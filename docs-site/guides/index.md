@@ -306,7 +306,7 @@ class CustomDebugger {
 #### Jest Integration
 ```javascript
 // test/debug.helper.js
-const { RapidTriageClient } = require('@yarlisai/rapidtriage-client');
+const { RapidTriageClient } = require('@/-client');
 
 class DebugHelper {
   constructor() {
@@ -380,7 +380,7 @@ If you encounter issues while following these guides:
 3. **Get Help**
    - Check [troubleshooting guide](../troubleshooting/index.md)
    - Join our [Discord community](https://discord.gg/rapidtriage)
-   - Open an [issue on GitHub](https://github.com/yarlisai/rapidtriage/issues)
+   - Open an [issue on GitHub](/issues)
 
 ## What's Next?
 

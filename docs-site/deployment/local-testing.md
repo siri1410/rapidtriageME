@@ -52,7 +52,7 @@ pytest --version  # For Python test utilities
 
 ```bash
 # Clone the repository
-git clone https://github.com/yarlisai/rapidtriage.git
+git clone .git
 cd rapidtriage
 
 # Install all dependencies

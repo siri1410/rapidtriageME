@@ -59,7 +59,7 @@ Automatic server discovery on ports 1421-1431:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yarlisai/rapidtriage.git
+git clone .git
 cd rapidtriage/rapidtriage-extension
 ```
 

@@ -15,13 +15,13 @@ A powerful browser triage and debugging server by YarlisAISolutions for capturin
 ## Installation
 
 ```bash
-npx @yarlisai/rapidtriage-server
+npx @/-server
 ```
 
 Or install globally:
 
 ```bash
-npm install -g @yarlisai/rapidtriage-server
+npm install -g @/-server
 ```
 
 ## Usage
@@ -29,7 +29,7 @@ npm install -g @yarlisai/rapidtriage-server
 1. Start the server:
 
 ```bash
-npx @yarlisai/rapidtriage-server
+npx @/-server
 ```
 
 2. The server will start on port 1421 by default

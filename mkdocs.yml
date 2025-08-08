@@ -3,8 +3,8 @@ site_url: https://rapidtriage.me/docs
 site_description: AI-Powered Browser Debugging Platform - Complete Documentation
 site_author: YarlisAISolutions
 
-repo_name: rapidtriage/rapidtriage
-repo_url: https://github.com/yarlisai/rapidtriage
+repo_name: YarlisAISolutions/rapidtriageME
+repo_url: https://github.com/YarlisAISolutions/rapidtriageME
 edit_uri: edit/main/docs/
 
 docs_dir: docs-site

@@ -14,8 +14,8 @@
       "Manage breaking change communications"
     ],
     "npm_package_management": [
-      "Publish @yarlisai/rapidtriage-mcp to NPM registry",
-      "Publish @yarlisai/rapidtriage-server to NPM registry",
+      "Publish @/-mcp to NPM registry",
+      "Publish @/-server to NPM registry",
       "Manage NPM access tokens and authentication",
       "Configure package visibility and access levels",
       "Update package metadata and keywords",
@@ -104,7 +104,7 @@
     ]
   },
   "release_artifacts": [
-    "NPM packages (@yarlisai/rapidtriage-mcp, @yarlisai/rapidtriage-server)",
+    "NPM packages (@/-mcp, @/-server)",
     "Chrome extension .zip file",
     "Cloudflare Worker bundles",
     "Source code archives",

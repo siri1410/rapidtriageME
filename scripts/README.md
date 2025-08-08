@@ -106,8 +106,8 @@ source ./scripts/01-load-env.sh
 ```
 
 **Packages published**:
-- `@yarlisai/rapidtriage-server` - Browser connector server
-- `@yarlisai/rapidtriage-mcp` - MCP protocol server
+- `@/-server` - Browser connector server
+- `@/-mcp` - MCP protocol server
 
 ---
 

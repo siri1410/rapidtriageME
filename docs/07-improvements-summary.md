@@ -39,8 +39,8 @@ Added comprehensive support for **10+ IDEs and platforms**:
 ```
 NPM Scope: @yarlisai
 Packages:
-  - @yarlisai/rapidtriage-mcp (v1.0.0)
-  - @yarlisai/rapidtriage-server (v1.0.0)
+  - @/-mcp (v1.0.0)
+  - @/-server (v1.0.0)
 
 Binary Commands:
   - rapidtriage-mcp
@@ -82,11 +82,11 @@ npm login
 3. **Users can install with:**
 ```bash
 # Install globally
-npm install -g @yarlisai/rapidtriage-mcp @yarlisai/rapidtriage-server
+npm install -g @/-mcp @/-server
 
 # Or use directly with npx
-npx @yarlisai/rapidtriage-server@latest
-npx @yarlisai/rapidtriage-mcp@latest
+npx @/-server@latest
+npx @/-mcp@latest
 ```
 
 ### ✨ **Key Features**

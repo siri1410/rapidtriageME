@@ -540,11 +540,11 @@ X-RateLimit-Window: 60
 
 ### JavaScript/Node.js
 ```bash
-npm install @yarlisai/rapidtriage-client
+npm install @/-client
 ```
 
 ```javascript
-import { RapidTriageClient } from '@yarlisai/rapidtriage-client';
+import { RapidTriageClient } from '@/-client';
 
 const client = new RapidTriageClient({
   baseUrl: 'http://localhost:1421',

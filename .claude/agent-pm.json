@@ -11,7 +11,7 @@
     ],
     "project_planning": [
       "Create and maintain sprint plans for multi-component architecture",
-      "Coordinate releases across NPM packages (@yarlisai/rapidtriage-mcp, @yarlisai/rapidtriage-server)",
+      "Coordinate releases across NPM packages (@/-mcp, @/-server)",
       "Track Chrome Web Store submission and approval process",
       "Manage Cloudflare Workers deployment timeline",
       "Maintain project board and GitHub issues tracking"

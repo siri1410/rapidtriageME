@@ -29,7 +29,7 @@ https://github.com/YarlisAISolutions/rapidtriage-extension/releases/download/v1.
 ### Step 2: Start the Browser Server
 Open a terminal and run:
 ```bash
-npx @yarlisai/rapidtriage-server@latest
+npx @/-server@latest
 ```
 
 You should see:
@@ -47,7 +47,7 @@ Edit `~/.cursor/mcp_settings.json`:
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlisai/rapidtriage-mcp@latest"]
+      "args": ["@/-mcp@latest"]
     }
   }
 }
@@ -60,7 +60,7 @@ Edit `~/.continue/config.json`:
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlisai/rapidtriage-mcp@latest"]
+      "args": ["@/-mcp@latest"]
     }
   }
 }
@@ -109,7 +109,7 @@ lsof -i :1421
 kill -9 <PID>
 
 # Restart the server
-npx @yarlisai/rapidtriage-server@latest
+npx @/-server@latest
 ```
 
 ### IDE Not Finding MCP Server
@@ -119,7 +119,7 @@ npx @yarlisai/rapidtriage-server@latest
    ```json
    {
      "command": "/usr/local/bin/npx",
-     "args": ["@yarlisai/rapidtriage-mcp@latest"]
+     "args": ["@/-mcp@latest"]
    }
    ```
 
@@ -129,8 +129,8 @@ You're using two npm packages:
 
 | Package | Purpose | Command |
 |---------|---------|---------|
-| `@yarlisai/rapidtriage-server` | Browser middleware server | Run in terminal |
-| `@yarlisai/rapidtriage-mcp` | MCP protocol handler | Configure in IDE |
+| `@/-server` | Browser middleware server | Run in terminal |
+| `@/-mcp` | MCP protocol handler | Configure in IDE |
 
 ## 🌐 Remote Usage (Optional)
 

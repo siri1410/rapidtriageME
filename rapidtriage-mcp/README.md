@@ -21,13 +21,13 @@ A Model Context Protocol (MCP) server by YarlisAISolutions that provides AI-powe
 ## Installation
 
 ```bash
-npx @yarlisai/rapidtriage-mcp
+npx @/-mcp
 ```
 
 Or install globally:
 
 ```bash
-npm install -g @yarlisai/rapidtriage-mcp
+npm install -g @/-mcp
 ```
 
 ## Usage
@@ -35,13 +35,13 @@ npm install -g @yarlisai/rapidtriage-mcp
 1. First, make sure the RapidTriage Server is running:
 
 ```bash
-npx @yarlisai/rapidtriage-server
+npx @/-server
 ```
 
 2. Then start the MCP server:
 
 ```bash
-npx @yarlisai/rapidtriage-mcp
+npx @/-mcp
 ```
 
 3. The MCP server will connect to the RapidTriage Server and provide the following capabilities:

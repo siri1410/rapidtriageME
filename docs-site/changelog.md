@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🎆 **Initial Release** - Complete rebranding to YarlisAISolutions RapidTriageME
 - 🤖 **Multi-IDE Support** - Compatible with 10+ IDEs and AI assistants
-- 📦 **NPM Packages** - Published `@yarlisai/rapidtriage-mcp` and `@yarlisai/rapidtriage-server`
+- 📦 **NPM Packages** - Published `@/-mcp` and `@/-server`
 - 🌍 **Cloud Deployment** - Ready for Cloudflare Workers at rapidtriage.me
 - 📸 **Advanced Screenshots** - Full-page and element-specific capture with auto-paste
 - 🚀 **Lighthouse Integration** - Complete SEO, performance, accessibility, and best practice audits
@@ -126,7 +126,7 @@ This is a major version with breaking changes. Follow these steps:
 npm uninstall -g cursor-browser-tools
 
 # Install new packages
-npm install -g @yarlisai/rapidtriage-server @yarlisai/rapidtriage-mcp
+npm install -g @/-server @/-mcp
 ```
 
 #### 2. Update IDE Configuration
@@ -149,7 +149,7 @@ npm install -g @yarlisai/rapidtriage-server @yarlisai/rapidtriage-mcp
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlisai/rapidtriage-mcp"],
+      "args": ["@/-mcp"],
       "env": {
         "BROWSER_TOOLS_PORT": "1421"
       }
@@ -239,13 +239,13 @@ When contributing, please:
 
 ```markdown
 ### Added
-- **Feature Name** - Brief description with context [#123](https://github.com/yarlisai/rapidtriage/pull/123)
+- **Feature Name** - Brief description with context [#123](/pull/123)
 
 ### Changed
-- **Component**: Description of what changed and impact [#456](https://github.com/yarlisai/rapidtriage/issues/456)
+- **Component**: Description of what changed and impact [#456](/issues/456)
 
 ### Fixed
-- **Critical/Bug**: Description of what was broken and how it was fixed [#789](https://github.com/yarlisai/rapidtriage/issues/789)
+- **Critical/Bug**: Description of what was broken and how it was fixed [#789](/issues/789)
 ```
 
 ## Historical Context
@@ -277,4 +277,4 @@ Complete rebranding and architectural overhaul to become a comprehensive AI-powe
 
 ---
 
-**Stay Updated**: Watch our [GitHub repository](https://github.com/yarlisai/rapidtriage) and join our [Discord community](https://discord.gg/rapidtriage) for the latest updates and release announcements.
+**Stay Updated**: Watch our [GitHub repository]() and join our [Discord community](https://discord.gg/rapidtriage) for the latest updates and release announcements.

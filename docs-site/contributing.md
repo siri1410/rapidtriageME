@@ -20,7 +20,7 @@ flowchart LR
 ## Ways to Contribute
 
 ### 🐛 Bug Reports
-Report bugs by [creating an issue](https://github.com/yarlisai/rapidtriage/issues/new?template=bug_report.md) with:
+Report bugs by [creating an issue](/issues/new?template=bug_report.md) with:
 - Clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior  
@@ -28,7 +28,7 @@ Report bugs by [creating an issue](https://github.com/yarlisai/rapidtriage/issue
 - Screenshots or logs when relevant
 
 ### ✨ Feature Requests
-Suggest new features by [creating an issue](https://github.com/yarlisai/rapidtriage/issues/new?template=feature_request.md) with:
+Suggest new features by [creating an issue](/issues/new?template=feature_request.md) with:
 - Use case description
 - Proposed solution
 - Alternative approaches considered
@@ -73,7 +73,7 @@ git clone https://github.com/YOUR_USERNAME/rapidtriage.git
 cd rapidtriage
 
 # 3. Add upstream remote
-git remote add upstream https://github.com/yarlisai/rapidtriage.git
+git remote add upstream .git
 
 # 4. Create a new branch
 git checkout -b feature/your-feature-name

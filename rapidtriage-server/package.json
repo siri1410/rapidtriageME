@@ -1,5 +1,5 @@
 {
-  "name": "@yarlisai/rapidtriage-server",
+  "name": "@/-server",
   "version": "1.0.0",
   "description": "YarlisAISolutions RapidTriage Server - Comprehensive browser debugging and triage server with Lighthouse audits",
   "type": "module",

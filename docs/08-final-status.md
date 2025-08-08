@@ -45,10 +45,10 @@ All documentation now reflects the correct folder structure:
 
 ### 🔧 **Package Configuration**
 
-#### @yarlisai/rapidtriage-mcp
+#### @/-mcp
 ```json
 {
-  "name": "@yarlisai/rapidtriage-mcp",
+  "name": "@/-mcp",
   "version": "1.0.0",
   "main": "dist/mcp-server.js",
   "bin": {
@@ -57,10 +57,10 @@ All documentation now reflects the correct folder structure:
 }
 ```
 
-#### @yarlisai/rapidtriage-server
+#### @/-server
 ```json
 {
-  "name": "@yarlisai/rapidtriage-server",
+  "name": "@/-server",
   "version": "1.0.0",
   "main": "dist/browser-connector.js",
   "bin": {
