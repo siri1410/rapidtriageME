@@ -30,7 +30,7 @@ Returns server information and validates the connection.
 ```json
 {
   "port": 1421,
-  "name": "browser-tools-server",
+  "name": "rapidtriage-server",
   "version": "1.2.0",
   "signature": "mcp-browser-connector-24x7"
 }

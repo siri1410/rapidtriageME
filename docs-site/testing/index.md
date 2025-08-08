@@ -90,7 +90,7 @@ Available on: http://localhost:1422
 | Service | Endpoint | Expected Response |
 |---------|----------|-------------------|
 | **Wrangler** | `http://localhost:1421/health` | `{"status":"healthy","service":"RapidTriageME"}` |
-| **Connector** | `http://localhost:1422/.identity` | `{"port":1422,"name":"browser-tools-server"}` |
+| **Connector** | `http://localhost:1422/.identity` | `{"port":1422,"name":"rapidtriage-server"}` |
 
 #### 3.2 Test Commands
 

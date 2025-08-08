@@ -137,7 +137,7 @@ npm install -g @/-server @/-mcp
   "mcpServers": {
     "browser-tools": {
       "command": "npx",
-      "args": ["cursor-browser-tools-mcp"]
+      "args": ["cursor-rapidtriage-mcp"]
     }
   }
 }
