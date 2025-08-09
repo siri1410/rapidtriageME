@@ -194,7 +194,7 @@ Make sure Docker is installed and running on your system:
 # Pull and run the latest image
 docker run -d \
   --name rapidtriage \
-  -p 1421:1421 \
+  -p 3025:3025 \
   -p 8080:8080 \
   yarlisai/rapidtriage:latest
 
@@ -216,7 +216,7 @@ services:
   rapidtriage:
     image: yarlisai/rapidtriage:latest
     ports:
-      - "1421:1421"
+      - "3025:3025"
       - "8080:8080"
     environment:
       - NODE_ENV=production
@@ -298,7 +298,7 @@ Create environment configuration for your system:
     
     ```bash
     # Add to ~/.bashrc or ~/.zshrc
-    export RAPIDTRIAGE_PORT=1421
+    export RAPIDTRIAGE_PORT=3025
     export RAPIDTRIAGE_HOST=localhost
     export NODE_ENV=development
     export LOG_LEVEL=info
@@ -311,7 +311,7 @@ Create environment configuration for your system:
     
     ```powershell
     # Set environment variables
-    [Environment]::SetEnvironmentVariable("RAPIDTRIAGE_PORT", "1421", "User")
+    [Environment]::SetEnvironmentVariable("RAPIDTRIAGE_PORT", "3025", "User")
     [Environment]::SetEnvironmentVariable("RAPIDTRIAGE_HOST", "localhost", "User")
     [Environment]::SetEnvironmentVariable("NODE_ENV", "development", "User")
     
@@ -322,7 +322,7 @@ Create environment configuration for your system:
     
     ```cmd
     # Set environment variables
-    setx RAPIDTRIAGE_PORT 1421
+    setx RAPIDTRIAGE_PORT 3025
     setx RAPIDTRIAGE_HOST localhost
     setx NODE_ENV development
     
@@ -340,7 +340,7 @@ mkdir -p ~/.rapidtriage
 # Create config file
 cat > ~/.rapidtriage/config.json << EOF
 {
-  "port": 1421,
+  "port": 3025,
   "host": "localhost",
   "logLevel": "info",
   "enableCors": true,
@@ -372,7 +372,7 @@ Configure your preferred IDE to use RapidTriageME:
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "NODE_ENV": "development"
       }
     }
@@ -398,7 +398,7 @@ Configure your preferred IDE to use RapidTriageME:
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421"
+        "BROWSER_TOOLS_PORT": "3025"
       }
     }
   }
@@ -416,7 +416,7 @@ Configure your preferred IDE to use RapidTriageME:
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "DEBUG": "true"
       }
     }
@@ -433,7 +433,7 @@ Configure your preferred IDE to use RapidTriageME:
 npx @yarlisai/rapidtriage-server
 
 # You should see:
-# 🚀 RapidTriage Server running on port 1421
+# 🚀 RapidTriage Server running on port 3025
 # ✅ WebSocket server ready
 # ✅ HTTP server ready
 ```
@@ -473,8 +473,8 @@ npx @yarlisai/rapidtriage-mcp
 #### Port Already in Use
 
 ```bash
-# Check what's using port 1421
-lsof -i :1421
+# Check what's using port 3025
+lsof -i :3025
 
 # Kill the process if needed
 kill -9 <PID>

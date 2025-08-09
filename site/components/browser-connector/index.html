@@ -531,10 +531,10 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="browser-connector-server">Browser Connector Server<a class="headerlink" href="#browser-connector-server" title="Permanent link">¶</a></h1>
-<p>The Browser Connector Server is the heart of RapidTriageME's local operation, running on port 1421. It serves as the central hub that processes browser data, provides HTTP APIs, and integrates with external services like Lighthouse.</p>
+<p>The Browser Connector Server is the heart of RapidTriageME's local operation, running on port 3025. It serves as the central hub that processes browser data, provides HTTP APIs, and integrates with external services like Lighthouse.</p>
 <h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">¶</a></h2>
 <pre class="mermaid"><code>graph TB
-    subgraph "Browser Connector Server (Port 1421)"
+    subgraph "Browser Connector Server (Port 3025)"
         subgraph "Network Layer"
             HTTP[HTTP Server&lt;br/&gt;Express.js]
             WS[WebSocket Server&lt;br/&gt;Real-time Communication]

@@ -104,8 +104,8 @@ function check_status() {
     echo ""
     
     # Check local server
-    echo -e "${YELLOW}Local Server (Port 1421):${NC}"
-    if curl -s http://localhost:1421/.identity > /dev/null 2>&1; then
+    echo -e "${YELLOW}Local Server (Port 3025):${NC}"
+    if curl -s http://localhost:3025/.identity > /dev/null 2>&1; then
         echo -e "${GREEN}✅ Running${NC}"
     else
         echo -e "${RED}❌ Not running${NC}"

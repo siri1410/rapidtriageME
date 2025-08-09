@@ -11,7 +11,7 @@ graph TB
     end
     
     subgraph "Local Processing Layer"
-        BC[Browser Connector<br/>🔄 Port 1421]
+        BC[Browser Connector<br/>🔄 Port 3025]
         MCP[MCP Server<br/>🤖 AI Integration]
     end
     
@@ -51,7 +51,7 @@ graph TB
 ### Browser Connector Server
 **Primary Role**: Data processing and HTTP API
 
-- 🌐 **Serves** HTTP API on port 1421
+- 🌐 **Serves** HTTP API on port 3025
 - 📊 **Processes** and aggregates browser data
 - 🚀 **Runs** Lighthouse performance audits
 - 💾 **Caches** data for quick AI access
@@ -219,7 +219,7 @@ sequenceDiagram
 ```bash
 # 1. Start Browser Connector
 npx @yarlisai/rapidtriage-server
-# Running on port 1421
+# Running on port 3025
 
 # 2. Configure IDE with MCP Server
 # Add to IDE config:
@@ -255,11 +255,11 @@ python -m http.server 8000
 #### Server Testing
 ```bash
 # Test API endpoints
-curl http://localhost:1421/.identity
-curl http://localhost:1421/console-logs
+curl http://localhost:3025/.identity
+curl http://localhost:3025/console-logs
 
 # Test WebSocket
-wscat -c ws://localhost:1421/ws
+wscat -c ws://localhost:3025/ws
 ```
 
 #### MCP Testing
@@ -277,12 +277,12 @@ npx @modelcontextprotocol/inspector npx @yarlisai/rapidtriage-mcp
 
 ```bash
 # Browser Connector
-export RAPIDTRIAGE_PORT=1421
+export RAPIDTRIAGE_PORT=3025
 export RAPIDTRIAGE_HOST=localhost
 export LOG_LEVEL=info
 
 # MCP Server
-export BROWSER_TOOLS_PORT=1421
+export BROWSER_TOOLS_PORT=3025
 export BROWSER_TOOLS_HOST=localhost
 
 # Cloudflare Worker
@@ -296,7 +296,7 @@ export JWT_SECRET=your-secret
 // rapidtriage.config.json
 {
   "server": {
-    "port": 1421,
+    "port": 3025,
     "cors": { "origin": "*" }
   },
   "features": {
@@ -316,7 +316,7 @@ export JWT_SECRET=your-secret
 
 ```bash
 # Browser Connector health
-curl http://localhost:1421/.identity
+curl http://localhost:3025/.identity
 
 # Expected response:
 {

@@ -28,7 +28,7 @@ graph TB
     end
     
     subgraph RapidTriage
-        BC[Browser Connector<br/>:1421]
+        BC[Browser Connector<br/>:3025]
         CE[Chrome Extension]
         Data[(Captured Data)]
     end
@@ -74,7 +74,7 @@ Create `mcp-config.json`:
   },
   "browserConnector": {
     "host": "localhost",
-    "port": 1421,
+    "port": 3025,
     "protocol": "http",
     "websocketPath": "/mcp-ws",
     "timeout": 30000,
@@ -152,7 +152,7 @@ class RapidTriageMCPServer extends MCPServer {
   }
   
   async connectToBrowserConnector() {
-    const wsUrl = 'ws://localhost:1421/mcp-ws';
+    const wsUrl = 'ws://localhost:3025/mcp-ws';
     
     try {
       this.wsConnection = new WebSocket(wsUrl);
@@ -363,7 +363,7 @@ class RapidTriageMCPServer extends MCPServer {
   
   // Resource implementations
   async getConsoleLogs() {
-    const response = await fetch('http://localhost:1421/console-logs');
+    const response = await fetch('http://localhost:3025/console-logs');
     const data = await response.json();
     
     return {
@@ -376,7 +376,7 @@ class RapidTriageMCPServer extends MCPServer {
   }
   
   async getNetworkRequests() {
-    const response = await fetch('http://localhost:1421/network-success');
+    const response = await fetch('http://localhost:3025/network-success');
     const data = await response.json();
     
     return {
@@ -389,7 +389,7 @@ class RapidTriageMCPServer extends MCPServer {
   }
   
   async getErrors() {
-    const response = await fetch('http://localhost:1421/console-errors');
+    const response = await fetch('http://localhost:3025/console-errors');
     const data = await response.json();
     
     return {
@@ -403,7 +403,7 @@ class RapidTriageMCPServer extends MCPServer {
   
   async getPageInfo() {
     // Get page info from browser connector
-    const response = await fetch('http://localhost:1421/page-info');
+    const response = await fetch('http://localhost:3025/page-info');
     const data = await response.json();
     
     return {
@@ -788,21 +788,21 @@ class RealtimeResourceManager {
     
     try {
       // Check for new console logs
-      const consoleResponse = await fetch('http://localhost:1421/console-logs?since=' + this.getLastUpdateTime('console'));
+      const consoleResponse = await fetch('http://localhost:3025/console-logs?since=' + this.getLastUpdateTime('console'));
       if (consoleResponse.ok) {
         const consoleData = await consoleResponse.json();
         updates.set('rapidtriage://console-logs', consoleData);
       }
       
       // Check for new network requests
-      const networkResponse = await fetch('http://localhost:1421/network-success?since=' + this.getLastUpdateTime('network'));
+      const networkResponse = await fetch('http://localhost:3025/network-success?since=' + this.getLastUpdateTime('network'));
       if (networkResponse.ok) {
         const networkData = await networkResponse.json();
         updates.set('rapidtriage://network-requests', networkData);
       }
       
       // Check for new errors
-      const errorResponse = await fetch('http://localhost:1421/console-errors?since=' + this.getLastUpdateTime('errors'));
+      const errorResponse = await fetch('http://localhost:3025/console-errors?since=' + this.getLastUpdateTime('errors'));
       if (errorResponse.ok) {
         const errorData = await errorResponse.json();
         updates.set('rapidtriage://errors', errorData);
@@ -994,7 +994,7 @@ describe('Claude Integration', () => {
 ??? bug "Browser connector unreachable"
     **Symptoms:** MCP tools returning connection errors
     **Solutions:**
-    - Ensure browser connector is running on port 1421
+    - Ensure browser connector is running on port 3025
     - Check firewall settings for localhost connections
     - Verify WebSocket connection in browser connector logs
 

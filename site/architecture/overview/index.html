@@ -642,7 +642,7 @@
     end
 
     subgraph "Local Environment"
-        BS[Browser Connector&lt;br/&gt;:1421]
+        BS[Browser Connector&lt;br/&gt;:3025]
         MCP[MCP Server]
         CE --&gt;|WebSocket| BS
         BS &lt;--&gt;|HTTP/REST| MCP
@@ -681,7 +681,7 @@
 <h3 id="2-browser-connector-server">2. Browser Connector Server<a class="headerlink" href="#2-browser-connector-server" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>Purpose</strong>: Local server that aggregates and processes browser data</li>
-<li><strong>Port</strong>: <code>1421</code> (configurable)</li>
+<li><strong>Port</strong>: <code>3025</code> (configurable)</li>
 <li><strong>Technology</strong>: Node.js, Express, WebSocket</li>
 <li><strong>Key Features</strong>:</li>
 <li>WebSocket connection management</li>
@@ -800,7 +800,7 @@
 </ul>
 <h2 id="deployment-models">Deployment Models<a class="headerlink" href="#deployment-models" title="Permanent link">¶</a></h2>
 <h3 id="local-development">Local Development<a class="headerlink" href="#local-development" title="Permanent link">¶</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Browser → Extension → Connector(:1421) → MCP → AI
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Browser → Extension → Connector(:3025) → MCP → AI
 </span></code></pre></div>
 <h3 id="production-edge">Production (Edge)<a class="headerlink" href="#production-edge" title="Permanent link">¶</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a>Browser → Extension → Cloudflare Worker → AI

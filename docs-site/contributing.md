@@ -116,7 +116,7 @@ npm run build:all
 npm run dev
 
 # This starts:
-# - Browser connector server on port 1421
+# - Browser connector server on port 3025
 # - MCP server in development mode
 # - File watchers for auto-rebuilding
 ```
@@ -274,7 +274,7 @@ describe('MCP Server Tools', () => {
   let server: MCPServer;
   
   beforeEach(() => {
-    server = new MCPServer({ port: 1421 });
+    server = new MCPServer({ port: 3025 });
   });
   
   it('should capture screenshot with default options', async () => {
@@ -337,7 +337,7 @@ test.describe('RapidTriageME E2E', () => {
     await page.goto('http://localhost:3000/test-page');
     
     // Simulate AI assistant request
-    const screenshotResponse = await page.request.post('http://localhost:1421/capture-screenshot', {
+    const screenshotResponse = await page.request.post('http://localhost:3025/capture-screenshot', {
       data: { options: { fullPage: true } }
     });
     

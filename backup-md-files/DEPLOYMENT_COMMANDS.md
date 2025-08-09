@@ -8,7 +8,7 @@ This document provides the complete step-by-step process for deploying RapidTria
 
 ### ✅ Completed Tasks
 
-1. **Port Configuration Changed**: Default port updated from 3025 to 1421 across entire codebase
+1. **Port Configuration Changed**: Default port updated from 3025 to 3025 across entire codebase
 2. **Production Deployment**: Successfully deployed to https://rapidtriage.me
 3. **Documentation Site**: Created comprehensive MkDocs documentation with 20+ pages
 4. **GitHub Pages**: Documentation deployed to https://yarlisaisolutions.github.io/rapidtriageME/
@@ -41,7 +41,7 @@ cp .env.example .env
 # Edit .env with your values
 CLOUDFLARE_ACCOUNT_ID=ed3fbe9532564f2f06ae772da689431a
 CLOUDFLARE_ZONE_ID=dba0cbc72f7f0b7727fbdb6f4d6d7901
-BROWSER_TOOLS_PORT=1421
+BROWSER_TOOLS_PORT=3025
 NODE_ENV=production
 ```
 
@@ -59,13 +59,13 @@ wrangler login
 
 ```bash
 # Test locally
-npm run dev -- --port 1421
+npm run dev -- --port 3025
 
 # Or use the script
 ./scripts/02-test-local.sh
 
 # Test health endpoint
-curl http://localhost:1421/health
+curl http://localhost:3025/health
 ```
 
 ### Step 5: Deploy to Staging
@@ -180,12 +180,12 @@ name = "rapidtriage-production"
 workers_dev = false
 route = "rapidtriage.me/*"
 zone_id = "dba0cbc72f7f0b7727fbdb6f4d6d7901"
-vars = { BROWSER_TOOLS_PORT = "1421" }
+vars = { BROWSER_TOOLS_PORT = "3025" }
 
 [env.staging]
 name = "rapidtriage-staging"
 workers_dev = true
-vars = { BROWSER_TOOLS_PORT = "1421" }
+vars = { BROWSER_TOOLS_PORT = "3025" }
 ```
 
 ### mkdocs.yml
@@ -256,20 +256,20 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/p
 
 ## 📊 Port Configuration Details
 
-The port was changed from 3025 to 1421 in the following files:
+The port was changed from 3025 to 3025 in the following files:
 
 1. **rapidtriage-mcp/mcp-server.ts**
-   - Default port: `1421`
-   - Discovery range: `1421-1431`
+   - Default port: `3025`
+   - Discovery range: `3025-1431`
 
 2. **wrangler.toml**
-   - All environments: `BROWSER_TOOLS_PORT = "1421"`
+   - All environments: `BROWSER_TOOLS_PORT = "3025"`
 
 3. **Extension files**
-   - Default connection port: `1421`
+   - Default connection port: `3025`
 
 4. **Documentation**
-   - All references updated to port `1421`
+   - All references updated to port `3025`
 
 ## 🚨 Troubleshooting
 
@@ -327,7 +327,7 @@ To continue managing the deployment:
 
 The RapidTriageME platform has been successfully:
 - ✅ Deployed to production at rapidtriage.me
-- ✅ Configured with port 1421 (changed from 3025)
+- ✅ Configured with port 3025 (changed from 3025)
 - ✅ Documentation created with 20+ comprehensive pages
 - ✅ Published to GitHub Pages
 - ✅ DNS configured for custom domains

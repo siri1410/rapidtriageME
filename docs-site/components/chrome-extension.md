@@ -22,7 +22,7 @@ graph LR
         DT --> API[DevTools API]
     end
     
-    DT -->|WebSocket| BC[Browser Connector :1421]
+    DT -->|WebSocket| BC[Browser Connector :3025]
 ```
 
 ## Features
@@ -47,8 +47,8 @@ Custom panel in Chrome DevTools providing:
 
 ### 🔗 Auto-Discovery
 
-Automatic server discovery on ports 1421-1431:
-1. Checks default port (1421)
+Automatic server discovery on ports 3025-1431:
+1. Checks default port (3025)
 2. Scans alternate ports
 3. Validates server identity
 4. Establishes WebSocket connection
@@ -82,7 +82,7 @@ Access via the DevTools panel:
 | Setting | Description | Default |
 |---------|-------------|---------|
 | **Server Host** | Connector server address | `localhost` |
-| **Server Port** | Connector server port | `1421` |
+| **Server Port** | Connector server port | `3025` |
 | **Log Limit** | Maximum logs to store | `50` |
 | **String Size Limit** | Max string length | `500` |
 | **Screenshot Path** | Save location | `~/Downloads` |
@@ -262,7 +262,7 @@ Typical resource consumption:
     - Check for console errors
 
 ??? bug "Not connecting to server"
-    - Verify server is running on port 1421
+    - Verify server is running on port 3025
     - Check firewall settings
     - Try manual connection test
 

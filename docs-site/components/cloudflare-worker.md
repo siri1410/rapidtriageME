@@ -12,7 +12,7 @@ The Cloudflare Worker acts as a secure relay between remote AI assistants and lo
 graph TB
     subgraph User Browser
         CE[Chrome Extension]
-        BC[Browser Connector<br/>:1421]
+        BC[Browser Connector<br/>:3025]
     end
     
     subgraph Cloudflare Edge
@@ -176,7 +176,7 @@ Register local browser connector with remote tunnel.
 **Request:**
 ```json
 {
-  "connectorPort": 1421,
+  "connectorPort": 3025,
   "capabilities": ["console", "network", "screenshots"],
   "version": "1.2.0"
 }
@@ -401,7 +401,7 @@ async function validateJWT(token, env) {
 function validateOrigin(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigins = [
-    'http://localhost:1421',
+    'http://localhost:3025',
     'https://rapidtriage.me',
     'chrome-extension://*'
   ];

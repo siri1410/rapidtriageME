@@ -20,7 +20,7 @@ graph TB
     end
     
     subgraph Local Server
-        BC[Browser Connector<br/>:1421]
+        BC[Browser Connector<br/>:3025]
     end
     
     subgraph Remote Access
@@ -32,8 +32,8 @@ graph TB
         AI[Claude/ChatGPT]
     end
     
-    CE -.->|ws://localhost:1421/extension-ws| BC
-    BC -.->|ws://localhost:1421/mcp-ws| MCP
+    CE -.->|ws://localhost:3025/extension-ws| BC
+    BC -.->|ws://localhost:3025/mcp-ws| MCP
     BC -.->|wss://rapidtriage.me/tunnel/{id}| CW
     MCP -.->|MCP Protocol| AI
     
@@ -44,7 +44,7 @@ graph TB
 
 ### Extension Connection
 
-#### `ws://localhost:1421/extension-ws`
+#### `ws://localhost:3025/extension-ws`
 
 Primary connection for Chrome Extension to Browser Connector.
 
@@ -60,7 +60,7 @@ Origin: chrome-extension://extension-id
 
 ### MCP Server Connection
 
-#### `ws://localhost:1421/mcp-ws`
+#### `ws://localhost:3025/mcp-ws`
 
 Connection for MCP server integration with AI assistants.
 
@@ -456,7 +456,7 @@ class RapidTriageWebSocket {
 }
 
 // Usage example
-const client = new RapidTriageWebSocket('ws://localhost:1421/extension-ws');
+const client = new RapidTriageWebSocket('ws://localhost:3025/extension-ws');
 
 // Handle console logs
 client.on('console-log', (message) => {
@@ -611,7 +611,7 @@ class RapidTriageMCPClient {
 }
 
 // Usage
-const client = new RapidTriageMCPClient('ws://localhost:1421/mcp-ws');
+const client = new RapidTriageMCPClient('ws://localhost:3025/mcp-ws');
 client.connect();
 
 // Request screenshot after 5 seconds
@@ -740,7 +740,7 @@ class RapidTriageWebSocketClient:
 
 # Usage example
 async def main():
-    client = RapidTriageWebSocketClient('ws://localhost:1421/mcp-ws')
+    client = RapidTriageWebSocketClient('ws://localhost:3025/mcp-ws')
     
     # Register handlers
     async def handle_console_log(message):
@@ -801,7 +801,7 @@ function validateOrigin(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigins = [
     'chrome-extension://extension-id',
-    'http://localhost:1421',
+    'http://localhost:3025',
     'https://rapidtriage.me'
   ];
   
@@ -922,7 +922,7 @@ class WebSocketPool {
     ```bash
     # Test with wscat
     npm install -g wscat
-    wscat -c ws://localhost:1421/extension-ws
+    wscat -c ws://localhost:3025/extension-ws
     ```
 
 ??? bug "Messages not being received"
@@ -945,7 +945,7 @@ class WebSocketPool {
 
 ```bash
 # Monitor WebSocket traffic
-wscat -c ws://localhost:1421/extension-ws -x '{"type":"heartbeat"}'
+wscat -c ws://localhost:3025/extension-ws -x '{"type":"heartbeat"}'
 
 # Check connection with curl
 curl --include \
@@ -954,11 +954,11 @@ curl --include \
      --header "Upgrade: websocket" \
      --header "Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==" \
      --header "Sec-WebSocket-Version: 13" \
-     http://localhost:1421/extension-ws
+     http://localhost:3025/extension-ws
 
 # Network debugging
-netstat -an | grep 1421
-lsof -i :1421
+netstat -an | grep 3025
+lsof -i :3025
 ```
 
 ## Next Steps

@@ -4,7 +4,7 @@ The Browser Connector Server exposes a RESTful API for retrieving browser data a
 
 ## Base URL
 
-- **Local**: `http://localhost:1421`
+- **Local**: `http://localhost:3025`
 - **Remote**: `https://rapidtriage.me`
 
 ## Authentication
@@ -29,7 +29,7 @@ Returns server information and validates the connection.
 **Response:**
 ```json
 {
-  "port": 1421,
+  "port": 3025,
   "name": "rapidtriage-server",
   "version": "1.2.0",
   "signature": "mcp-browser-connector-24x7"
@@ -343,7 +343,7 @@ All endpoints return consistent error responses:
 
 ## WebSocket Endpoints
 
-### `ws://localhost:1421/extension-ws`
+### `ws://localhost:3025/extension-ws`
 
 WebSocket connection for real-time data streaming.
 
@@ -359,30 +359,30 @@ WebSocket connection for real-time data streaming.
 
 ```bash
 # Get console logs
-curl http://localhost:1421/console-logs
+curl http://localhost:3025/console-logs
 
 # Take screenshot
-curl -X POST http://localhost:1421/capture-screenshot
+curl -X POST http://localhost:3025/capture-screenshot
 
 # Run accessibility audit
-curl -X POST http://localhost:1421/accessibility-audit \
+curl -X POST http://localhost:3025/accessibility-audit \
   -H "Content-Type: application/json" \
   -d '{"url": "https://example.com"}'
 
 # Clear all logs
-curl -X POST http://localhost:1421/wipelogs
+curl -X POST http://localhost:3025/wipelogs
 ```
 
 ### JavaScript Examples
 
 ```javascript
 // Fetch console logs
-const response = await fetch('http://localhost:1421/console-logs');
+const response = await fetch('http://localhost:3025/console-logs');
 const data = await response.json();
 console.log(data.logs);
 
 // Take screenshot
-const screenshot = await fetch('http://localhost:1421/capture-screenshot', {
+const screenshot = await fetch('http://localhost:3025/capture-screenshot', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ fullPage: true })

@@ -151,7 +151,7 @@ npm install -g @yarlisai/rapidtriage-server @yarlisai/rapidtriage-mcp
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421"
+        "BROWSER_TOOLS_PORT": "3025"
       }
     }
   }
@@ -173,7 +173,7 @@ curl http://localhost:3000/screenshot
 
 **New API calls:**
 ```bash
-curl http://localhost:1421/capture-screenshot
+curl http://localhost:3025/capture-screenshot
 ```
 
 #### 5. Configuration File Updates
@@ -190,7 +190,7 @@ curl http://localhost:1421/capture-screenshot
 ```json
 {
   "server": {
-    "port": 1421,
+    "port": 3025,
     "host": "localhost"
   },
   "features": {

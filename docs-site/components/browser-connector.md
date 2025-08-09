@@ -1,12 +1,12 @@
 # Browser Connector Server
 
-The Browser Connector Server is the heart of RapidTriageME's local operation, running on port 1421. It serves as the central hub that processes browser data, provides HTTP APIs, and integrates with external services like Lighthouse.
+The Browser Connector Server is the heart of RapidTriageME's local operation, running on port 3025. It serves as the central hub that processes browser data, provides HTTP APIs, and integrates with external services like Lighthouse.
 
 ## Architecture Overview
 
 ```mermaid
 graph TB
-    subgraph "Browser Connector Server (Port 1421)"
+    subgraph "Browser Connector Server (Port 3025)"
         subgraph "Network Layer"
             HTTP[HTTP Server<br/>Express.js]
             WS[WebSocket Server<br/>Real-time Communication]

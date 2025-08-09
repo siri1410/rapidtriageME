@@ -63,7 +63,7 @@ graph TB
     end
     
     subgraph Local
-        BC[Browser Connector<br/>Port 1421]
+        BC[Browser Connector<br/>Port 3025]
         MCP[MCP Server]
     end
     
@@ -87,7 +87,7 @@ graph TB
 ## 🚦 Current Status
 
 !!! success "Production Ready"
-    - ✅ **Server**: Running on port `1421`
+    - ✅ **Server**: Running on port `3025`
     - ✅ **Domain**: Active at [rapidtriage.me](https://rapidtriage.me)
     - ✅ **API**: Fully operational
     - ✅ **Extension**: Published and available
@@ -97,7 +97,7 @@ graph TB
 | Component | Description | Status |
 |-----------|-------------|--------|
 | **Chrome Extension** | Captures browser data via DevTools | ✅ Active |
-| **Browser Connector** | Local server for data aggregation | ✅ Port 1421 |
+| **Browser Connector** | Local server for data aggregation | ✅ Port 3025 |
 | **MCP Server** | AI integration via Model Context Protocol | ✅ Ready |
 | **Cloudflare Worker** | Remote access and edge computing | ✅ Deployed |
 

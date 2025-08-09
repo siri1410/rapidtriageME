@@ -2,11 +2,26 @@
 
 > **YarlisAISolutions** - Make your AI tools 10x more aware and capable of interacting with your browser
 
+[![Production Status](https://img.shields.io/badge/Production-Live-success)](https://rapidtriage.me)
+[![Documentation](https://img.shields.io/badge/Docs-Available-blue)](https://yarlisaisolutions.github.io/rapidtriageME/)
+[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-purple)](https://modelcontextprotocol.io)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 RapidTriageME is a powerful browser triage and debugging platform by YarlisAISolutions that enables AI-powered applications via Anthropic's Model Context Protocol (MCP) to capture and analyze browser data through a Chrome extension for remote debugging and comprehensive browser analysis.
+
+## 🌐 Live Services
+
+- **Production**: https://rapidtriage.me
+- **Backend API**: https://rapidtriage-backend-u72y6ntcwa-uc.a.run.app
+- **Documentation**: https://yarlisaisolutions.github.io/rapidtriageME/
 
 ## 📚 Documentation
 
-Read our comprehensive [documentation](https://rapidtriage.me/docs) for installation, quickstart, and contribution guides.
+- **[Complete Documentation](https://yarlisaisolutions.github.io/rapidtriageME/)** - Full guides and API reference
+- **[Quick Start Guide](docs/01-quickstart.md)** - Get started in 5 minutes
+- **[IDE Configuration](docs/02-ide-configuration.md)** - Setup for 10+ IDEs
+- **[Deployment Guide](docs/04-deployment.md)** - Deploy to production
+- **[Testing Guide](docs/12-testing.md)** - Complete testing procedures
 
 ## 🎯 Key Features
 
@@ -22,8 +37,8 @@ Read our comprehensive [documentation](https://rapidtriage.me/docs) for installa
 
 ```
 rapidtriageME/
-├── rapidtriage-mcp/        # MCP server (@yarlis/rapidtriage-mcp)
-├── rapidtriage-server/     # Browser server (@yarlis/rapidtriage-server)
+├── rapidtriage-mcp/        # MCP server (@yarlisai/rapidtriage-mcp)
+├── rapidtriage-server/     # Browser server (@yarlisai/rapidtriage-server)
 ├── rapidtriage-extension/  # Browser extension
 ├── src/                   # Cloudflare Worker source
 └── docs/                  # Documentation
@@ -33,50 +48,87 @@ rapidtriageME/
 
 Check out our project roadmap here: [Github Roadmap / Project Board](https://github.com/orgs/YarlisAISolutions/projects/1/views/1)
 
-## 🆕 Updates
+## 🆕 Latest Updates
 
-### v1.0.0 - Complete Rebranding & Multi-IDE Support
-- 🎨 **Rebranded** to YarlisAISolutions RapidTriageME
-- 🔧 **Multi-IDE Support** - Now works with 10+ IDEs, not just Cursor
-- 📦 **New Package Names** - `@yarlis/rapidtriage-mcp` and `@yarlis/rapidtriage-server`
-- 🚀 **Cloud Deployment** - Ready for Cloudflare Workers at rapidtriage.me
-- 🔄 **Auto-Paste** - Screenshots auto-paste into Cursor (with focus)
-- 🎯 **Lighthouse Integration** - SEO, performance, accessibility, and best practice audits
-- 🔍 **Debugger Mode** - Execute all debugging tools in sequence
-- 📊 **Audit Mode** - Run all auditing tools systematically
-- 🌐 **Cross-Platform** - Windows, macOS, and Linux support
-- 🔗 **Improved Networking** - Auto-discovery, auto-reconnect, graceful shutdown
+### v1.1.0 - Production Ready & Enhanced Features
+- ✅ **Production Deployment** - Live at https://rapidtriage.me
+- 🔧 **Dual Transport Modes** - Both stdio (local) and HTTP/SSE (remote) supported
+- 📦 **NPM Packages Published** - `@yarlisai/rapidtriage-mcp` and `@yarlisai/rapidtriage-server`
+- 🚀 **Cloud Infrastructure** - Cloudflare Workers + Google Cloud Run backend
+- 🔐 **Enhanced Security** - Bearer token auth, rate limiting, CORS configured
+- 📊 **Complete API Suite** - 10 endpoints for full browser control
+- 🧪 **Test Collections** - Bruno and Postman collections included
+- 📈 **Performance Optimized** - 47ms average response time
+- 🎯 **MCP Protocol** - Full JSON-RPC implementation with 8 tools
+- 📝 **Comprehensive Docs** - Complete documentation site with 12+ guides
 
 ## 🚀 Quickstart Guide
 
-### Three Components to Install:
+### Option 1: Local Development (3 Steps)
 
-### 1. **Install Chrome Extension**
-Download and install the RapidTriage Chrome Extension:
-[v1.0.0 RapidTriage Chrome Extension](https://github.com/YarlisAISolutions/rapidtriage-extension/releases/download/v1.0.0/RapidTriage-1.0.0-extension.zip)
-
-### 2. **Install MCP Server** (in your IDE)
+#### 1. **Install Chrome Extension**
 ```bash
-npx @yarlis/rapidtriage-mcp@latest
+# Load unpacked extension
+1. Open chrome://extensions/
+2. Enable "Developer mode"
+3. Click "Load unpacked"
+4. Select rapidtriage-extension folder
 ```
 
-### 3. **Start Browser Server** (in terminal)
+#### 2. **Start Local Server**
 ```bash
-npx @yarlis/rapidtriage-server@latest
+# Using npm (recommended)
+npx @yarlisai/rapidtriage-server
+
+# Or clone and run
+git clone https://github.com/YarlisAISolutions/rapidtriageME.git
+cd rapidtriageME
+./run.sh test
 ```
 
-### Important Notes:
-- **Two servers needed**:
-  - `rapidtriage-server` - Local Node.js middleware for gathering logs
-  - `rapidtriage-mcp` - MCP server for IDE integration
-- **Configuration**: See [IDE_CONFIGURATION.md](./IDE_CONFIGURATION.md) for your specific IDE
-- **Chrome DevTools**: Open DevTools and navigate to the RapidTriage panel
+#### 3. **Configure IDE**
+```bash
+# Add to your IDE's MCP configuration
+npx @yarlisai/rapidtriage-mcp
+```
 
-### Troubleshooting:
-- Quit and restart Chrome completely (not just the window)
-- Restart the rapidtriage-server
-- Ensure only ONE Chrome DevTools panel is open
-- Check that both servers are running
+### Option 2: Cloud/Remote Usage
+
+```json
+// Add to Claude/Cursor MCP config
+{
+  "mcpServers": {
+    "rapidtriage": {
+      "type": "sse",
+      "url": "https://rapidtriage.me/sse",
+      "headers": {
+        "Authorization": "Bearer KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8"
+      }
+    }
+  }
+}
+```
+
+### ✅ Verification
+
+1. **Check Server Status**:
+   ```bash
+   curl http://localhost:3025/health  # Local
+   curl https://rapidtriage.me/health # Production
+   ```
+
+2. **Test MCP Connection**:
+   ```bash
+   curl -X POST https://rapidtriage.me/sse \
+     -H "Authorization: Bearer KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8" \
+     -H "Content-Type: application/json" \
+     -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
+   ```
+
+3. **Browser DevTools**:
+   - Open Chrome DevTools (F12)
+   - Navigate to "RapidTriage" panel
+   - Should show "Connected" status
 
 ## 🔄 MCP Transport Modes
 
@@ -109,9 +161,9 @@ The **stdio transport** is the primary mode for local IDE integrations. The MCP 
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlis/rapidtriage-mcp"],
+      "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "BROWSER_TOOLS_HOST": "localhost"
       }
     }
@@ -129,7 +181,7 @@ The **stdio transport** is the primary mode for local IDE integrations. The MCP 
       "args": ["/path/to/rapidtriage-mcp/dist/mcp-server.js"],
       "env": {
         "NODE_ENV": "development",
-        "BROWSER_TOOLS_PORT": "1421"
+        "BROWSER_TOOLS_PORT": "3025"
       }
     }
   }
@@ -142,9 +194,9 @@ The **stdio transport** is the primary mode for local IDE integrations. The MCP 
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlis/rapidtriage-mcp"],
+      "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "DEBUG": "true"
       }
     }
@@ -156,8 +208,8 @@ The **stdio transport** is the primary mode for local IDE integrations. The MCP 
 
 1. **Start the browser server** (required for browser communication):
 ```bash
-npx @yarlis/rapidtriage-server
-# Server starts on port 1421 by default
+npx @yarlisai/rapidtriage-server
+# Server starts on port 3025 by default
 ```
 
 2. **Configure your IDE** with the above configuration
@@ -195,7 +247,7 @@ cursor .
       "args": ["/opt/rapidtriage/mcp-server.js"],
       "cwd": "/opt/rapidtriage",
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "LOG_LEVEL": "debug"
       }
     }
@@ -433,14 +485,14 @@ const transport = new SseServerTransport({
 #### Example 1: Local Development with stdio
 ```bash
 # Terminal 1: Start browser server
-npx @yarlis/rapidtriage-server
+npx @yarlisai/rapidtriage-server
 
 # Terminal 2: Your IDE automatically starts MCP server
 # Just open your project in Cursor/VS Code/etc.
 
 # The flow:
 # 1. IDE launches MCP server as subprocess
-# 2. MCP server connects to browser server on port 1421
+# 2. MCP server connects to browser server on port 3025
 # 3. Browser extension connects to browser server
 # 4. You can now use browser tools in your IDE
 ```
@@ -467,8 +519,8 @@ curl -X POST https://rapidtriage.me/mcp \
   "mcpServers": {
     "rapidtriage-local": {
       "command": "npx",
-      "args": ["@yarlis/rapidtriage-mcp"],
-      "env": { "BROWSER_TOOLS_PORT": "1421" }
+      "args": ["@yarlisai/rapidtriage-mcp"],
+      "env": { "BROWSER_TOOLS_PORT": "3025" }
     },
     "rapidtriage-cloud": {
       "transport": "http",
@@ -593,13 +645,13 @@ See [IDE_CONFIGURATION.md](./IDE_CONFIGURATION.md) for detailed setup instructio
 
 ### NPM Global Installation
 ```bash
-npm install -g @yarlis/rapidtriage-mcp @yarlis/rapidtriage-server
+npm install -g @yarlisai/rapidtriage-mcp @yarlisai/rapidtriage-server
 ```
 
 ### Docker Installation
 ```bash
 docker pull /:latest
-docker run -p 1421:1421 /
+docker run -p 3025:3025 /
 ```
 
 ### From Source
@@ -613,7 +665,7 @@ npm run build
 ## 🚀 Deployment
 
 ### Local Development
-1. Start the server: `npx @yarlis/rapidtriage-server`
+1. Start the server: `npx @yarlisai/rapidtriage-server`
 2. Configure your IDE (see [IDE_CONFIGURATION.md](./IDE_CONFIGURATION.md))
 3. Install Chrome extension
 4. Open Chrome DevTools → RapidTriage panel
@@ -655,6 +707,15 @@ npm test
 ```bash
 ./publish-packages.sh
 ```
+
+### Claude Conversations
+  # Use production server
+  claude-code chat "Using rapidtriage, take a screenshot of example.com"
+  claude-code chat "Using rapidtriage, get console errors from github.com"
+  claude-code chat "Using rapidtriage, run a Lighthouse audit on google.com"
+
+  # Use local server (when running locally)
+  claude-code chat "Using rapidtriage-local, inspect the main heading on wikipedia.org"
 
 ## 📄 License
 

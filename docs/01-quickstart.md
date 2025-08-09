@@ -34,7 +34,7 @@ npx @yarlis/rapidtriage-server@latest
 
 You should see:
 ```
-🚀 RapidTriage Server running on port 1421
+🚀 RapidTriage Server running on port 3025
 ✅ Ready for connections
 ```
 
@@ -102,8 +102,8 @@ In your AI assistant, try these commands:
 
 ### Server Connection Failed
 ```bash
-# Check if port 1421 is in use
-lsof -i :1421
+# Check if port 3025 is in use
+lsof -i :3025
 
 # Kill existing process if needed
 kill -9 <PID>

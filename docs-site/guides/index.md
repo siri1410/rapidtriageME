@@ -370,7 +370,7 @@ If you encounter issues while following these guides:
 1. **Check Prerequisites**
    - Ensure RapidTriageME is properly installed
    - Verify browser extension is loaded
-   - Confirm server is running on port 1421
+   - Confirm server is running on port 3025
 
 2. **Review Configuration**
    - Double-check IDE settings

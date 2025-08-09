@@ -16,7 +16,7 @@ All components have been successfully deployed and are operational.
 
 ### 🔧 Configuration
 
-- **Server Port**: `1421` (Changed from 3025)
+- **Server Port**: `3025` (Changed from 3025)
 - **Environment**: Production
 - **Version**: 1.0.0
 - **Region**: Global (Cloudflare Edge)
@@ -38,10 +38,10 @@ All components have been successfully deployed and are operational.
 3. **Chrome Extension** ✅
    - Ready for installation
    - Auto-discovery enabled
-   - Port 1421 configured
+   - Port 3025 configured
 
 4. **Local Services** ✅
-   - Browser Connector: Port 1421
+   - Browser Connector: Port 3025
    - MCP Server: Ready for AI integration
 
 ### 🚀 Quick Access Commands

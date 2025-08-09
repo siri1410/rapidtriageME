@@ -2,9 +2,9 @@
 
 > **High-performance browser debugging server with Lighthouse integration**
 
-[![npm version](https://img.shields.io/npm/v/@yarlis/rapidtriage-server.svg)](https://www.npmjs.com/package/@yarlis/rapidtriage-server)
+[![npm version](https://img.shields.io/npm/v/@yarlisai/rapidtriage-server.svg)](https://www.npmjs.com/package/@yarlisai/rapidtriage-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v/@yarlis/rapidtriage-server.svg)](https://nodejs.org)
+[![Node.js Version](https://img.shields.io/node/v/@yarlisai/rapidtriage-server.svg)](https://nodejs.org)
 
 ## 📋 Table of Contents
 
@@ -73,17 +73,17 @@ RapidTriage Server is a powerful Node.js middleware that bridges Chrome extensio
 
 ```bash
 # Start the server with npx (no installation needed)
-npx @yarlis/rapidtriage-server@latest
+npx @yarlisai/rapidtriage-server@latest
 
-# Server will start on port 1421
-# 🚀 RapidTriage Server running on http://localhost:1421
+# Server will start on port 3025
+# 🚀 RapidTriage Server running on http://localhost:3025
 ```
 
 ### Verify Installation
 
 ```bash
 # Check server health
-curl http://localhost:1421/health
+curl http://localhost:3025/health
 
 # Response:
 # {"status":"ok","version":"1.0.0","uptime":123}
@@ -95,17 +95,17 @@ curl http://localhost:1421/health
 
 ```bash
 # Run without installation
-npx @yarlis/rapidtriage-server@latest
+npx @yarlisai/rapidtriage-server@latest
 
 # Run with custom port
-PORT=3000 npx @yarlis/rapidtriage-server@latest
+PORT=3000 npx @yarlisai/rapidtriage-server@latest
 ```
 
 ### Global Installation
 
 ```bash
 # Install globally
-npm install -g @yarlis/rapidtriage-server
+npm install -g @yarlisai/rapidtriage-server
 
 # Run from anywhere
 rapidtriage-server
@@ -132,15 +132,15 @@ npm start
 
 ```dockerfile
 FROM node:18-alpine
-RUN npm install -g @yarlis/rapidtriage-server
-EXPOSE 1421
+RUN npm install -g @yarlisai/rapidtriage-server
+EXPOSE 3025
 CMD ["rapidtriage-server"]
 ```
 
 ```bash
 # Build and run
 docker build -t rapidtriage-server .
-docker run -p 1421:1421 rapidtriage-server
+docker run -p 3025:3025 rapidtriage-server
 ```
 
 ## ⚙️ Configuration
@@ -149,7 +149,7 @@ docker run -p 1421:1421 rapidtriage-server
 
 ```bash
 # Server Configuration
-PORT=1421                         # Server port (default: 1421)
+PORT=3025                         # Server port (default: 3025)
 HOST=0.0.0.0                      # Server host (default: localhost)
 NODE_ENV=production               # Environment (development/production)
 
@@ -178,7 +178,7 @@ Create a `.rapidtriagerc` file:
 ```json
 {
   "server": {
-    "port": 1421,
+    "port": 3025,
     "host": "localhost",
     "cors": {
       "origin": "*",
@@ -225,7 +225,7 @@ Response:
 ### WebSocket Connection
 
 ```javascript
-const ws = new WebSocket('ws://localhost:1421');
+const ws = new WebSocket('ws://localhost:3025');
 
 ws.on('open', () => {
   ws.send(JSON.stringify({
@@ -381,7 +381,7 @@ server {
     ssl_certificate_key /etc/ssl/private/rapidtriage.key;
 
     location / {
-        proxy_pass http://localhost:1421;
+        proxy_pass http://localhost:3025;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -398,14 +398,14 @@ server {
 #### Port Already in Use
 
 ```bash
-# Find process using port 1421
-lsof -i :1421
+# Find process using port 3025
+lsof -i :3025
 
 # Kill the process
 kill -9 <PID>
 
 # Or use a different port
-PORT=3000 npx @yarlis/rapidtriage-server@latest
+PORT=3000 npx @yarlisai/rapidtriage-server@latest
 ```
 
 #### Chrome Not Found
@@ -435,10 +435,10 @@ export CHROME_PATH="/usr/bin/google-chrome"
 
 ```bash
 # Enable debug logging
-DEBUG=* npx @yarlis/rapidtriage-server@latest
+DEBUG=* npx @yarlisai/rapidtriage-server@latest
 
 # Or set log level
-LOG_LEVEL=debug npx @yarlis/rapidtriage-server@latest
+LOG_LEVEL=debug npx @yarlisai/rapidtriage-server@latest
 ```
 
 ### Logs Location

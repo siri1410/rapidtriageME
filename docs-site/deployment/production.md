@@ -60,7 +60,7 @@ CLOUDFLARE_ACCOUNT_ID=ed3fbe9532564f2f06ae772da689431a
 CLOUDFLARE_ZONE_ID=dba0cbc72f7f0b7727fbdb6f4d6d7901
 
 # Application Settings
-BROWSER_TOOLS_PORT=1421
+BROWSER_TOOLS_PORT=3025
 NODE_ENV=production
 
 # Worker Settings
@@ -76,7 +76,7 @@ source ./scripts/01-load-env.sh
 
 # Verify environment is loaded
 echo $BROWSER_TOOLS_PORT
-# Output: 1421
+# Output: 3025
 ```
 
 ## Step 3: Cloudflare Authentication
@@ -128,7 +128,7 @@ route = "rapidtriage.me/*"
 zone_id = "dba0cbc72f7f0b7727fbdb6f4d6d7901"
 
 [env.production.vars]
-BROWSER_TOOLS_PORT = "1421"
+BROWSER_TOOLS_PORT = "3025"
 ENVIRONMENT = "production"
 
 [env.staging]
@@ -136,7 +136,7 @@ name = "rapidtriage-staging"
 workers_dev = true
 
 [env.staging.vars]
-BROWSER_TOOLS_PORT = "1421"
+BROWSER_TOOLS_PORT = "3025"
 ENVIRONMENT = "staging"
 ```
 
@@ -149,24 +149,24 @@ ENVIRONMENT = "staging"
 ./scripts/02-test-local.sh
 
 # This runs:
-# npm run dev -- --port 1421
+# npm run dev -- --port 3025
 
 # Output:
 # ⛅️ wrangler 3.97.1
 # ⎔ Starting local server...
-# [wrangler:inf] Ready on http://localhost:1421
+# [wrangler:inf] Ready on http://localhost:3025
 ```
 
 ### 5.2 Test Health Endpoint
 
 ```bash
 # In a new terminal, test the health endpoint
-curl http://localhost:1421/health
+curl http://localhost:3025/health
 
 # Expected response:
 {
   "status": "healthy",
-  "serverPort": 1421,
+  "serverPort": 3025,
   "version": "1.0.0",
   "timestamp": "2025-08-07T23:45:00.000Z"
 }
@@ -286,7 +286,7 @@ curl https://rapidtriage.me/health
 # Response:
 {
   "status": "healthy",
-  "serverPort": 1421,
+  "serverPort": 3025,
   "environment": "production",
   "version": "1.0.0"
 }
@@ -498,7 +498,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/pur
 ## Success Indicators
 
 ✅ **All checks passed:**
-- [ ] Local server runs on port 1421
+- [ ] Local server runs on port 3025
 - [ ] Staging deployment accessible
 - [ ] Production deployment live at rapidtriage.me
 - [ ] Health endpoint returns 200 OK

@@ -1,0 +1,580 @@
+{
+  "info": {
+    "name": "RapidTriageME API Collection",
+    "description": "Complete test collection for RapidTriageME platform including MCP protocol and API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://rapidtriage.me",
+      "type": "string"
+    },
+    {
+      "key": "backend_url",
+      "value": "https://rapidtriage-backend-u72y6ntcwa-uc.a.run.app",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "Worker Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Backend Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend_url}}/health",
+              "host": ["{{backend_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MCP Protocol (SSE Endpoint)",
+      "item": [
+        {
+          "name": "List Available Tools",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/list\",\n  \"params\": {},\n  \"id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Capture Screenshot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_capture_screenshot\",\n    \"arguments\": {\n      \"fullPage\": true,\n      \"format\": \"png\",\n      \"quality\": 90\n    }\n  },\n  \"id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Get Console Logs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_get_console_logs\",\n    \"arguments\": {\n      \"level\": \"all\",\n      \"limit\": 100\n    }\n  },\n  \"id\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Get Network Logs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_get_network_logs\",\n    \"arguments\": {\n      \"limit\": 50,\n      \"filter\": {\n        \"method\": \"GET\"\n      }\n    }\n  },\n  \"id\": 4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Run Lighthouse Audit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_run_lighthouse_audit\",\n    \"arguments\": {\n      \"categories\": [\"performance\", \"accessibility\", \"seo\", \"best-practices\"],\n      \"device\": \"desktop\"\n    }\n  },\n  \"id\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Navigate Browser",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_browser_navigate\",\n    \"arguments\": {\n      \"url\": \"https://example.com\",\n      \"waitForLoad\": true,\n      \"timeout\": 30000\n    }\n  },\n  \"id\": 6\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Execute JavaScript",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_execute_javascript\",\n    \"arguments\": {\n      \"code\": \"return { title: document.title, url: window.location.href, timestamp: Date.now() }\",\n      \"timeout\": 5000\n    }\n  },\n  \"id\": 7\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Inspect Element",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_inspect_element\",\n    \"arguments\": {\n      \"selector\": \"body\",\n      \"includeStyles\": true,\n      \"includeAttributes\": true\n    }\n  },\n  \"id\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Generate Triage Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"remote_generate_triage_report\",\n    \"arguments\": {\n      \"includeScreenshot\": true,\n      \"includeLogs\": true,\n      \"includeNetworkAnalysis\": true,\n      \"includePerformanceAudit\": true\n    }\n  },\n  \"id\": 9\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Endpoints",
+      "item": [
+        {
+          "name": "API Screenshot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://example.com\",\n  \"fullPage\": true,\n  \"format\": \"png\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/screenshot",
+              "host": ["{{base_url}}"],
+              "path": ["api", "screenshot"]
+            }
+          }
+        },
+        {
+          "name": "API Console Logs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": \"all\",\n  \"limit\": 100\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/console-logs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "console-logs"]
+            }
+          }
+        },
+        {
+          "name": "API Network Logs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"limit\": 50,\n  \"filter\": {\n    \"method\": \"GET\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/network-logs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "network-logs"]
+            }
+          }
+        },
+        {
+          "name": "API Lighthouse",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categories\": [\"performance\", \"accessibility\"],\n  \"device\": \"desktop\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/lighthouse",
+              "host": ["{{base_url}}"],
+              "path": ["api", "lighthouse"]
+            }
+          }
+        },
+        {
+          "name": "API Execute JS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"return document.title\",\n  \"timeout\": 5000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/execute-js",
+              "host": ["{{base_url}}"],
+              "path": ["api", "execute-js"]
+            }
+          }
+        },
+        {
+          "name": "API Inspect Element",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selector\": \"#main\",\n  \"includeStyles\": true,\n  \"includeAttributes\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/inspect-element",
+              "host": ["{{base_url}}"],
+              "path": ["api", "inspect-element"]
+            }
+          }
+        },
+        {
+          "name": "API Navigate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://example.com\",\n  \"waitForLoad\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/navigate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "navigate"]
+            }
+          }
+        },
+        {
+          "name": "API Triage Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"includeScreenshot\": true,\n  \"includeLogs\": true,\n  \"includeNetworkAnalysis\": true,\n  \"includePerformanceAudit\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/triage-report",
+              "host": ["{{base_url}}"],
+              "path": ["api", "triage-report"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Security Tests",
+      "item": [
+        {
+          "name": "Test CORS Preflight",
+          "request": {
+            "method": "OPTIONS",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://localhost:3000"
+              },
+              {
+                "key": "Access-Control-Request-Method",
+                "value": "POST"
+              },
+              {
+                "key": "Access-Control-Request-Headers",
+                "value": "content-type,authorization"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Test Invalid Auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid-token-12345"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"tools/list\",\n  \"params\": {},\n  \"id\": 999\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        },
+        {
+          "name": "Test Unknown Method",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"unknown/method\",\n  \"params\": {},\n  \"id\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sse",
+              "host": ["{{base_url}}"],
+              "path": ["sse"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

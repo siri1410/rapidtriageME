@@ -1,69 +1,24 @@
 {
-  "name": "@yarlis/rapidtriage-server",
+  "name": "rapidtriage-browser-backend",
   "version": "1.0.0",
-  "description": "YarlisAISolutions RapidTriage Server - Comprehensive browser debugging and triage server with Lighthouse audits",
-  "type": "module",
-  "main": "dist/browser-connector.js",
-  "bin": {
-    "rapidtriage-server": "./dist/browser-connector.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/YarlisAISolutions/rapidtriageME.git"
-  },
-  "homepage": "https://rapidtriage.me",
-  "bugs": {
-    "url": "https://github.com/YarlisAISolutions/rapidtriageME/issues"
-  },
+  "description": "Browser automation backend for RapidTriageME",
+  "main": "server.js",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && node dist/browser-connector.js",
-    "test": "echo \"No tests yet\"",
-    "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build && npm test"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "docker:build": "docker build -t rapidtriage-backend .",
+    "docker:run": "docker run -p 3025:3025 rapidtriage-backend"
   },
-  "keywords": [
-    "browser",
-    "debugging",
-    "triage",
-    "logging",
-    "screenshots",
-    "chrome",
-    "extension",
-    "yarlis",
-    "rapidtriage",
-    "lighthouse",
-    "puppeteer",
-    "performance",
-    "accessibility",
-    "seo"
-  ],
-  "author": "YarlisAISolutions",
-  "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.4.1",
-    "body-parser": "^1.20.3",
     "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "lighthouse": "^11.6.0",
-    "llm-cost": "^1.0.5",
-    "node-fetch": "^2.7.0",
-    "puppeteer-core": "^22.4.1",
-    "ws": "^8.18.0"
-  },
-  "optionalDependencies": {
-    "chrome-launcher": "^1.1.2"
+    "express": "^4.18.2",
+    "puppeteer": "^21.0.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.14",
-    "@types/body-parser": "^1.19.5",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.13.1",
-    "@types/node-fetch": "^2.6.11",
-    "@types/puppeteer-core": "^7.0.4",
-    "typescript": "^5.7.3"
+    "@types/ws": "^8.18.1",
+    "nodemon": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -15,7 +15,7 @@ graph TB
     end
     
     subgraph "Local Environment"
-        BS[Browser Connector<br/>:1421]
+        BS[Browser Connector<br/>:3025]
         MCP[MCP Server]
         CE -->|WebSocket| BS
         BS <-->|HTTP/REST| MCP
@@ -55,7 +55,7 @@ graph TB
 
 ### 2. Browser Connector Server
 - **Purpose**: Local server that aggregates and processes browser data
-- **Port**: `1421` (configurable)
+- **Port**: `3025` (configurable)
 - **Technology**: Node.js, Express, WebSocket
 - **Key Features**:
   - WebSocket connection management
@@ -181,7 +181,7 @@ sequenceDiagram
 
 ### Local Development
 ```
-Browser → Extension → Connector(:1421) → MCP → AI
+Browser → Extension → Connector(:3025) → MCP → AI
 ```
 
 ### Production (Edge)

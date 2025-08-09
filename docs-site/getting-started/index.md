@@ -21,7 +21,7 @@ RapidTriageME consists of three main components working together:
 
 ```mermaid
 graph LR
-    A[Chrome Extension] -->|WebSocket| B[Browser Connector<br/>Port 1421]
+    A[Chrome Extension] -->|WebSocket| B[Browser Connector<br/>Port 3025]
     B -->|HTTP/REST| C[MCP Server]
     C -->|MCP Protocol| D[AI Assistant<br/>Claude/Cursor/etc.]
     
@@ -32,7 +32,7 @@ graph LR
 ```
 
 1. **Chrome Extension** - Captures browser data through DevTools API
-2. **Browser Connector** - Local server (port 1421) that processes and aggregates data
+2. **Browser Connector** - Local server (port 3025) that processes and aggregates data
 3. **MCP Server** - Bridges data to AI assistants using Model Context Protocol
 
 ## Installation Overview
@@ -94,7 +94,7 @@ Getting started requires three simple steps:
 
 ### Local Development
 ```
-Browser → Extension → Connector(:1421) → MCP → AI
+Browser → Extension → Connector(:3025) → MCP → AI
 ```
 - **Ultra-low latency** - Direct local communication
 - **Complete privacy** - All data stays on your machine
@@ -169,7 +169,7 @@ Before you begin, ensure you have:
 After installation, verify everything is working:
 
 - [ ] Chrome extension loaded and visible in extensions page
-- [ ] Browser connector server running on port 1421
+- [ ] Browser connector server running on port 3025
 - [ ] DevTools panel shows "RapidTriage" tab
 - [ ] AI assistant recognizes MCP tools
 - [ ] Screenshot capture works

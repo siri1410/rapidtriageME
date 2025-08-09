@@ -87,7 +87,7 @@ CLOUDFLARE_ACCOUNT_ID=your_account_id
 CLOUDFLARE_API_TOKEN=your_api_token  # Optional with OAuth
 
 # Application Settings
-BROWSER_TOOLS_PORT=1421
+BROWSER_TOOLS_PORT=3025
 NODE_ENV=production
 ```
 
@@ -190,7 +190,7 @@ compatibility_date = "2024-12-12"
 [env.production]
 name = "rapidtriage-production"
 route = "rapidtriage.me/*"
-vars = { BROWSER_TOOLS_PORT = "1421" }
+vars = { BROWSER_TOOLS_PORT = "3025" }
 ```
 
 ### package.json Scripts
@@ -223,7 +223,7 @@ vars = { BROWSER_TOOLS_PORT = "1421" }
 !!! error "Port Already in Use"
     ```bash
     # Find process using port
-    lsof -i :1421
+    lsof -i :3025
     
     # Kill process
     kill -9 <PID>

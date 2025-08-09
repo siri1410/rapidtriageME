@@ -1,8 +1,25 @@
-# 🚀 RapidTriageME Deployment Guide
+# 🚀 RapidTriageME Complete Deployment Guide
 
 ## YarlisAISolutions Browser Triage & Debugging Platform
 
-This guide will walk you through deploying RapidTriageME to Cloudflare Workers with your custom domain `rapidtriage.me`.
+This comprehensive guide covers all deployment scenarios for RapidTriageME, including local testing, staging, and production deployment to Cloudflare Workers with custom domain configuration.
+
+## 📋 Deployment Status
+
+### ✅ Completed
+- Cloudflare Worker deployed at https://rapidtriage.me
+- Authentication configured with secure tokens
+- MCP protocol implemented with JSON-RPC support
+- Health monitoring operational
+- CORS properly configured
+- SSL/TLS certificates active
+- Documentation site at GitHub Pages
+
+### 🚀 Production Services
+- **Main Service**: https://rapidtriage.me
+- **Backend API**: https://rapidtriage-backend-u72y6ntcwa-uc.a.run.app
+- **Health Check**: https://rapidtriage.me/health
+- **SSE/MCP Endpoint**: https://rapidtriage.me/sse
 
 ## Prerequisites
 
@@ -64,31 +81,52 @@ binding = "SESSIONS"
 id = "" # Will be created during deployment
 ```
 
-## Step 5: Run the Deployment Script
+## Step 5: Deployment Options
+
+### Option A: Automated Deployment Script
 
 ```bash
-# Make the script executable
-chmod +x deploy.sh
+# Production deployment with all features
+./deploy-production.sh
 
-# Run the deployment
-./deploy.sh
+# Or use enhanced version with additional checks
+./deploy-production-enhanced.sh
 ```
 
-**Note**: The deployment script will:
-- Install dependencies for both packages
-- Build the TypeScript code
-- Create KV namespaces
-- Deploy to Cloudflare Workers
+**The script will:**
+1. Check prerequisites (Node.js 18+, npm, wrangler)
+2. Install all dependencies
+3. Build TypeScript code
+4. Create KV namespaces
+5. Set authentication secrets
+6. Deploy to production
+7. Verify deployment
+8. Test all endpoints
 
-The script will:
-1. Install dependencies
-2. Build the project
-3. Create KV namespace for sessions
-4. Set up authentication secrets
-5. Deploy to staging first
-6. Optionally deploy to production
+### Option B: Numbered Scripts (Step-by-Step)
 
-## Step 6: Manual Deployment (Alternative)
+```bash
+# Follow numbered scripts in order
+./scripts/01-install-deps.sh
+./scripts/02-test-local.sh
+./scripts/03-oauth-login.sh
+./scripts/04-deploy-staging.sh
+./scripts/05-add-dns-records.sh
+./scripts/06-deploy-production.sh
+./scripts/07-health-check.sh
+./scripts/08-run-tests.sh
+```
+
+### Option C: Quick Deployment
+
+```bash
+# Use run.sh for different environments
+./run.sh test    # Local testing
+./run.sh staging # Deploy to staging
+./run.sh prod    # Deploy to production
+```
+
+## Step 6: Manual Deployment (Complete Control)
 
 **Important**: Use the new folder structure
 
@@ -261,11 +299,118 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 4. **Regular Updates**: Keep dependencies updated
 5. **Monitor Metrics**: Check /metrics endpoint regularly
 
+## Production Deployment Plan
+
+### Backend Server Deployment
+
+#### Google Cloud Run (Recommended)
+```bash
+# Build and deploy backend
+cd rapidtriage-server
+docker build -t gcr.io/rapidtriage/backend:latest .
+docker push gcr.io/rapidtriage/backend:latest
+
+gcloud run deploy rapidtriage-backend \
+  --image gcr.io/rapidtriage/backend:latest \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --memory 2Gi \
+  --cpu 2 \
+  --timeout 60
+```
+
+#### Alternative: Railway/Render
+```bash
+# Railway
+railway login && railway init && railway up
+
+# Render
+render deploy # Uses render.yaml
+```
+
+### Environment Variables
+
+```bash
+# Production secrets
+wrangler secret put AUTH_TOKEN --env production
+wrangler secret put JWT_SECRET --env production
+wrangler secret put BACKEND_URL --env production
+```
+
+## Testing & Validation
+
+### Complete Test Suite
+
+```bash
+# Run all tests
+npm test
+
+# Test production endpoints
+curl https://rapidtriage.me/health
+
+# Test MCP protocol
+curl -X POST https://rapidtriage.me/sse \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'
+```
+
+### Browser Test Page
+
+Open `test-rapidtriage-enhanced.html` in your browser to test all features:
+- Screenshot capture
+- Console log retrieval
+- Network monitoring
+- Lighthouse audits
+- Element inspection
+- JavaScript execution
+
+## API Test Collections
+
+### Bruno Collection
+Import `RapidTriageME-Bruno-Collection.bru` into Bruno API client
+
+### Postman Collection
+Import `RapidTriageME-Postman-Collection.json` into Postman
+
+## Performance Metrics
+
+- **Cloudflare Worker**: ~47ms response time
+- **Backend API**: ~96ms response time
+- **Rate Limiting**: 100 requests/minute
+- **KV TTL**: Minimum 60 seconds
+
+## Recent Updates & Fixes
+
+### Fixed Issues
+1. **KV Storage TTL**: Updated to ensure minimum 60-second TTL
+2. **MCP Handler**: Added JSON-RPC support to SSE endpoint
+3. **Worker Config**: Changed from minimal to full worker implementation
+4. **TypeScript**: Fixed type annotations and compilation errors
+
+### Production Commands Used
+
+```bash
+# Deploy production worker
+wrangler deploy --env production
+
+# Set secrets
+echo "KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8" | wrangler secret put AUTH_TOKEN --env production
+echo "RBnmNVfUQ3yW9TZpdGroczLqq5sA9YSzdBXJYinKIth1uTPerBllvzHyCXq502pq" | wrangler secret put JWT_SECRET --env production
+
+# View logs
+wrangler tail --env production
+
+# Check deployment
+curl -I https://rapidtriage.me/health
+```
+
 ## Support
 
 For issues or questions:
 - GitHub: [YarlisAISolutions/rapidtriageME](https://github.com/YarlisAISolutions/rapidtriageME)
-- Documentation: [rapidtriage.me/docs](https://rapidtriage.me/docs)
+- Documentation: [https://yarlisaisolutions.github.io/rapidtriageME/](https://yarlisaisolutions.github.io/rapidtriageME/)
 
 ---
 

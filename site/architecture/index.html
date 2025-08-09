@@ -421,7 +421,7 @@
     end
 
     subgraph "Local Environment"
-        BC[Browser Connector&lt;br/&gt;Port 1421]
+        BC[Browser Connector&lt;br/&gt;Port 3025]
         MCP[MCP Server]
         CE --&gt;|WebSocket| BC
         BC &lt;--&gt;|HTTP/REST| MCP
@@ -615,7 +615,7 @@
     subgraph "Developer Machine"
         BROWSER[Chrome Browser]
         EXT[Extension]
-        SERVER[Local Server :1421]
+        SERVER[Local Server :3025]
         MCP[MCP Server]
         IDE[IDE/Editor]
 
@@ -639,7 +639,7 @@
     subgraph "Local Environment"
         BROWSER[Chrome Browser]
         EXT[Extension]
-        SERVER[Local Server :1421]
+        SERVER[Local Server :3025]
 
         BROWSER &lt;--&gt; EXT
         EXT &lt;--&gt; SERVER

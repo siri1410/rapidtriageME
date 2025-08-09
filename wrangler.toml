@@ -2,7 +2,7 @@
 # Configuration for rapidtriage.me domain
 
 name = "rapidtriage-me"
-main = "src/worker-minimal.ts"
+main = "src/worker.ts"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
@@ -20,7 +20,7 @@ routes = [
 # Environment variables for production
 [vars]
 ENVIRONMENT = "production"
-BROWSER_TOOLS_PORT = "1421"
+BROWSER_TOOLS_PORT = "3025"
 SSE_ENDPOINT = "/sse"
 HEALTH_ENDPOINT = "/health"
 METRICS_ENDPOINT = "/metrics"
@@ -56,7 +56,7 @@ workers_dev = true
 
 [env.staging.vars]
 ENVIRONMENT = "staging"
-BROWSER_TOOLS_PORT = "1421"
+BROWSER_TOOLS_PORT = "3025"
 SSE_ENDPOINT = "/sse"
 HEALTH_ENDPOINT = "/health"
 METRICS_ENDPOINT = "/metrics"
@@ -85,7 +85,7 @@ zone_id = "dba0cbc72f7f0b7727fbdb6f4d6d7901"
 
 [env.production.vars]
 ENVIRONMENT = "production"
-BROWSER_TOOLS_PORT = "1421"
+BROWSER_TOOLS_PORT = "3025"
 SSE_ENDPOINT = "/sse"
 HEALTH_ENDPOINT = "/health"
 METRICS_ENDPOINT = "/metrics"

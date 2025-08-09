@@ -21,7 +21,7 @@ graph TB
     end
     
     subgraph "Core Services"
-        BC[Browser Connector<br/>Port 1421]
+        BC[Browser Connector<br/>Port 3025]
         CW[Cloudflare Worker<br/>Global Edge]
     end
     
@@ -76,7 +76,7 @@ graph TB
 
 ```bash
 # Get server identity
-curl http://localhost:1421/.identity
+curl http://localhost:3025/.identity
 
 # Response:
 {
@@ -108,7 +108,7 @@ curl http://localhost:1421/.identity
 ### WebSocket Connection
 
 ```javascript
-const ws = new WebSocket('ws://localhost:1421/ws');
+const ws = new WebSocket('ws://localhost:3025/ws');
 
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
@@ -120,8 +120,8 @@ ws.onmessage = (event) => {
 
 ### Local Development
 ```
-Base URL: http://localhost:1421
-WebSocket: ws://localhost:1421/ws
+Base URL: http://localhost:3025
+WebSocket: ws://localhost:3025/ws
 ```
 
 ### Production (Cloudflare)
@@ -135,7 +135,7 @@ SSE Stream: https://rapidtriage.me/mcp/sse
 ### Local (No Auth Required)
 ```bash
 # Direct access to localhost
-curl http://localhost:1421/console-logs
+curl http://localhost:3025/console-logs
 ```
 
 ### Production (JWT Required)
@@ -240,7 +240,7 @@ Retrieve console logs with filtering
 
 **Example:**
 ```bash
-curl "http://localhost:1421/console-logs?level=error&limit=50"
+curl "http://localhost:3025/console-logs?level=error&limit=50"
 ```
 
 **Response:**
@@ -278,7 +278,7 @@ Retrieve network requests with filtering
 
 **Example:**
 ```bash
-curl "http://localhost:1421/network-requests?failed=true&limit=25"
+curl "http://localhost:3025/network-requests?failed=true&limit=25"
 ```
 
 **Response:**
@@ -547,7 +547,7 @@ npm install @yarlisai/rapidtriage-client
 import { RapidTriageClient } from '@yarlisai/rapidtriage-client';
 
 const client = new RapidTriageClient({
-  baseUrl: 'http://localhost:1421',
+  baseUrl: 'http://localhost:3025',
   apiKey: 'your-api-key' // for production
 });
 
@@ -567,7 +567,7 @@ pip install rapidtriage-python
 from rapidtriage import RapidTriageClient
 
 client = RapidTriageClient(
-    base_url='http://localhost:1421',
+    base_url='http://localhost:3025',
     api_key='your-api-key'  # for production
 )
 
@@ -588,7 +588,7 @@ screenshot = client.capture_screenshot(full_page=True)
 ### Version Headers
 ```bash
 curl -H "Accept: application/vnd.rapidtriage.v1+json" \
-     http://localhost:1421/console-logs
+     http://localhost:3025/console-logs
 ```
 
 ### Deprecation Policy

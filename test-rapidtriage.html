@@ -97,7 +97,7 @@
         <div class="status">
             <div class="status-card">
                 <h3>🌐 Wrangler Server</h3>
-                <p>Port: <strong>1421</strong></p>
+                <p>Port: <strong>3025</strong></p>
                 <p>Status: <span class="connection-status" id="wrangler-status"></span><span id="wrangler-text">Checking...</span></p>
             </div>
             
@@ -136,7 +136,7 @@
         async function checkServers() {
             // Check Wrangler server
             try {
-                const wranglerResponse = await fetch('http://localhost:1421/health');
+                const wranglerResponse = await fetch('http://localhost:3025/health');
                 const wranglerData = await wranglerResponse.json();
                 document.getElementById('wrangler-status').className = 'connection-status connected';
                 document.getElementById('wrangler-text').textContent = 'Connected (' + wranglerData.service + ')';

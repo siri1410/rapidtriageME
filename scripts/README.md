@@ -33,7 +33,7 @@ source ./scripts/01-load-env.sh
 - Installs dependencies for all components
 - Builds TypeScript code
 - Verifies build output
-- Tests server startup on port 1421
+- Tests server startup on port 3025
 - Validates Chrome extension files
 
 ---
@@ -147,7 +147,7 @@ JWT_SECRET=your_jwt_secret
 ```
 
 ### Port Configuration
-- Default server port: **1421**
+- Default server port: **3025**
 - Configurable via `BROWSER_TOOLS_PORT` environment variable
 
 ### Domain Configuration
@@ -210,5 +210,5 @@ scripts/
 ---
 
 Last Updated: August 2025  
-Port Configuration: 1421  
+Port Configuration: 3025  
 Platform: RapidTriageME - YarlisAISolutions

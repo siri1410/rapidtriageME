@@ -78,8 +78,8 @@ npm start
 ### Environment Variables
 
 ```bash
-# Port for browser connector (default: 1421)
-BROWSER_TOOLS_PORT=1421
+# Port for browser connector (default: 3025)
+BROWSER_TOOLS_PORT=3025
 
 # Enable debug logging
 DEBUG=true
@@ -104,7 +104,7 @@ Add to `~/.cursor/mcp_settings.json`:
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "DEBUG": "false"
       }
     }
@@ -125,7 +125,7 @@ Add to Claude configuration:
           "command": "npx",
           "args": ["@yarlisai/rapidtriage-mcp"],
           "env": {
-            "BROWSER_TOOLS_PORT": "1421"
+            "BROWSER_TOOLS_PORT": "3025"
           }
         }
       }
@@ -141,7 +141,7 @@ Add to Claude configuration:
           "command": "npx",
           "args": ["@yarlisai/rapidtriage-mcp"],
           "env": {
-            "BROWSER_TOOLS_PORT": "1421"
+            "BROWSER_TOOLS_PORT": "3025"
           }
         }
       }
@@ -159,7 +159,7 @@ Add to Claude configuration:
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421"
+        "BROWSER_TOOLS_PORT": "3025"
       }
     }
   }
@@ -217,7 +217,7 @@ DEBUG=mcp:* npx @yarlisai/rapidtriage-mcp
 import { MCPServer } from '@yarlisai/rapidtriage-mcp';
 
 const server = new MCPServer({
-  port: 1421,
+  port: 3025,
   debug: true,
   timeout: 30000
 });
@@ -359,7 +359,7 @@ The server implements the standard MCP protocol over stdio:
 
 ```bash
 # Check if port is in use
-lsof -i :1421
+lsof -i :3025
 
 # Use different port
 BROWSER_TOOLS_PORT=3030 npx @yarlisai/rapidtriage-mcp
@@ -431,7 +431,7 @@ npx @modelcontextprotocol/inspector npx @yarlisai/rapidtriage-mcp
 ### Permissions
 
 The MCP server requires:
-- Network access to localhost:1421
+- Network access to localhost:3025
 - File system access for configuration
 - Process spawning for browser operations
 

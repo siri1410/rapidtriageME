@@ -69,7 +69,7 @@ npm run build:all
 npm run test:setup
 
 # This starts:
-# - Browser connector on port 1421
+# - Browser connector on port 3025
 # - Test web server on port 3000
 # - Chrome with test extension loaded
 ```
@@ -315,11 +315,11 @@ describe('Full Stack Integration', () => {
   beforeAll(async () => {
     // Start browser connector server
     browserConnector = spawn('npm', ['run', 'start:browser-connector'], {
-      env: { ...process.env, PORT: '1421' }
+      env: { ...process.env, PORT: '3025' }
     });
     
     // Wait for server to be ready
-    await waitForServer('http://localhost:1421');
+    await waitForServer('http://localhost:3025');
     
     // Start MCP server
     mcpServer = spawn('npm', ['run', 'start:mcp-server']);
@@ -350,7 +350,7 @@ describe('Full Stack Integration', () => {
     await client.send('Runtime.enable');
     
     // Verify WebSocket connection
-    const ws = new WebSocket('ws://localhost:1421/ws');
+    const ws = new WebSocket('ws://localhost:3025/ws');
     await new Promise(resolve => ws.on('open', resolve));
     
     expect(ws.readyState).toBe(WebSocket.OPEN);
@@ -369,7 +369,7 @@ describe('Full Stack Integration', () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Retrieve logs via API
-    const response = await fetch('http://localhost:1421/console-logs');
+    const response = await fetch('http://localhost:3025/console-logs');
     const data = await response.json();
     
     expect(data.logs).toHaveLength(1);
@@ -381,7 +381,7 @@ describe('Full Stack Integration', () => {
     await page.goto('http://localhost:3000/test-page.html');
     
     // Request screenshot via API
-    const response = await fetch('http://localhost:1421/capture-screenshot', {
+    const response = await fetch('http://localhost:3025/capture-screenshot', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ options: { fullPage: true } })
@@ -407,7 +407,7 @@ import { test, expect, chromium } from '@playwright/test';
 test.describe('RapidTriageME User Workflows', () => {
   test.beforeAll(async () => {
     // Ensure servers are running
-    await fetch('http://localhost:1421/.identity');
+    await fetch('http://localhost:3025/.identity');
   });
   
   test('complete debugging workflow', async () => {
@@ -428,7 +428,7 @@ test.describe('RapidTriageME User Workflows', () => {
     await page.waitForTimeout(2000);
     
     // Simulate AI assistant requesting screenshot
-    const screenshotResponse = await fetch('http://localhost:1421/capture-screenshot', {
+    const screenshotResponse = await fetch('http://localhost:3025/capture-screenshot', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ options: { fullPage: true } })
@@ -437,7 +437,7 @@ test.describe('RapidTriageME User Workflows', () => {
     expect(screenshotResponse.status).toBe(200);
     
     // Simulate AI assistant requesting console logs
-    const logsResponse = await fetch('http://localhost:1421/console-logs');
+    const logsResponse = await fetch('http://localhost:3025/console-logs');
     const logsData = await logsResponse.json();
     
     expect(logsResponse.status).toBe(200);
@@ -447,7 +447,7 @@ test.describe('RapidTriageME User Workflows', () => {
   });
   
   test('Lighthouse audit workflow', async () => {
-    const auditResponse = await fetch('http://localhost:1421/lighthouse-audit', {
+    const auditResponse = await fetch('http://localhost:3025/lighthouse-audit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -484,7 +484,7 @@ npm run dev
 # F12 -> RapidTriage tab -> Should show "Connected"
 
 # 5. Test screenshot capture
-curl -X POST http://localhost:1421/capture-screenshot \
+curl -X POST http://localhost:3025/capture-screenshot \
   -H "Content-Type: application/json" \
   -d '{"options": {"fullPage": true}}'
 
@@ -500,7 +500,7 @@ console.warn('Test warning message');
 throw new Error('Test exception');
 
 // Then check logs:
-// curl http://localhost:1421/console-logs
+// curl http://localhost:3025/console-logs
 ```
 
 ### Test Scenario 3: Network Monitoring
@@ -512,7 +512,7 @@ fetch('/api/404').catch(e => console.log('Error:', e));
 fetch('/api/slow').then(r => console.log('Slow request completed'));
 
 // Check network logs:
-// curl http://localhost:1421/network-requests
+// curl http://localhost:3025/network-requests
 ```
 
 ## Performance Testing
@@ -525,7 +525,7 @@ import autocannon from 'autocannon';
 
 async function runLoadTest() {
   const result = await autocannon({
-    url: 'http://localhost:1421',
+    url: 'http://localhost:3025',
     connections: 50,
     duration: 30, // 30 seconds
     requests: [
@@ -569,7 +569,7 @@ test('should not leak memory during extended operation', async () => {
   
   // Simulate extended operation
   for (let i = 0; i < 1000; i++) {
-    await fetch('http://localhost:1421/console-logs');
+    await fetch('http://localhost:3025/console-logs');
     await new Promise(resolve => setTimeout(resolve, 10));
   }
   
@@ -610,7 +610,7 @@ export class ServerTestHelper {
   
   static async createTestData(count = 10): Promise<void> {
     for (let i = 0; i < count; i++) {
-      await fetch('http://localhost:1421/test/add-log', {
+      await fetch('http://localhost:3025/test/add-log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -788,7 +788,7 @@ export const mockNetworkRequests = [
 ```bash
 # Test server port conflicts
 echo "Checking for port conflicts..."
-lsof -i :1421 | grep LISTEN
+lsof -i :3025 | grep LISTEN
 
 # Clear test data
 echo "Cleaning test environment..."

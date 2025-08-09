@@ -74,7 +74,7 @@ This guide covers the most frequently encountered issues when using RapidTriageM
 
 ??? bug "Server fails to start"
     **Symptoms:**
-    - "Port 1421 already in use" error
+    - "Port 3025 already in use" error
     - "Permission denied" on port binding
     - Process exits immediately after start
     
@@ -82,8 +82,8 @@ This guide covers the most frequently encountered issues when using RapidTriageM
     1. **Check Port Availability**:
         ```bash
         # Check if port is in use
-        lsof -i :1421
-        netstat -an | grep 1421
+        lsof -i :3025
+        netstat -an | grep 3025
         
         # Kill existing process if needed
         pkill -f rapidtriage-server
@@ -121,13 +121,13 @@ This guide covers the most frequently encountered issues when using RapidTriageM
         ps aux | grep rapidtriage
         
         # Test server response
-        curl http://localhost:1421/.identity
+        curl http://localhost:3025/.identity
         ```
     
     2. **Check Firewall Settings**:
         ```bash
         # Linux: Check iptables
-        sudo iptables -L | grep 1421
+        sudo iptables -L | grep 3025
         
         # Mac: Check firewall
         sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
@@ -139,7 +139,7 @@ This guide covers the most frequently encountered issues when using RapidTriageM
     3. **Test Network Connectivity**:
         ```bash
         # Test local connection
-        telnet localhost 1421
+        telnet localhost 3025
         
         # Check routing
         netstat -rn | grep 127.0.0.1
@@ -721,12 +721,12 @@ rapidtriage-server --debug --log-level=debug
 
 ```bash
 # Test all components
-curl http://localhost:1421/health
-curl http://localhost:1421/.identity  
+curl http://localhost:3025/health
+curl http://localhost:3025/.identity  
 curl http://localhost:1422/health    # MCP server
 
 # Check component status
-curl http://localhost:1421/status | jq .
+curl http://localhost:3025/status | jq .
 ```
 
 ### Log File Locations
@@ -828,7 +828,7 @@ ps aux | grep rapidtriage
 echo
 
 echo "Port Status:"
-netstat -an | grep -E "(1421|1422)"
+netstat -an | grep -E "(3025|1422)"
 echo
 
 echo "Recent Logs:"

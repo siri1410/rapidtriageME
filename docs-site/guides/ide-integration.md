@@ -37,7 +37,7 @@ rapidtriage-mcp --version
 ### 2. Start the Browser Server
 
 ```bash
-# Start the server (runs on port 1421 by default)
+# Start the server (runs on port 3025 by default)
 npx @rapidtriage/browser-server
 
 # Or with custom port
@@ -59,7 +59,7 @@ Edit `~/.cursor/mcp_settings.json`:
       "command": "npx",
       "args": ["@rapidtriage/mcp-server"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "BROWSER_TOOLS_HOST": "localhost",
         "NODE_ENV": "development",
         "LOG_LEVEL": "info"
@@ -89,7 +89,7 @@ Edit `~/.cursor/mcp_settings.json`:
       "command": "npx",
       "args": ["@rapidtriage/mcp-server"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "DEBUG": "true"
       }
     }
@@ -115,7 +115,7 @@ Edit `~/.continue/config.json`:
       "command": "npx",
       "args": ["@rapidtriage/mcp-server"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421"
+        "BROWSER_TOOLS_PORT": "3025"
       }
     }
   },
@@ -144,7 +144,7 @@ Edit `~/.windsurf/config.json`:
       "command": "npx",
       "args": ["@rapidtriage/mcp-server"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "AUTO_RECONNECT": "true"
       }
     }
@@ -164,7 +164,7 @@ command: npx
 args:
   - "@rapidtriage/mcp-server"
 environment:
-  BROWSER_TOOLS_PORT: "1421"
+  BROWSER_TOOLS_PORT: "3025"
   BROWSER_TOOLS_HOST: "localhost"
 ```
 
@@ -179,7 +179,7 @@ Edit `~/.config/zed/settings.json`:
       "command": "npx",
       "args": ["@rapidtriage/mcp-server"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "NODE_ENV": "development"
       }
     }
@@ -199,7 +199,7 @@ All IDEs support these environment variables:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `BROWSER_TOOLS_PORT` | Server port | `1421` |
+| `BROWSER_TOOLS_PORT` | Server port | `3025` |
 | `BROWSER_TOOLS_HOST` | Server host | `localhost` |
 | `LOG_LEVEL` | Logging level | `info` |
 | `DEBUG` | Enable debug mode | `false` |
@@ -214,7 +214,7 @@ Create `~/.rapidtriage/config.json`:
 ```json
 {
   "server": {
-    "port": 1421,
+    "port": 3025,
     "host": "localhost",
     "ssl": false
   },
@@ -249,7 +249,7 @@ npx @rapidtriage/mcp-server --test
 
 # Expected output:
 # ✅ MCP Server running
-# ✅ Connected to browser server at localhost:1421
+# ✅ Connected to browser server at localhost:3025
 # ✅ Available tools: 15
 ```
 
@@ -286,7 +286,7 @@ The AI should:
 
 ```bash
 # Check if server is running
-lsof -i :1421
+lsof -i :3025
 
 # Check Node.js path
 which node
@@ -373,13 +373,13 @@ Share configuration via Git:
 # .rapidtriage/team-config.json
 {
   "server": {
-    "port": "${TEAM_PORT:-1421}",
+    "port": "${TEAM_PORT:-3025}",
     "host": "${TEAM_HOST:-localhost}"
   }
 }
 
 # .env.example
-TEAM_PORT=1421
+TEAM_PORT=3025
 TEAM_HOST=localhost
 ```
 

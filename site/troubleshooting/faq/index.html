@@ -1761,7 +1761,7 @@
 </div>
 <div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pull and run container</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">1421</span>:1421<span class="w"> </span>yarlisai/rapidtriage:latest
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">3025</span>:3025<span class="w"> </span>yarlisai/rapidtriage:latest
 </span></code></pre></div>
 </div>
 </div>
@@ -1806,8 +1806,8 @@
 <ol>
 <li><strong>Through AI Assistant</strong>: "Take a screenshot of the current page"</li>
 <li><strong>DevTools Panel</strong>: Click "Capture Screenshot" button</li>
-<li><strong>API Call</strong>: <code>POST http://localhost:1421/capture-screenshot</code></li>
-<li><strong>Command Line</strong>: <code>curl -X POST http://localhost:1421/capture-screenshot</code></li>
+<li><strong>API Call</strong>: <code>POST http://localhost:3025/capture-screenshot</code></li>
+<li><strong>Command Line</strong>: <code>curl -X POST http://localhost:3025/capture-screenshot</code></li>
 </ol>
 <h3 id="can-i-access-browser-data-remotely">Can I access browser data remotely?<a class="headerlink" href="#can-i-access-browser-data-remotely" title="Permanent link">&para;</a></h3>
 <p>Yes! RapidTriageME supports remote access through Cloudflare Workers:</p>
@@ -1822,7 +1822,7 @@
 <ol>
 <li><strong>Through AI</strong>: "Clear all logs and data"</li>
 <li><strong>DevTools Panel</strong>: Click "Wipe Logs" button  </li>
-<li><strong>API Call</strong>: <code>POST http://localhost:1421/wipelogs</code></li>
+<li><strong>API Call</strong>: <code>POST http://localhost:3025/wipelogs</code></li>
 <li><strong>Restart Server</strong>: Data clears on server restart</li>
 </ol>
 <h3 id="whats-the-difference-between-local-and-remote-access">What's the difference between local and remote access?<a class="headerlink" href="#whats-the-difference-between-local-and-remote-access" title="Permanent link">&para;</a></h3>
@@ -1868,7 +1868,7 @@
 <ol>
 <li>
 <p><strong>Check server status</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>http://localhost:1421/.identity
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>http://localhost:3025/.identity
 </span></code></pre></div></p>
 </li>
 <li>
@@ -1878,7 +1878,7 @@
 </li>
 <li>
 <p><strong>Check port availability</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:1421
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:3025
 </span></code></pre></div></p>
 </li>
 <li>
@@ -2082,13 +2082,13 @@
 <h3 id="how-do-i-set-up-load-balancing">How do I set up load balancing?<a class="headerlink" href="#how-do-i-set-up-load-balancing" title="Permanent link">&para;</a></h3>
 <p>For high-traffic scenarios, use multiple browser connector instances:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Start multiple instances on different ports</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>rapidtriage-server<span class="w"> </span>--port<span class="w"> </span><span class="m">1421</span><span class="w"> </span><span class="p">&amp;</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>rapidtriage-server<span class="w"> </span>--port<span class="w"> </span><span class="m">3025</span><span class="w"> </span><span class="p">&amp;</span>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>rapidtriage-server<span class="w"> </span>--port<span class="w"> </span><span class="m">1422</span><span class="w"> </span><span class="p">&amp;</span>
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>rapidtriage-server<span class="w"> </span>--port<span class="w"> </span><span class="m">1423</span><span class="w"> </span><span class="p">&amp;</span>
 </span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
 </span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1"># Configure load balancer (nginx example)</span>
 </span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>upstream<span class="w"> </span>rapidtriage<span class="w"> </span><span class="o">{</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">    </span>server<span class="w"> </span>localhost:1421<span class="p">;</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">    </span>server<span class="w"> </span>localhost:3025<span class="p">;</span>
 </span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">    </span>server<span class="w"> </span>localhost:1422<span class="p">;</span>
 </span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">    </span>server<span class="w"> </span>localhost:1423<span class="p">;</span>
 </span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="o">}</span>
@@ -2099,11 +2099,11 @@
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>docker<span class="w"> </span>pull<span class="w"> </span>yarlisai/rapidtriage:latest
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
 </span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Run with port mapping</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">1421</span>:1421<span class="w"> </span>-p<span class="w"> </span><span class="m">1422</span>:1422<span class="w"> </span>yarlisai/rapidtriage:latest
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">3025</span>:3025<span class="w"> </span>-p<span class="w"> </span><span class="m">1422</span>:1422<span class="w"> </span>yarlisai/rapidtriage:latest
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
 </span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Or build from source</span>
 </span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>rapidtriage<span class="w"> </span>.
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">1421</span>:1421<span class="w"> </span>rapidtriage
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">3025</span>:3025<span class="w"> </span>rapidtriage
 </span></code></pre></div>
 <h3 id="how-do-i-monitor-multiple-browser-instances">How do I monitor multiple browser instances?<a class="headerlink" href="#how-do-i-monitor-multiple-browser-instances" title="Permanent link">&para;</a></h3>
 <p>Configure unique session IDs for each browser:</p>
@@ -2116,13 +2116,13 @@
 <h3 id="can-i-export-debugging-data">Can I export debugging data?<a class="headerlink" href="#can-i-export-debugging-data" title="Permanent link">&para;</a></h3>
 <p>Yes, multiple export options available:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Export as JSON</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>http://localhost:1421/export/json<span class="w"> </span>&gt;<span class="w"> </span>debug-session.json
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>http://localhost:3025/export/json<span class="w"> </span>&gt;<span class="w"> </span>debug-session.json
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
 </span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Export as CSV</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>curl<span class="w"> </span>http://localhost:1421/export/csv<span class="w"> </span>&gt;<span class="w"> </span>debug-session.csv
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>curl<span class="w"> </span>http://localhost:3025/export/csv<span class="w"> </span>&gt;<span class="w"> </span>debug-session.csv
 </span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
 </span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># Export logs only</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>curl<span class="w"> </span>http://localhost:1421/console-logs<span class="w"> </span>&gt;<span class="w"> </span>console-logs.json
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>curl<span class="w"> </span>http://localhost:3025/console-logs<span class="w"> </span>&gt;<span class="w"> </span>console-logs.json
 </span></code></pre></div>
 <h2 id="deployment-production">Deployment &amp; Production<a class="headerlink" href="#deployment-production" title="Permanent link">&para;</a></h2>
 <h3 id="how-do-i-deploy-to-production">How do I deploy to production?<a class="headerlink" href="#how-do-i-deploy-to-production" title="Permanent link">&para;</a></h3>
@@ -2145,19 +2145,19 @@
 <h3 id="how-do-i-monitor-system-health">How do I monitor system health?<a class="headerlink" href="#how-do-i-monitor-system-health" title="Permanent link">&para;</a></h3>
 <p>Use built-in health monitoring:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Health check endpoints</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>curl<span class="w"> </span>http://localhost:1421/health
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>curl<span class="w"> </span>http://localhost:3025/health
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>curl<span class="w"> </span>http://localhost:1422/health
 </span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># System metrics</span>
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>curl<span class="w"> </span>http://localhost:1421/metrics
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>curl<span class="w"> </span>http://localhost:3025/metrics
 </span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>
 </span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="c1"># Performance monitoring</span>
-</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>curl<span class="w"> </span>http://localhost:1421/stats
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>curl<span class="w"> </span>http://localhost:3025/stats
 </span></code></pre></div>
 <p>Set up alerts for production use:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Example monitoring script</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="c1">#!/bin/bash</span>
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">HEALTH</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:1421/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.status&#39;</span><span class="k">)</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">HEALTH</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:3025/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.status&#39;</span><span class="k">)</span>
 </span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HEALTH</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 </span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;RapidTriage health check failed!&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;Alert&quot;</span><span class="w"> </span>admin@company.com
 </span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="k">fi</span>

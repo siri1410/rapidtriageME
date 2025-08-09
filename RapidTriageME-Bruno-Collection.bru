@@ -1,0 +1,702 @@
+meta {
+  name: RapidTriageME API Collection
+  type: collection
+  version: 1.0.0
+}
+
+auth {
+  mode: bearer
+  bearer {
+    token: KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8
+  }
+}
+
+vars {
+  base_url: https://rapidtriage.me
+  backend_url: https://rapidtriage-backend-u72y6ntcwa-uc.a.run.app
+  auth_token: KskHe6x5tkS4CgLrwfeZvbXsSDmZUjR8
+}
+
+---
+
+meta {
+  name: 1. Health Check - Worker
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/health
+}
+
+tests {
+  test("Status is 200", () => {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Response contains status", () => {
+    expect(res.body.status).to.equal("healthy");
+  });
+}
+
+---
+
+meta {
+  name: 2. Health Check - Backend
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{backend_url}}/health
+}
+
+tests {
+  test("Backend is healthy", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.status).to.equal("healthy");
+  });
+}
+
+---
+
+meta {
+  name: 3. MCP - List Tools
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/list",
+    "params": {},
+    "id": 1
+  }
+}
+
+tests {
+  test("Returns tool list", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.result.tools).to.be.an("array");
+    expect(res.body.result.tools.length).to.equal(8);
+  });
+}
+
+---
+
+meta {
+  name: 4. MCP - Capture Screenshot
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_capture_screenshot",
+      "arguments": {
+        "fullPage": true,
+        "format": "png",
+        "quality": 90
+      }
+    },
+    "id": 2
+  }
+}
+
+tests {
+  test("Screenshot captured", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.result.content).to.be.an("array");
+  });
+}
+
+---
+
+meta {
+  name: 5. MCP - Get Console Logs
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_get_console_logs",
+      "arguments": {
+        "level": "all",
+        "limit": 100
+      }
+    },
+    "id": 3
+  }
+}
+
+tests {
+  test("Console logs retrieved", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.result.content).to.be.an("array");
+  });
+}
+
+---
+
+meta {
+  name: 6. MCP - Get Network Logs
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_get_network_logs",
+      "arguments": {
+        "limit": 50,
+        "filter": {
+          "method": "GET"
+        }
+      }
+    },
+    "id": 4
+  }
+}
+
+---
+
+meta {
+  name: 7. MCP - Run Lighthouse Audit
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_run_lighthouse_audit",
+      "arguments": {
+        "categories": ["performance", "accessibility", "seo", "best-practices"],
+        "device": "desktop"
+      }
+    },
+    "id": 5
+  }
+}
+
+---
+
+meta {
+  name: 8. MCP - Navigate Browser
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_browser_navigate",
+      "arguments": {
+        "url": "https://example.com",
+        "waitForLoad": true,
+        "timeout": 30000
+      }
+    },
+    "id": 6
+  }
+}
+
+---
+
+meta {
+  name: 9. MCP - Execute JavaScript
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_execute_javascript",
+      "arguments": {
+        "code": "return { title: document.title, url: window.location.href, timestamp: Date.now() }",
+        "timeout": 5000
+      }
+    },
+    "id": 7
+  }
+}
+
+---
+
+meta {
+  name: 10. MCP - Inspect Element
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_inspect_element",
+      "arguments": {
+        "selector": "body",
+        "includeStyles": true,
+        "includeAttributes": true
+      }
+    },
+    "id": 8
+  }
+}
+
+---
+
+meta {
+  name: 11. MCP - Generate Triage Report
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "remote_generate_triage_report",
+      "arguments": {
+        "includeScreenshot": true,
+        "includeLogs": true,
+        "includeNetworkAnalysis": true,
+        "includePerformanceAudit": true
+      }
+    },
+    "id": 9
+  }
+}
+
+---
+
+meta {
+  name: 12. API - Screenshot
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{base_url}}/api/screenshot
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "url": "https://example.com",
+    "fullPage": true,
+    "format": "png"
+  }
+}
+
+---
+
+meta {
+  name: 13. API - Console Logs
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{base_url}}/api/console-logs
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "level": "all",
+    "limit": 100
+  }
+}
+
+---
+
+meta {
+  name: 14. API - Network Logs
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{base_url}}/api/network-logs
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "limit": 50,
+    "filter": {
+      "method": "GET"
+    }
+  }
+}
+
+---
+
+meta {
+  name: 15. API - Lighthouse Audit
+  type: http
+  seq: 15
+}
+
+post {
+  url: {{base_url}}/api/lighthouse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "categories": ["performance", "accessibility"],
+    "device": "desktop"
+  }
+}
+
+---
+
+meta {
+  name: 16. API - Execute JavaScript
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{base_url}}/api/execute-js
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "code": "return document.title",
+    "timeout": 5000
+  }
+}
+
+---
+
+meta {
+  name: 17. API - Inspect Element
+  type: http
+  seq: 17
+}
+
+post {
+  url: {{base_url}}/api/inspect-element
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "selector": "#main",
+    "includeStyles": true,
+    "includeAttributes": true
+  }
+}
+
+---
+
+meta {
+  name: 18. API - Navigate
+  type: http
+  seq: 18
+}
+
+post {
+  url: {{base_url}}/api/navigate
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "url": "https://example.com",
+    "waitForLoad": true
+  }
+}
+
+---
+
+meta {
+  name: 19. API - Triage Report
+  type: http
+  seq: 19
+}
+
+post {
+  url: {{base_url}}/api/triage-report
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "includeScreenshot": true,
+    "includeLogs": true,
+    "includeNetworkAnalysis": true,
+    "includePerformanceAudit": true
+  }
+}
+
+---
+
+meta {
+  name: 20. Test CORS Preflight
+  type: http
+  seq: 20
+}
+
+options {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Origin: http://localhost:3000
+  Access-Control-Request-Method: POST
+  Access-Control-Request-Headers: content-type,authorization
+}
+
+tests {
+  test("CORS headers present", () => {
+    expect(res.status).to.equal(204);
+    expect(res.headers["access-control-allow-origin"]).to.exist;
+    expect(res.headers["access-control-allow-methods"]).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 21. Test Rate Limiting
+  type: http
+  seq: 21
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/list",
+    "params": {},
+    "id": 100
+  }
+}
+
+script:pre-request {
+  // This would run 100 times to test rate limiting
+  // In Bruno, you'd need to run this request multiple times manually
+  // or use a script to iterate
+}
+
+tests {
+  test("Rate limiting works", () => {
+    // After 100 requests, should get 429
+    if (iteration > 100) {
+      expect(res.status).to.equal(429);
+    } else {
+      expect(res.status).to.equal(200);
+    }
+  });
+}
+
+---
+
+meta {
+  name: 22. Test Invalid Auth
+  type: http
+  seq: 22
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer invalid-token-12345
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "tools/list",
+    "params": {},
+    "id": 999
+  }
+}
+
+tests {
+  test("Unauthorized with invalid token", () => {
+    expect(res.status).to.equal(401);
+  });
+}
+
+---
+
+meta {
+  name: 23. Test Unknown Method
+  type: http
+  seq: 23
+}
+
+post {
+  url: {{base_url}}/sse
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{auth_token}}
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "unknown/method",
+    "params": {},
+    "id": 1000
+  }
+}
+
+tests {
+  test("Returns error for unknown method", () => {
+    expect(res.status).to.equal(500);
+    expect(res.body.error).to.exist;
+  });
+}

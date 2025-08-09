@@ -833,7 +833,7 @@
 </span><span id="__span-3-3"><a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="nv">CLOUDFLARE_ZONE_ID</span><span class="o">=</span>dba0cbc72f7f0b7727fbdb6f4d6d7901
 </span><span id="__span-3-4"><a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>
 </span><span id="__span-3-5"><a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="c1"># Application Settings</span>
-</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="nv">BROWSER_TOOLS_PORT</span><span class="o">=</span><span class="m">1421</span>
+</span><span id="__span-3-6"><a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="nv">BROWSER_TOOLS_PORT</span><span class="o">=</span><span class="m">3025</span>
 </span><span id="__span-3-7"><a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="nv">NODE_ENV</span><span class="o">=</span>production
 </span><span id="__span-3-8"><a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>
 </span><span id="__span-3-9"><a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="c1"># Worker Settings</span>
@@ -846,7 +846,7 @@
 </span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>
 </span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="c1"># Verify environment is loaded</span>
 </span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$BROWSER_TOOLS_PORT</span>
-</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="c1"># Output: 1421</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="c1"># Output: 3025</span>
 </span></code></pre></div>
 <h2 id="step-3-cloudflare-authentication">Step 3: Cloudflare Authentication<a class="headerlink" href="#step-3-cloudflare-authentication" title="Permanent link">¶</a></h2>
 <h3 id="31-oauth-login-recommended">3.1 OAuth Login (Recommended)<a class="headerlink" href="#31-oauth-login-recommended" title="Permanent link">¶</a></h3>
@@ -884,7 +884,7 @@
 </span><span id="__span-8-10"><a href="#__codelineno-8-10" id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="n">zone_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dba0cbc72f7f0b7727fbdb6f4d6d7901"</span>
 </span><span id="__span-8-11"><a href="#__codelineno-8-11" id="__codelineno-8-11" name="__codelineno-8-11"></a>
 </span><span id="__span-8-12"><a href="#__codelineno-8-12" id="__codelineno-8-12" name="__codelineno-8-12"></a><span class="k">[env.production.vars]</span>
-</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="n">BROWSER_TOOLS_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1421"</span>
+</span><span id="__span-8-13"><a href="#__codelineno-8-13" id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="n">BROWSER_TOOLS_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3025"</span>
 </span><span id="__span-8-14"><a href="#__codelineno-8-14" id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="n">ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
 </span><span id="__span-8-15"><a href="#__codelineno-8-15" id="__codelineno-8-15" name="__codelineno-8-15"></a>
 </span><span id="__span-8-16"><a href="#__codelineno-8-16" id="__codelineno-8-16" name="__codelineno-8-16"></a><span class="k">[env.staging]</span>
@@ -892,7 +892,7 @@
 </span><span id="__span-8-18"><a href="#__codelineno-8-18" id="__codelineno-8-18" name="__codelineno-8-18"></a><span class="n">workers_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </span><span id="__span-8-19"><a href="#__codelineno-8-19" id="__codelineno-8-19" name="__codelineno-8-19"></a>
 </span><span id="__span-8-20"><a href="#__codelineno-8-20" id="__codelineno-8-20" name="__codelineno-8-20"></a><span class="k">[env.staging.vars]</span>
-</span><span id="__span-8-21"><a href="#__codelineno-8-21" id="__codelineno-8-21" name="__codelineno-8-21"></a><span class="n">BROWSER_TOOLS_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1421"</span>
+</span><span id="__span-8-21"><a href="#__codelineno-8-21" id="__codelineno-8-21" name="__codelineno-8-21"></a><span class="n">BROWSER_TOOLS_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3025"</span>
 </span><span id="__span-8-22"><a href="#__codelineno-8-22" id="__codelineno-8-22" name="__codelineno-8-22"></a><span class="n">ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"staging"</span>
 </span></code></pre></div>
 <h2 id="step-5-local-testing">Step 5: Local Testing<a class="headerlink" href="#step-5-local-testing" title="Permanent link">¶</a></h2>
@@ -901,21 +901,21 @@
 </span><span id="__span-9-2"><a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a>./scripts/02-test-local.sh
 </span><span id="__span-9-3"><a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="c1"># This runs:</span>
-</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="c1"># npm run dev -- --port 1421</span>
+</span><span id="__span-9-5"><a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="c1"># npm run dev -- --port 3025</span>
 </span><span id="__span-9-6"><a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
 </span><span id="__span-9-7"><a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="c1"># Output:</span>
 </span><span id="__span-9-8"><a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="c1"># ⛅️ wrangler 3.97.1</span>
 </span><span id="__span-9-9"><a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="c1"># ⎔ Starting local server...</span>
-</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="c1"># [wrangler:inf] Ready on http://localhost:1421</span>
+</span><span id="__span-9-10"><a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="c1"># [wrangler:inf] Ready on http://localhost:3025</span>
 </span></code></pre></div>
 <h3 id="52-test-health-endpoint">5.2 Test Health Endpoint<a class="headerlink" href="#52-test-health-endpoint" title="Permanent link">¶</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="c1"># In a new terminal, test the health endpoint</span>
-</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>curl<span class="w"> </span>http://localhost:1421/health
+</span><span id="__span-10-2"><a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a>curl<span class="w"> </span>http://localhost:3025/health
 </span><span id="__span-10-3"><a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>
 </span><span id="__span-10-4"><a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="c1"># Expected response:</span>
 </span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="o">{</span>
 </span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="w">  </span><span class="s2">"status"</span>:<span class="w"> </span><span class="s2">"healthy"</span>,
-</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="w">  </span><span class="s2">"serverPort"</span>:<span class="w"> </span><span class="m">1421</span>,
+</span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="w">  </span><span class="s2">"serverPort"</span>:<span class="w"> </span><span class="m">3025</span>,
 </span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="w">  </span><span class="s2">"version"</span>:<span class="w"> </span><span class="s2">"1.0.0"</span>,
 </span><span id="__span-10-9"><a href="#__codelineno-10-9" id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="w">  </span><span class="s2">"timestamp"</span>:<span class="w"> </span><span class="s2">"2025-08-07T23:45:00.000Z"</span>
 </span><span id="__span-10-10"><a href="#__codelineno-10-10" id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="o">}</span>
@@ -1034,7 +1034,7 @@
 </span><span id="__span-17-7"><a href="#__codelineno-17-7" id="__codelineno-17-7" name="__codelineno-17-7"></a><span class="c1"># Response:</span>
 </span><span id="__span-17-8"><a href="#__codelineno-17-8" id="__codelineno-17-8" name="__codelineno-17-8"></a><span class="o">{</span>
 </span><span id="__span-17-9"><a href="#__codelineno-17-9" id="__codelineno-17-9" name="__codelineno-17-9"></a><span class="w">  </span><span class="s2">"status"</span>:<span class="w"> </span><span class="s2">"healthy"</span>,
-</span><span id="__span-17-10"><a href="#__codelineno-17-10" id="__codelineno-17-10" name="__codelineno-17-10"></a><span class="w">  </span><span class="s2">"serverPort"</span>:<span class="w"> </span><span class="m">1421</span>,
+</span><span id="__span-17-10"><a href="#__codelineno-17-10" id="__codelineno-17-10" name="__codelineno-17-10"></a><span class="w">  </span><span class="s2">"serverPort"</span>:<span class="w"> </span><span class="m">3025</span>,
 </span><span id="__span-17-11"><a href="#__codelineno-17-11" id="__codelineno-17-11" name="__codelineno-17-11"></a><span class="w">  </span><span class="s2">"environment"</span>:<span class="w"> </span><span class="s2">"production"</span>,
 </span><span id="__span-17-12"><a href="#__codelineno-17-12" id="__codelineno-17-12" name="__codelineno-17-12"></a><span class="w">  </span><span class="s2">"version"</span>:<span class="w"> </span><span class="s2">"1.0.0"</span>
 </span><span id="__span-17-13"><a href="#__codelineno-17-13" id="__codelineno-17-13" name="__codelineno-17-13"></a><span class="o">}</span>
@@ -1209,7 +1209,7 @@
 </span></code></pre></div>
 <h2 id="success-indicators">Success Indicators<a class="headerlink" href="#success-indicators" title="Permanent link">¶</a></h2>
 <p>✅ <strong>All checks passed:</strong>
-- [ ] Local server runs on port 1421
+- [ ] Local server runs on port 3025
 - [ ] Staging deployment accessible
 - [ ] Production deployment live at rapidtriage.me
 - [ ] Health endpoint returns 200 OK

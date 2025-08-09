@@ -9,9 +9,9 @@ This guide provides a complete testing process for RapidTriageME, including loca
 ### 1. Start Required Services
 
 ```bash
-# Terminal 1: Start Wrangler Dev Server (Port 1421)
+# Terminal 1: Start Wrangler Dev Server (Port 3025)
 cd /Users/yarlis/Downloads/rapidtriageME
-npm run dev -- --port 1421
+npm run dev -- --port 3025
 
 # Terminal 2: Start Browser Connector (Port 1422)
 cd rapidtriage-server
@@ -22,7 +22,7 @@ npm start
 
 ```bash
 # Check Wrangler Server
-curl http://localhost:1421/health
+curl http://localhost:3025/health
 
 # Check Browser Connector
 curl http://localhost:1422/.identity
@@ -51,7 +51,7 @@ npm install -g wrangler
 cp .env.example .env
 
 # Set required variables
-BROWSER_TOOLS_PORT=1421
+BROWSER_TOOLS_PORT=3025
 NODE_ENV=development
 ```
 
@@ -60,13 +60,13 @@ NODE_ENV=development
 #### 2.1 Start Wrangler Server
 
 ```bash
-npm run dev -- --port 1421
+npm run dev -- --port 3025
 ```
 
 **Expected Output:**
 ```
 ⛅️ wrangler 3.114.13
-[wrangler:inf] Ready on http://localhost:1421
+[wrangler:inf] Ready on http://localhost:3025
 ```
 
 #### 2.2 Start Browser Connector
@@ -89,14 +89,14 @@ Available on: http://localhost:1422
 
 | Service | Endpoint | Expected Response |
 |---------|----------|-------------------|
-| **Wrangler** | `http://localhost:1421/health` | `{"status":"healthy","service":"RapidTriageME"}` |
+| **Wrangler** | `http://localhost:3025/health` | `{"status":"healthy","service":"RapidTriageME"}` |
 | **Connector** | `http://localhost:1422/.identity` | `{"port":1422,"name":"rapidtriage-server"}` |
 
 #### 3.2 Test Commands
 
 ```bash
 # Test health endpoints
-curl -s http://localhost:1421/health | jq .
+curl -s http://localhost:3025/health | jq .
 curl -s http://localhost:1422/.identity | jq .
 
 # Test log endpoints
@@ -198,7 +198,7 @@ curl http://localhost:1422/console-errors | jq .
 
 ### ✅ Service Status
 
-- [ ] Wrangler server running on port 1421
+- [ ] Wrangler server running on port 3025
 - [ ] Browser connector running on port 1422
 - [ ] Health endpoints responding
 - [ ] No port conflicts
@@ -276,7 +276,7 @@ curl -X POST http://localhost:1422/wipelogs
 
 1. **Start Services**
    ```bash
-   npm run dev -- --port 1421  # Terminal 1
+   npm run dev -- --port 3025  # Terminal 1
    npm start                    # Terminal 2 (in rapidtriage-server)
    ```
 
@@ -328,12 +328,12 @@ curl -X POST http://localhost:1422/wipelogs
 
 ### Scenario 1: Port Conflict
 
-**Issue:** Port 1421 already in use
+**Issue:** Port 3025 already in use
 
 **Solution:**
 ```bash
 # Find process using port
-lsof -i :1421
+lsof -i :3025
 
 # Kill process
 kill -9 <PID>

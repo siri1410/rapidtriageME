@@ -20,7 +20,7 @@ The AI-first code editor with deep MCP integration.
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -53,7 +53,7 @@ code --install-extension continue.continue
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -79,7 +79,7 @@ The high-performance, multiplayer code editor.
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -105,7 +105,7 @@ code --install-extension saoudrizwan.claude-dev
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -129,7 +129,7 @@ Anthropic's official desktop application.
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -150,7 +150,7 @@ The IDE that writes code with you.
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -176,7 +176,7 @@ With AI Assistant plugin supporting MCP.
       "command": "npx",
       "args": ["@yarlis/rapidtriage-mcp@latest"],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -199,7 +199,7 @@ require('codecompanion').setup({
       command = "npx",
       args = {"@yarlis/rapidtriage-mcp@latest"},
       env = {
-        RAPIDTRIAGE_PORT = "1421"
+        RAPIDTRIAGE_PORT = "3025"
       }
     }
   }
@@ -226,7 +226,7 @@ Lightweight editor with AI capabilities.
         "rapidtriage": {
           "command": ["npx", "@yarlis/rapidtriage-mcp@latest"],
           "env": {
-            "RAPIDTRIAGE_PORT": "1421"
+            "RAPIDTRIAGE_PORT": "3025"
           }
         }
       }
@@ -247,7 +247,7 @@ For any MCP-compatible client or custom integration.
   "command": "npx",
   "args": ["@yarlis/rapidtriage-mcp@latest"],
   "env": {
-    "RAPIDTRIAGE_PORT": "1421",
+    "RAPIDTRIAGE_PORT": "3025",
     "NODE_ENV": "production"
   },
   "capabilities": {
@@ -288,7 +288,7 @@ All IDEs support these environment variables:
 
 ```bash
 # Port Configuration
-RAPIDTRIAGE_PORT=1421           # Server port (default: 1421)
+RAPIDTRIAGE_PORT=3025           # Server port (default: 3025)
 RAPIDTRIAGE_MCP_PORT=3026       # MCP port (default: 3026)
 
 # Feature Flags
@@ -318,7 +318,7 @@ If you've installed globally or have a custom installation:
       "command": "/usr/local/bin/rapidtriage-mcp",
       "args": [],
       "env": {
-        "RAPIDTRIAGE_PORT": "1421"
+        "RAPIDTRIAGE_PORT": "3025"
       }
     }
   }
@@ -368,7 +368,7 @@ For remote MCP server with SSE transport:
 
 ### Connection Issues
 1. Ensure the server is running: `npx @yarlis/rapidtriage-server@latest`
-2. Check port availability: `lsof -i :1421`
+2. Check port availability: `lsof -i :3025`
 3. Verify Chrome extension is installed and enabled
 
 ### IDE Not Detecting MCP

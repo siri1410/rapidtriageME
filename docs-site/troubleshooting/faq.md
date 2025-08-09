@@ -67,7 +67,7 @@ Choose your preferred installation method:
 === "Docker"
     ```bash
     # Pull and run container
-    docker run -p 1421:1421 yarlisai/rapidtriage:latest
+    docker run -p 3025:3025 yarlisai/rapidtriage:latest
     ```
 
 ### How do I load the Chrome extension?
@@ -118,8 +118,8 @@ Multiple ways to capture screenshots:
 
 1. **Through AI Assistant**: "Take a screenshot of the current page"
 2. **DevTools Panel**: Click "Capture Screenshot" button
-3. **API Call**: `POST http://localhost:1421/capture-screenshot`
-4. **Command Line**: `curl -X POST http://localhost:1421/capture-screenshot`
+3. **API Call**: `POST http://localhost:3025/capture-screenshot`
+4. **Command Line**: `curl -X POST http://localhost:3025/capture-screenshot`
 
 ### Can I access browser data remotely?
 
@@ -136,7 +136,7 @@ Several methods to clear data:
 
 1. **Through AI**: "Clear all logs and data"
 2. **DevTools Panel**: Click "Wipe Logs" button  
-3. **API Call**: `POST http://localhost:1421/wipelogs`
+3. **API Call**: `POST http://localhost:3025/wipelogs`
 4. **Restart Server**: Data clears on server restart
 
 ### What's the difference between local and remote access?
@@ -157,7 +157,7 @@ Common solutions:
 
 1. **Check server status**:
    ```bash
-   curl http://localhost:1421/.identity
+   curl http://localhost:3025/.identity
    ```
 
 2. **Verify server is running**:
@@ -167,7 +167,7 @@ Common solutions:
 
 3. **Check port availability**:
    ```bash
-   lsof -i :1421
+   lsof -i :3025
    ```
 
 4. **Restart server**:
@@ -402,13 +402,13 @@ For high-traffic scenarios, use multiple browser connector instances:
 
 ```bash
 # Start multiple instances on different ports
-rapidtriage-server --port 1421 &
+rapidtriage-server --port 3025 &
 rapidtriage-server --port 1422 &
 rapidtriage-server --port 1423 &
 
 # Configure load balancer (nginx example)
 upstream rapidtriage {
-    server localhost:1421;
+    server localhost:3025;
     server localhost:1422;
     server localhost:1423;
 }
@@ -423,11 +423,11 @@ Yes! Docker support is available:
 docker pull yarlisai/rapidtriage:latest
 
 # Run with port mapping
-docker run -p 1421:1421 -p 1422:1422 yarlisai/rapidtriage:latest
+docker run -p 3025:3025 -p 1422:1422 yarlisai/rapidtriage:latest
 
 # Or build from source
 docker build -t rapidtriage .
-docker run -p 1421:1421 rapidtriage
+docker run -p 3025:3025 rapidtriage
 ```
 
 ### How do I monitor multiple browser instances?
@@ -448,13 +448,13 @@ Yes, multiple export options available:
 
 ```bash
 # Export as JSON
-curl http://localhost:1421/export/json > debug-session.json
+curl http://localhost:3025/export/json > debug-session.json
 
 # Export as CSV
-curl http://localhost:1421/export/csv > debug-session.csv
+curl http://localhost:3025/export/csv > debug-session.csv
 
 # Export logs only
-curl http://localhost:1421/console-logs > console-logs.json
+curl http://localhost:3025/console-logs > console-logs.json
 ```
 
 ## Deployment & Production
@@ -490,14 +490,14 @@ Use built-in health monitoring:
 
 ```bash
 # Health check endpoints
-curl http://localhost:1421/health
+curl http://localhost:3025/health
 curl http://localhost:1422/health
 
 # System metrics
-curl http://localhost:1421/metrics
+curl http://localhost:3025/metrics
 
 # Performance monitoring
-curl http://localhost:1421/stats
+curl http://localhost:3025/stats
 ```
 
 Set up alerts for production use:
@@ -505,7 +505,7 @@ Set up alerts for production use:
 ```bash
 # Example monitoring script
 #!/bin/bash
-HEALTH=$(curl -s http://localhost:1421/health | jq -r '.status')
+HEALTH=$(curl -s http://localhost:3025/health | jq -r '.status')
 if [ "$HEALTH" != "healthy" ]; then
     echo "RapidTriage health check failed!" | mail -s "Alert" admin@company.com
 fi

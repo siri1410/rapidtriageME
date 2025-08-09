@@ -423,7 +423,7 @@
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h2>
 <p>RapidTriageME consists of three main components working together:</p>
 <pre class="mermaid"><code>graph LR
-    A[Chrome Extension] --&gt;|WebSocket| B[Browser Connector&lt;br/&gt;Port 1421]
+    A[Chrome Extension] --&gt;|WebSocket| B[Browser Connector&lt;br/&gt;Port 3025]
     B --&gt;|HTTP/REST| C[MCP Server]
     C --&gt;|MCP Protocol| D[AI Assistant&lt;br/&gt;Claude/Cursor/etc.]
 
@@ -433,7 +433,7 @@
     style D fill:#fff3e0</code></pre>
 <ol>
 <li><strong>Chrome Extension</strong> - Captures browser data through DevTools API</li>
-<li><strong>Browser Connector</strong> - Local server (port 1421) that processes and aggregates data</li>
+<li><strong>Browser Connector</strong> - Local server (port 3025) that processes and aggregates data</li>
 <li><strong>MCP Server</strong> - Bridges data to AI assistants using Model Context Protocol</li>
 </ol>
 <h2 id="installation-overview">Installation Overview<a class="headerlink" href="#installation-overview" title="Permanent link">¶</a></h2>
@@ -499,7 +499,7 @@
 </ul>
 <h2 id="architecture-benefits">Architecture Benefits<a class="headerlink" href="#architecture-benefits" title="Permanent link">¶</a></h2>
 <h3 id="local-development">Local Development<a class="headerlink" href="#local-development" title="Permanent link">¶</a></h3>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Browser → Extension → Connector(:1421) → MCP → AI
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Browser → Extension → Connector(:3025) → MCP → AI
 </span></code></pre></div>
 - <strong>Ultra-low latency</strong> - Direct local communication
 - <strong>Complete privacy</strong> - All data stays on your machine
@@ -560,7 +560,7 @@
 <p>After installation, verify everything is working:</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> Chrome extension loaded and visible in extensions page</li>
-<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> Browser connector server running on port 1421</li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> Browser connector server running on port 3025</li>
 <li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> DevTools panel shows "RapidTriage" tab</li>
 <li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> AI assistant recognizes MCP tools</li>
 <li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> Screenshot capture works</li>

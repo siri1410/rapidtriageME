@@ -100,7 +100,7 @@ class BackgroundManager {
    * Implements exponential backoff retry logic
    */
   async initializeWebSocket() {
-    const url = `ws://localhost:1421/ws`;
+    const url = `ws://localhost:3025/ws`;
     
     try {
       this.websocket = new WebSocket(url);
@@ -909,7 +909,7 @@ class RapidTriageMCPServer {
   constructor() {
     this.browserConnectorUrl = process.env.BROWSER_TOOLS_PORT 
       ? `http://localhost:${process.env.BROWSER_TOOLS_PORT}` 
-      : 'http://localhost:1421';
+      : 'http://localhost:3025';
     
     this.httpClient = new HttpClient({
       timeout: 10000,

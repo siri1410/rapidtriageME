@@ -27,7 +27,7 @@ Comprehensive testing of both **stdio** (standard input/output) and **HTTP Strea
 
 #### Key Findings:
 1. The stdio mode uses `@modelcontextprotocol/sdk` with StdioServerTransport
-2. Server attempts to discover browser tools on ports 1421-1431
+2. Server attempts to discover browser tools on ports 3025-1431
 3. Requires a separate browser tools server for actual functionality
 4. Tools include: screenshot, console logs, network logs, lighthouse audit
 
@@ -140,7 +140,7 @@ Comprehensive testing of both **stdio** (standard input/output) and **HTTP Strea
 ### STDIO Mode:
 ```bash
 # Environment Variables
-export BROWSER_TOOLS_PORT=1421
+export BROWSER_TOOLS_PORT=3025
 export BROWSER_TOOLS_HOST=127.0.0.1
 
 # Start server

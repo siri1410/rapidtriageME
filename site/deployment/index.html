@@ -515,7 +515,7 @@
 </span><span id="__span-4-3"><a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="nv">CLOUDFLARE_API_TOKEN</span><span class="o">=</span>your_api_token<span class="w">  </span><span class="c1"># Optional with OAuth</span>
 </span><span id="__span-4-4"><a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>
 </span><span id="__span-4-5"><a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="c1"># Application Settings</span>
-</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="nv">BROWSER_TOOLS_PORT</span><span class="o">=</span><span class="m">1421</span>
+</span><span id="__span-4-6"><a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="nv">BROWSER_TOOLS_PORT</span><span class="o">=</span><span class="m">3025</span>
 </span><span id="__span-4-7"><a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="nv">NODE_ENV</span><span class="o">=</span>production
 </span></code></pre></div>
 <h3 id="4-authenticate-with-cloudflare">4. Authenticate with Cloudflare<a class="headerlink" href="#4-authenticate-with-cloudflare" title="Permanent link">¶</a></h3>
@@ -594,7 +594,7 @@
 </span><span id="__span-10-5"><a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="k">[env.production]</span>
 </span><span id="__span-10-6"><a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"rapidtriage-production"</span>
 </span><span id="__span-10-7"><a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="n">route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"rapidtriage.me/*"</span>
-</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="n">vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">BROWSER_TOOLS_PORT</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"1421"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-10-8"><a href="#__codelineno-10-8" id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="n">vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">BROWSER_TOOLS_PORT</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"3025"</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="packagejson-scripts">package.json Scripts<a class="headerlink" href="#packagejson-scripts" title="Permanent link">¶</a></h3>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="p">{</span>
@@ -621,7 +621,7 @@
 <div class="admonition error">
 <p class="admonition-title">Port Already in Use</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1"># Find process using port</span>
-</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:1421
+</span><span id="__span-13-2"><a href="#__codelineno-13-2" id="__codelineno-13-2" name="__codelineno-13-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:3025
 </span><span id="__span-13-3"><a href="#__codelineno-13-3" id="__codelineno-13-3" name="__codelineno-13-3"></a>
 </span><span id="__span-13-4"><a href="#__codelineno-13-4" id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="c1"># Kill process</span>
 </span><span id="__span-13-5"><a href="#__codelineno-13-5" id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;

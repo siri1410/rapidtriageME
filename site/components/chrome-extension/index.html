@@ -734,7 +734,7 @@
         DT --&gt; API[DevTools API]
     end
 
-    DT --&gt;|WebSocket| BC[Browser Connector :1421]</code></pre>
+    DT --&gt;|WebSocket| BC[Browser Connector :3025]</code></pre>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">¶</a></h2>
 <h3 id="data-capture">🔍 Data Capture<a class="headerlink" href="#data-capture" title="Permanent link">¶</a></h3>
 <ul>
@@ -753,8 +753,8 @@
 - Server discovery
 - Manual screenshot trigger</p>
 <h3 id="auto-discovery">🔗 Auto-Discovery<a class="headerlink" href="#auto-discovery" title="Permanent link">¶</a></h3>
-<p>Automatic server discovery on ports 1421-1431:
-1. Checks default port (1421)
+<p>Automatic server discovery on ports 3025-1431:
+1. Checks default port (3025)
 2. Scans alternate ports
 3. Validates server identity
 4. Establishes WebSocket connection</p>
@@ -797,7 +797,7 @@
 <tr>
 <td><strong>Server Port</strong></td>
 <td>Connector server port</td>
-<td><code>1421</code></td>
+<td><code>3025</code></td>
 </tr>
 <tr>
 <td><strong>Log Limit</strong></td>
@@ -987,7 +987,7 @@
 <details class="bug">
 <summary>Not connecting to server</summary>
 <ul>
-<li>Verify server is running on port 1421</li>
+<li>Verify server is running on port 3025</li>
 <li>Check firewall settings</li>
 <li>Try manual connection test</li>
 </ul>

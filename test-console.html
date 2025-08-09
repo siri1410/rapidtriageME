@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Log Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error-btn {
+            background: #dc3545;
+        }
+        .error-btn:hover {
+            background: #c82333;
+        }
+        .info-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 RapidTriage Console Log Test Page</h1>
+    
+    <div class="info-section">
+        <h2>Test Console Logging</h2>
+        <p>Click the buttons below to generate different types of console messages:</p>
+        
+        <button onclick="testLog()">Generate Log Message</button>
+        <button onclick="testInfo()">Generate Info Message</button>
+        <button onclick="testWarn()">Generate Warning</button>
+        <button onclick="testError()" class="error-btn">Generate Error</button>
+        <button onclick="testMultiple()">Generate Multiple Logs</button>
+        <button onclick="testObject()">Log Complex Object</button>
+        <button onclick="throwError()" class="error-btn">Throw Exception</button>
+    </div>
+
+    <div class="info-section">
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Open Chrome DevTools (F12)</li>
+            <li>Click on "RapidTriage DevTools" tab</li>
+            <li>Ensure connection to localhost:3026</li>
+            <li>Click the buttons above to generate console messages</li>
+            <li>Check if logs appear in the RapidTriage panel</li>
+        </ol>
+    </div>
+
+    <script>
+        // Automatic console logs on page load
+        console.log('🚀 RapidTriage Test Page Loaded');
+        console.info('ℹ️ Console logging test initialized');
+        console.log('Timestamp:', new Date().toISOString());
+        
+        function testLog() {
+            const message = `Log message at ${new Date().toLocaleTimeString()}`;
+            console.log('📝', message);
+            alert('Log sent: ' + message);
+        }
+        
+        function testInfo() {
+            const message = `Info message at ${new Date().toLocaleTimeString()}`;
+            console.info('ℹ️', message);
+            alert('Info sent: ' + message);
+        }
+        
+        function testWarn() {
+            const message = `Warning at ${new Date().toLocaleTimeString()}`;
+            console.warn('⚠️', message);
+            alert('Warning sent: ' + message);
+        }
+        
+        function testError() {
+            const message = `Error at ${new Date().toLocaleTimeString()}`;
+            console.error('❌', message);
+            alert('Error sent: ' + message);
+        }
+        
+        function testMultiple() {
+            console.group('Multiple Logs Test');
+            console.log('First log in group');
+            console.info('Second info in group');
+            console.warn('Third warning in group');
+            console.error('Fourth error in group');
+            console.groupEnd();
+            alert('Multiple logs sent - check console');
+        }
+        
+        function testObject() {
+            const testObj = {
+                name: 'RapidTriage Test',
+                timestamp: Date.now(),
+                nested: {
+                    level1: {
+                        level2: {
+                            deep: 'value'
+                        }
+                    }
+                },
+                array: [1, 2, 3, 4, 5],
+                boolean: true,
+                nullValue: null
+            };
+            console.log('Complex object:', testObj);
+            alert('Complex object logged - check console');
+        }
+        
+        function throwError() {
+            try {
+                throw new Error('Intentional test error thrown at ' + new Date().toLocaleTimeString());
+            } catch(e) {
+                console.error('Caught exception:', e);
+                alert('Exception thrown and logged');
+            }
+        }
+
+        // Send a heartbeat log every 10 seconds
+        setInterval(() => {
+            console.log('💓 Heartbeat:', new Date().toLocaleTimeString());
+        }, 10000);
+    </script>
+</body>
+</html>

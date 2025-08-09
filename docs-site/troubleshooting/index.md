@@ -8,7 +8,7 @@ Start with this quick checklist to identify the issue category:
 
 ```mermaid
 flowchart TD
-    START["🔍 Issue with RapidTriageME?"] --> CHECK1{"Can you access<br/>http://localhost:1421?"}
+    START["🔍 Issue with RapidTriageME?"] --> CHECK1{"Can you access<br/>http://localhost:3025?"}
     CHECK1 -->|Yes| CHECK2{"Extension visible<br/>in DevTools?"}
     CHECK1 -->|No| SERVER["🔧 Server Issues"]
     CHECK2 -->|Yes| CHECK3{"AI assistant<br/>recognizes tools?"}
@@ -28,7 +28,7 @@ flowchart TD
 ## Issue Categories
 
 ### 🔧 Server Issues
-**Symptoms**: Cannot access localhost:1421, server won't start  
+**Symptoms**: Cannot access localhost:3025, server won't start  
 **Common causes**: Port conflicts, permission issues, Node.js problems
 
 ### 📱 Extension Issues
@@ -45,29 +45,29 @@ flowchart TD
 
 ## Common Issues and Solutions
 
-### Server Won't Start (Port 1421)
+### Server Won't Start (Port 3025)
 
 #### Symptom
 ```bash
 $ npx @yarlisai/rapidtriage-server
-Error: listen EADDRINUSE :::1421
+Error: listen EADDRINUSE :::3025
 ```
 
 #### Diagnosis
 ```bash
-# Check what's using port 1421
-lsof -i :1421
+# Check what's using port 3025
+lsof -i :3025
 
 # Example output:
 COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-node    12345 user   18u  IPv6  0x1234      0t0  TCP *:1421 (LISTEN)
+node    12345 user   18u  IPv6  0x1234      0t0  TCP *:3025 (LISTEN)
 ```
 
 #### Solutions
 
 === "Kill existing process"
     ```bash
-    # Kill the process using port 1421
+    # Kill the process using port 3025
     kill -9 12345
     
     # Or kill all Node.js processes
@@ -180,7 +180,7 @@ node    12345 user   18u  IPv6  0x1234      0t0  TCP *:1421 (LISTEN)
 npx @yarlisai/rapidtriage-mcp
 
 # Expected output:
-Connected to browser tools server at http://localhost:1421
+Connected to browser tools server at http://localhost:3025
 MCP Server running...
 Available tools: screenshot_capture, get_console_logs, ...
 ```
@@ -196,7 +196,7 @@ Available tools: screenshot_capture, get_console_logs, ...
           "command": "npx",
           "args": ["@yarlisai/rapidtriage-mcp"],
           "env": {
-            "BROWSER_TOOLS_PORT": "1421",
+            "BROWSER_TOOLS_PORT": "3025",
             "BROWSER_TOOLS_HOST": "localhost"
           }
         }
@@ -287,12 +287,12 @@ echo "\n📦 Package versions:"
 npm list -g @yarlisai/rapidtriage-server @yarlisai/rapidtriage-mcp 2>/dev/null || echo "❌ Packages not installed globally"
 
 # Check server port
-echo "\n🔌 Port 1421 status:"
-if lsof -i :1421 >/dev/null 2>&1; then
-    echo "✅ Port 1421 is in use"
-    lsof -i :1421
+echo "\n🔌 Port 3025 status:"
+if lsof -i :3025 >/dev/null 2>&1; then
+    echo "✅ Port 3025 is in use"
+    lsof -i :3025
 else
-    echo "❌ Port 1421 is free - server not running"
+    echo "❌ Port 3025 is free - server not running"
 fi
 
 # Check Chrome processes
@@ -301,7 +301,7 @@ ps aux | grep -i chrome | grep -v grep | wc -l | xargs echo "Chrome processes:"
 
 # Test server endpoint
 echo "\n🏥 Server health:"
-curl -s http://localhost:1421/.identity | jq '.status' 2>/dev/null || echo "❌ Server not responding"
+curl -s http://localhost:3025/.identity | jq '.status' 2>/dev/null || echo "❌ Server not responding"
 
 echo "\n✅ Health check complete"
 ```
@@ -344,19 +344,19 @@ echo "================================="
 
 # Identity endpoint
 echo "Identity:"
-curl -w "Status: %{http_code}\n" -s http://localhost:1421/.identity | jq .
+curl -w "Status: %{http_code}\n" -s http://localhost:3025/.identity | jq .
 
 # Console logs
 echo "\nConsole logs:"
-curl -w "Status: %{http_code}\n" -s "http://localhost:1421/console-logs?limit=5" | jq .
+curl -w "Status: %{http_code}\n" -s "http://localhost:3025/console-logs?limit=5" | jq .
 
 # Network requests
 echo "\nNetwork requests:"
-curl -w "Status: %{http_code}\n" -s "http://localhost:1421/network-requests?limit=5" | jq .
+curl -w "Status: %{http_code}\n" -s "http://localhost:3025/network-requests?limit=5" | jq .
 
 # Health check
 echo "\nHealth:"
-curl -w "Status: %{http_code}\n" -s http://localhost:1421/health | jq .
+curl -w "Status: %{http_code}\n" -s http://localhost:3025/health | jq .
 ```
 
 ## Performance Issues
@@ -438,10 +438,10 @@ npx @yarlisai/rapidtriage-mcp --debug
 
 ```bash
 # Use netstat to monitor connections
-netstat -an | grep 1421
+netstat -an | grep 3025
 
 # Monitor WebSocket traffic
-wscat -c ws://localhost:1421/ws
+wscat -c ws://localhost:3025/ws
 ```
 
 ### Debug Extension Background Script

@@ -30,8 +30,13 @@ export class RemoteBrowserMCPHandler {
       }
     );
     
+    // Initialize requestHandlers if not exists
+    if (!(this.server as any).requestHandlers) {
+      (this.server as any).requestHandlers = new Map();
+    }
+    
     // Define available tools for browser triage
-    (this.server as any).setRequestHandler('tools/list', async () => ({
+    (this.server as any).requestHandlers.set('tools/list', async () => ({
       tools: [
         {
           name: "remote_browser_navigate",
@@ -238,7 +243,7 @@ export class RemoteBrowserMCPHandler {
     }));
     
     // Handle tool execution
-    (this.server as any).setRequestHandler('tools/call', async (request: any) => {
+    (this.server as any).requestHandlers.set('tools/call', async (request: any) => {
       const { name, arguments: args } = request.params;
       
       try {
@@ -257,8 +262,16 @@ export class RemoteBrowserMCPHandler {
     });
   }
   
-  async handleSSE(request: Request, ctx: ExecutionContext): Promise<Response> {
-    // Create SSE transport for MCP communication
+  async handleSSE(request: Request, _ctx: ExecutionContext): Promise<Response> {
+    // Handle both SSE and JSON-RPC requests
+    const contentType = request.headers.get('content-type');
+    
+    // If it's a JSON-RPC request, handle it directly
+    if (contentType?.includes('application/json')) {
+      return this.handleJSONRPC(request);
+    }
+    
+    // Otherwise, handle as SSE
     const headers = new Headers({
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
@@ -270,9 +283,59 @@ export class RemoteBrowserMCPHandler {
     const writer = writable.getWriter();
     
     // Handle SSE connection
-    ctx.waitUntil(this.handleSSEConnection(writer, request));
+    _ctx.waitUntil(this.handleSSEConnection(writer, request));
     
     return new Response(readable, { headers });
+  }
+  
+  private async handleJSONRPC(request: Request): Promise<Response> {
+    try {
+      const body = await request.json() as any;
+      const { method, params, id } = body;
+      
+      let result;
+      
+      // Handle different MCP methods
+      if (method === 'tools/list') {
+        const handler = (this.server as any).requestHandlers.get('tools/list');
+        result = await handler();
+      } else if (method === 'tools/call') {
+        const handler = (this.server as any).requestHandlers.get('tools/call');
+        result = await handler({ params });
+      } else {
+        throw new Error(`Unknown method: ${method}`);
+      }
+      
+      // Return JSON-RPC response
+      return new Response(JSON.stringify({
+        jsonrpc: '2.0',
+        result,
+        id
+      }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Max-Age': '86400',
+        }
+      });
+    } catch (error) {
+      return new Response(JSON.stringify({
+        jsonrpc: '2.0',
+        error: {
+          code: -32603,
+          message: (error as Error).message
+        },
+        id: null
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
+      });
+    }
   }
   
   private async handleSSEConnection(writer: WritableStreamDefaultWriter, _request: Request) {

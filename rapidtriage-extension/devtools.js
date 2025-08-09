@@ -10,7 +10,7 @@ let settings = {
   showResponseHeaders: false,
   screenshotPath: "", // Add new setting for screenshot path
   serverHost: "localhost", // Default server host
-  serverPort: 1421, // Default server port
+  serverPort: 3025, // Default server port
   allowAutoPaste: false, // Default auto-paste setting
 };
 
@@ -646,7 +646,7 @@ const consoleMessageListener = (source, method, params) => {
 };
 
 // 2) Use DevTools Protocol to capture console logs
-chrome.devtools.panels.create("BrowserToolsMCP", "", "panel.html", (panel) => {
+chrome.devtools.panels.create("RapidTriageMCP", "", "panel.html", (panel) => {
   // Initial attach - we'll keep the debugger attached as long as DevTools is open
   attachDebugger();
 

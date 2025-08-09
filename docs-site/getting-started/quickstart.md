@@ -32,8 +32,8 @@ cd rapidtriageME
 
 You should see:
 ```
-🚀 RapidTriage Server running on port 1421
-Available at: http://localhost:1421
+🚀 RapidTriage Server running on port 3025
+Available at: http://localhost:3025
 ```
 
 ### Step 3: Configure Your AI Assistant
@@ -49,7 +49,7 @@ Available at: http://localhost:1421
           "command": "npx",
           "args": ["@yarlisai/rapidtriage-mcp"],
           "env": {
-            "BROWSER_TOOLS_PORT": "1421"
+            "BROWSER_TOOLS_PORT": "3025"
           }
         }
       }
@@ -67,7 +67,7 @@ Available at: http://localhost:1421
           "command": "node",
           "args": ["/path/to/rapidtriage-mcp/dist/mcp-server.js"],
           "env": {
-            "BROWSER_TOOLS_PORT": "1421"
+            "BROWSER_TOOLS_PORT": "3025"
           }
         }
       }
@@ -92,7 +92,7 @@ Ask your AI assistant:
 ## ✅ Verification Checklist
 
 - [ ] Chrome extension loaded and visible
-- [ ] Server running on port 1421
+- [ ] Server running on port 3025
 - [ ] DevTools panel shows "Connected"
 - [ ] AI assistant can retrieve browser data
 
@@ -109,9 +109,9 @@ You're now ready to use RapidTriageME for AI-powered browser debugging.
 ## Common Issues
 
 ??? question "Server not starting?"
-    Make sure port 1421 is not in use:
+    Make sure port 3025 is not in use:
     ```bash
-    lsof -i :1421
+    lsof -i :3025
     # Kill any process using the port
     kill -9 <PID>
     ```

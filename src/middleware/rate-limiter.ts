@@ -27,7 +27,7 @@ export class RateLimiter {
       await this.storage.put(key, JSON.stringify({
         windowStart: now,
         count: 1
-      }), { expirationTtl: Math.ceil(this.windowMs / 1000) });
+      }), { expirationTtl: Math.max(60, Math.ceil(this.windowMs / 1000)) });
       
       return { allowed: true };
     }
@@ -41,7 +41,7 @@ export class RateLimiter {
     // Increment counter
     data.count++;
     await this.storage.put(key, JSON.stringify(data), {
-      expirationTtl: Math.ceil((data.windowStart + this.windowMs - now) / 1000)
+      expirationTtl: Math.max(60, Math.ceil((data.windowStart + this.windowMs - now) / 1000))
     });
     
     return { allowed: true };

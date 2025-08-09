@@ -21,7 +21,7 @@ The most common way to configure RapidTriageME is through environment variables.
 
 ```bash
 # Server Configuration
-export RAPIDTRIAGE_PORT=1421              # Port for browser connector server
+export RAPIDTRIAGE_PORT=3025              # Port for browser connector server
 export RAPIDTRIAGE_HOST=localhost         # Host address to bind to
 export RAPIDTRIAGE_CORS_ORIGIN=*          # CORS origin (use specific domains in production)
 
@@ -64,7 +64,7 @@ export RAPIDTRIAGE_LIGHTHOUSE_TIMEOUT=60000  # Lighthouse audit timeout
     cat >> ~/.bashrc << 'EOF'
     
     # RapidTriageME Configuration
-    export RAPIDTRIAGE_PORT=1421
+    export RAPIDTRIAGE_PORT=3025
     export RAPIDTRIAGE_HOST=localhost
     export NODE_ENV=development
     export LOG_LEVEL=info
@@ -81,7 +81,7 @@ export RAPIDTRIAGE_LIGHTHOUSE_TIMEOUT=60000  # Lighthouse audit timeout
     
     ```powershell
     # Set persistent environment variables
-    [Environment]::SetEnvironmentVariable("RAPIDTRIAGE_PORT", "1421", "User")
+    [Environment]::SetEnvironmentVariable("RAPIDTRIAGE_PORT", "3025", "User")
     [Environment]::SetEnvironmentVariable("RAPIDTRIAGE_HOST", "localhost", "User")
     [Environment]::SetEnvironmentVariable("NODE_ENV", "development", "User")
     [Environment]::SetEnvironmentVariable("LOG_LEVEL", "info", "User")
@@ -92,7 +92,7 @@ export RAPIDTRIAGE_LIGHTHOUSE_TIMEOUT=60000  # Lighthouse audit timeout
 === "Windows Command Prompt"
     
     ```cmd
-    setx RAPIDTRIAGE_PORT 1421
+    setx RAPIDTRIAGE_PORT 3025
     setx RAPIDTRIAGE_HOST localhost
     setx NODE_ENV development
     setx LOG_LEVEL info
@@ -116,7 +116,7 @@ mkdir -p ~/.rapidtriage
 cat > ~/.rapidtriage/config.json << 'EOF'
 {
   "server": {
-    "port": 1421,
+    "port": 3025,
     "host": "localhost",
     "cors": {
       "origin": "*",
@@ -201,7 +201,7 @@ Configure your AI assistant to work with RapidTriageME.
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "BROWSER_TOOLS_HOST": "localhost",
         "NODE_ENV": "development",
         "LOG_LEVEL": "info",
@@ -230,7 +230,7 @@ Configure your AI assistant to work with RapidTriageME.
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "BROWSER_TOOLS_HOST": "localhost",
         "RAPIDTRIAGE_CONFIG_PATH": "./rapidtriage.config.json"
       }
@@ -256,7 +256,7 @@ Configure your AI assistant to work with RapidTriageME.
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "DEBUG": "true",
         "LOG_LEVEL": "debug"
       }
@@ -275,7 +275,7 @@ Configure your AI assistant to work with RapidTriageME.
       "command": "npx",
       "args": ["@yarlisai/rapidtriage-mcp"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421",
+        "BROWSER_TOOLS_PORT": "3025",
         "NODE_ENV": "development"
       }
     }
@@ -335,7 +335,7 @@ Configure different environments:
   "environments": {
     "development": {
       "server": {
-        "port": 1421,
+        "port": 3025,
         "host": "localhost"
       },
       "logging": {
@@ -364,7 +364,7 @@ Configure different environments:
     },
     "production": {
       "server": {
-        "port": 1421,
+        "port": 3025,
         "host": "127.0.0.1"
       },
       "logging": {
@@ -482,7 +482,7 @@ RapidTriageME loads configuration in this order (later sources override earlier 
 
 ```bash
 # .env.local
-RAPIDTRIAGE_PORT=1421
+RAPIDTRIAGE_PORT=3025
 RAPIDTRIAGE_HOST=localhost
 NODE_ENV=development
 LOG_LEVEL=debug
@@ -495,7 +495,7 @@ RAPIDTRIAGE_SCREENSHOT_QUALITY=90
 
 ```bash
 # .env.ci
-RAPIDTRIAGE_PORT=1421
+RAPIDTRIAGE_PORT=3025
 RAPIDTRIAGE_HOST=127.0.0.1
 NODE_ENV=test
 LOG_LEVEL=warn
@@ -508,7 +508,7 @@ RAPIDTRIAGE_LIGHTHOUSE_TIMEOUT=30000  # Shorter timeout for CI
 
 ```bash
 # .env.production
-RAPIDTRIAGE_PORT=1421
+RAPIDTRIAGE_PORT=3025
 RAPIDTRIAGE_HOST=127.0.0.1
 NODE_ENV=production
 LOG_LEVEL=error
@@ -567,7 +567,7 @@ RapidTriageME validates configuration against a JSON schema:
 
 ```bash
 # Check what's using the port
-lsof -i :1421
+lsof -i :3025
 
 # Use a different port
 export RAPIDTRIAGE_PORT=3030

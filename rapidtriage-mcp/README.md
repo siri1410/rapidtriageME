@@ -2,7 +2,7 @@
 
 > **Model Context Protocol server for AI-powered browser debugging and triage**
 
-[![npm version](https://img.shields.io/npm/v/@yarlis/rapidtriage-mcp.svg)](https://www.npmjs.com/package/@yarlis/rapidtriage-mcp)
+[![npm version](https://img.shields.io/npm/v/@yarlisai/rapidtriage-mcp.svg)](https://www.npmjs.com/package/@yarlisai/rapidtriage-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io)
 
@@ -62,10 +62,10 @@ The Model Context Protocol (MCP) is an open standard that enables AI assistants 
 
 ```bash
 # Step 1: Start the browser server
-npx @yarlis/rapidtriage-server@latest
+npx @yarlisai/rapidtriage-server@latest
 
 # Step 2: In another terminal, start the MCP server
-npx @yarlis/rapidtriage-mcp@latest
+npx @yarlisai/rapidtriage-mcp@latest
 
 # Step 3: Configure your IDE (see IDE Integration section)
 ```
@@ -77,13 +77,13 @@ That's it! Your AI assistant can now interact with browsers.
 ### Using npx (Recommended)
 
 ```bash
-npx @yarlis/rapidtriage-mcp@latest
+npx @yarlisai/rapidtriage-mcp@latest
 ```
 
 ### Global Installation
 
 ```bash
-npm install -g @yarlis/rapidtriage-mcp
+npm install -g @yarlisai/rapidtriage-mcp
 ```
 
 ### Local Development
@@ -109,7 +109,7 @@ npm start
 
 ```bash
 # Server connection
-BROWSER_TOOLS_PORT=1421          # Port for browser server connection
+BROWSER_TOOLS_PORT=3025          # Port for browser server connection
 BROWSER_TOOLS_HOST=localhost     # Host for browser server
 
 # Debugging
@@ -129,7 +129,7 @@ Create a `.rapidtriagerc` file in your project root:
 {
   "browserServer": {
     "host": "localhost",
-    "port": 1421,
+    "port": 3025,
     "secure": false
   },
   "mcp": {
@@ -195,9 +195,9 @@ Edit `~/.cursor/config.json`:
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlis/rapidtriage-mcp@latest"],
+      "args": ["@yarlisai/rapidtriage-mcp@latest"],
       "env": {
-        "BROWSER_TOOLS_PORT": "1421"
+        "BROWSER_TOOLS_PORT": "3025"
       }
     }
   }
@@ -214,7 +214,7 @@ Edit `~/.continue/config.json`:
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlis/rapidtriage-mcp@latest"]
+      "args": ["@yarlisai/rapidtriage-mcp@latest"]
     }
   }
 }
@@ -229,7 +229,7 @@ Edit `~/Library/Application Support/Claude/config.json` (macOS):
   "mcpServers": {
     "rapidtriage": {
       "command": "npx",
-      "args": ["@yarlis/rapidtriage-mcp@latest"]
+      "args": ["@yarlisai/rapidtriage-mcp@latest"]
     }
   }
 }
@@ -297,10 +297,10 @@ The MCP server communicates using JSON-RPC 2.0 over stdio (standard input/output
 
 ```bash
 # Check if browser server is running
-curl http://localhost:1421/health
+curl http://localhost:3025/health
 
 # Restart the browser server
-npx @yarlis/rapidtriage-server@latest
+npx @yarlisai/rapidtriage-server@latest
 ```
 
 #### MCP Server Not Found in IDE
@@ -311,7 +311,7 @@ npx @yarlis/rapidtriage-server@latest
    ```json
    {
      "command": "/usr/local/bin/npx",
-     "args": ["@yarlis/rapidtriage-mcp@latest"]
+     "args": ["@yarlisai/rapidtriage-mcp@latest"]
    }
    ```
 
@@ -334,7 +334,7 @@ export CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 Enable debug logging for troubleshooting:
 
 ```bash
-DEBUG=true npx @yarlis/rapidtriage-mcp@latest
+DEBUG=true npx @yarlisai/rapidtriage-mcp@latest
 ```
 
 Check logs at:
