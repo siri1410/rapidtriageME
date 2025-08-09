@@ -100,3 +100,4 @@ personal/
 test-local.sh
 test-configs/
 test-page.html
+.env.backup.*

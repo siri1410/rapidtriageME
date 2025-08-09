@@ -13,41 +13,37 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Environment configurations
-declare -A ENVIRONMENTS
-
-# Local environment
-ENVIRONMENTS["local"]="
-ENVIRONMENT=local
+# Environment configurations using functions for compatibility
+function get_local_env() {
+    echo "ENVIRONMENT=local
 API_BASE_URL=http://localhost:8787
 BACKEND_URL=http://localhost:3025
 BROWSER_TOOLS_PORT=3025
 SSE_ENDPOINT=/sse
 HEALTH_ENDPOINT=/health
-METRICS_ENDPOINT=/metrics
-"
+METRICS_ENDPOINT=/metrics"
+}
 
-# Staging environment
-ENVIRONMENTS["staging"]="
-ENVIRONMENT=staging
-API_BASE_URL=https://rapidtriage-staging.sireesh-yarlagadda-d3f.workers.dev
-BACKEND_URL=https://rapidtriage-backend-staging.herokuapp.com
-BROWSER_TOOLS_PORT=443
-SSE_ENDPOINT=/sse
-HEALTH_ENDPOINT=/health
-METRICS_ENDPOINT=/metrics
-"
+# DEPRECATED: Staging environment is no longer in use
+# function get_staging_env() {
+#     echo "ENVIRONMENT=staging
+# API_BASE_URL=https://rapidtriage-staging.sireesh-yarlagadda-d3f.workers.dev
+# BACKEND_URL=https://rapidtriage-backend-staging.herokuapp.com
+# BROWSER_TOOLS_PORT=443
+# SSE_ENDPOINT=/sse
+# HEALTH_ENDPOINT=/health
+# METRICS_ENDPOINT=/metrics"
+# }
 
-# Production environment
-ENVIRONMENTS["production"]="
-ENVIRONMENT=production
+function get_production_env() {
+    echo "ENVIRONMENT=production
 API_BASE_URL=https://rapidtriage.me
 BACKEND_URL=https://rapidtriage-backend-u72y6ntcwa-uc.a.run.app
 BROWSER_TOOLS_PORT=443
 SSE_ENDPOINT=/sse
 HEALTH_ENDPOINT=/health
-METRICS_ENDPOINT=/metrics
-"
+METRICS_ENDPOINT=/metrics"
+}
 
 function print_header() {
     echo -e "${CYAN}🔄 RapidTriageME Environment Switcher${NC}"
@@ -68,8 +64,9 @@ function show_current_env() {
 function list_environments() {
     echo -e "${GREEN}Available environments:${NC}"
     echo "  1) local       - Local development"
-    echo "  2) staging     - Staging environment"
-    echo "  3) production  - Production environment"
+    echo "  2) production  - Production environment"
+    echo ""
+    echo -e "${YELLOW}Note: Staging environment has been deprecated${NC}"
     echo ""
 }
 
@@ -83,11 +80,27 @@ function backup_env() {
 
 function switch_environment() {
     local env_name=$1
+    local env_config=""
     
-    if [[ ! ${ENVIRONMENTS[$env_name]+_} ]]; then
-        echo -e "${RED}❌ Invalid environment: $env_name${NC}"
-        return 1
-    fi
+    # Get environment configuration based on name
+    case $env_name in
+        local)
+            env_config=$(get_local_env)
+            ;;
+        staging)
+            echo -e "${YELLOW}⚠️  Warning: Staging environment is deprecated and no longer in use${NC}"
+            echo -e "${YELLOW}   Please use 'local' for development or 'production' for live environment${NC}"
+            return 1
+            ;;
+        production)
+            env_config=$(get_production_env)
+            ;;
+        *)
+            echo -e "${RED}❌ Invalid environment: $env_name${NC}"
+            echo -e "${YELLOW}   Valid options: local, production${NC}"
+            return 1
+            ;;
+    esac
     
     # Backup current .env
     backup_env
@@ -99,7 +112,7 @@ function switch_environment() {
     echo "" >> .env.tmp
     
     # Add environment-specific variables
-    echo "${ENVIRONMENTS[$env_name]}" | sed '/^$/d' >> .env.tmp
+    echo "$env_config" | sed '/^$/d' >> .env.tmp
     
     # Preserve other configurations from .env.example
     if [ -f .env.example ]; then
@@ -173,13 +186,12 @@ function interactive_mode() {
     show_current_env
     list_environments
     
-    echo -n "Select environment (1-3) or 'q' to quit: "
+    echo -n "Select environment (1-2) or 'q' to quit: "
     read -r choice
     
     case $choice in
         1) switch_environment "local" ;;
-        2) switch_environment "staging" ;;
-        3) switch_environment "production" ;;
+        2) switch_environment "production" ;;
         q|Q) echo "Exiting..."; exit 0 ;;
         *) echo -e "${RED}Invalid choice${NC}"; exit 1 ;;
     esac
@@ -194,10 +206,16 @@ function interactive_mode() {
 
 # Main script logic
 case "$1" in
-    local|staging|production)
+    local|production)
         print_header
         switch_environment "$1"
         test_environment
+        ;;
+    staging)
+        print_header
+        echo -e "${YELLOW}⚠️  Warning: Staging environment is deprecated and no longer in use${NC}"
+        echo -e "${YELLOW}   Please use 'local' for development or 'production' for live environment${NC}"
+        exit 1
         ;;
     test)
         print_header
@@ -214,7 +232,6 @@ case "$1" in
         echo ""
         echo "Environments:"
         echo "  local       - Switch to local development"
-        echo "  staging     - Switch to staging environment"
         echo "  production  - Switch to production environment"
         echo ""
         echo "Commands:"
@@ -223,6 +240,8 @@ case "$1" in
         echo "  help        - Show this help message"
         echo ""
         echo "Interactive mode: ./switch-env.sh (no arguments)"
+        echo ""
+        echo -e "${YELLOW}Note: Staging environment has been deprecated${NC}"
         ;;
     *)
         interactive_mode

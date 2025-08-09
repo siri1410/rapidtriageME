@@ -25,7 +25,7 @@ function print_menu() {
     echo "Available commands:"
     echo ""
     echo -e "${GREEN}1${NC}) env       - Load environment variables"
-    echo -e "${GREEN}2${NC}) switch    - Switch environment (local/staging/production)"
+    echo -e "${GREEN}2${NC}) switch    - Switch environment (local/production)"
     echo -e "${GREEN}3${NC}) test      - Run local tests"
     echo -e "${GREEN}4${NC}) login     - Login to Cloudflare"
     echo -e "${GREEN}5${NC}) deploy    - Deploy to Cloudflare"
@@ -111,27 +111,35 @@ function check_status() {
     echo ""
     
     # Check local server
-    echo -e "${YELLOW}Local Server (Port 3025):${NC}"
+    echo -e "${YELLOW}Local Development Server:${NC}"
+    echo -n "  API (Port 8787): "
+    if curl -s http://localhost:8787/health > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ Running${NC}"
+    else
+        echo -e "${RED}❌ Not running${NC}"
+    fi
+    
+    echo -n "  Backend (Port 3025): "
     if curl -s http://localhost:3025/.identity > /dev/null 2>&1; then
         echo -e "${GREEN}✅ Running${NC}"
     else
         echo -e "${RED}❌ Not running${NC}"
     fi
     
-    # Check staging
-    echo -e "${YELLOW}Staging Environment:${NC}"
-    if curl -s https://rapidtriage-staging.sireesh-yarlagadda-d3f.workers.dev/health > /dev/null 2>&1; then
-        echo -e "${GREEN}✅ Online${NC}"
-    else
-        echo -e "${RED}❌ Offline${NC}"
-    fi
-    
     # Check production
-    echo -e "${YELLOW}Production (rapidtriage.me):${NC}"
+    echo -e "${YELLOW}Production Environment:${NC}"
+    echo -n "  API (rapidtriage.me): "
     if curl -s https://rapidtriage.me/health > /dev/null 2>&1; then
         echo -e "${GREEN}✅ Online${NC}"
     else
         echo -e "${RED}❌ Offline or DNS not propagated${NC}"
+    fi
+    
+    echo -n "  Backend: "
+    if curl -s https://rapidtriage-backend-u72y6ntcwa-uc.a.run.app/health > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ Online${NC}"
+    else
+        echo -e "${RED}❌ Offline${NC}"
     fi
     
     echo ""
