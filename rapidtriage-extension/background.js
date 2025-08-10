@@ -16,8 +16,62 @@ function safeSendRuntimeMessage(message, callback) {
   }
 }
 
+// Store selected element data
+let selectedElementData = null;
+
 // Listen for messages from the devtools panel
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Handle element selection messages
+  if (message.type === 'ELEMENT_SELECTED') {
+    // Store the selected element data
+    selectedElementData = message.data;
+    console.log('Element selected:', selectedElementData);
+    
+    // Notify any open popups
+    chrome.runtime.sendMessage({
+      type: 'ELEMENT_UPDATED',
+      data: selectedElementData
+    }).catch(() => {
+      // Popup might not be open, ignore
+    });
+    
+    sendResponse({success: true});
+    return true;
+  }
+  
+  if (message.type === 'DEVTOOLS_ELEMENT_SELECTED') {
+    // Element selected via DevTools
+    selectedElementData = message.data;
+    console.log('DevTools element selected:', selectedElementData);
+    
+    // Notify any open popups
+    chrome.runtime.sendMessage({
+      type: 'ELEMENT_UPDATED',
+      data: selectedElementData
+    }).catch(() => {
+      // Popup might not be open, ignore
+    });
+    
+    sendResponse({success: true});
+    return true;
+  }
+  
+  if (message.type === 'GET_STORED_ELEMENT') {
+    // Return stored element data
+    sendResponse({
+      success: true,
+      data: selectedElementData
+    });
+    return true;
+  }
+  
+  if (message.type === 'CLEAR_ELEMENT') {
+    // Clear stored element
+    selectedElementData = null;
+    sendResponse({success: true});
+    return true;
+  }
+
   if (message.type === "GET_CURRENT_URL" && message.tabId) {
     getCurrentTabUrl(message.tabId)
       .then((url) => {

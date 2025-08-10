@@ -10,6 +10,38 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Attach event listeners to buttons (Chrome extensions block inline onclick)
     attachButtonListeners();
+    
+    // Check if there's a stored selected element
+    chrome.runtime.sendMessage({type: 'GET_STORED_ELEMENT'}, function(response) {
+        if (response && response.success && response.data) {
+            const element = response.data;
+            addLog('📍 Previously selected element found');
+            
+            // Show a brief preview
+            const preview = `${element.tagName}${element.id ? '#' + element.id : ''}${element.className ? '.' + element.className.split(' ')[0] : ''}`;
+            showPreview('📍 Last Selected Element', `
+                <div class="info">Element: ${preview}</div>
+                <strong>XPath:</strong> <code style="font-size: 10px;">${element.xpath}</code><br>
+                Click "Inspect Element" to see full details
+            `, 'info');
+        }
+    });
+    
+    // Listen for element updates from background
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.type === 'ELEMENT_UPDATED' && message.data) {
+            const element = message.data;
+            addLog('🎯 New element selected');
+            
+            // Update the preview with the new element
+            const preview = `${element.tagName}${element.id ? '#' + element.id : ''}${element.className ? '.' + element.className.split(' ')[0] : ''}`;
+            showPreview('🎯 Element Selected', `
+                <div class="success">New element selected: ${preview}</div>
+                <strong>XPath:</strong> <code style="font-size: 10px;">${element.xpath}</code><br>
+                Click "Inspect Element" for full details
+            `, 'success');
+        }
+    });
 });
 
 function addLog(message) {
@@ -562,27 +594,133 @@ function getConsoleLogs(button) {
 function inspectElement(button) {
     if (button) setButtonLoading(button, true);
     
-    addLog('Element inspection ready - select an element on the page');
+    addLog('🔍 Checking for selected element...');
     
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        const currentUrl = tabs[0]?.url || 'unknown';
+        if (!tabs[0]) {
+            addLog('❌ No active tab found');
+            showPreview('🔍 Element Inspector', '<div class="error">No active tab found</div>', 'error');
+            if (button) setButtonLoading(button, false);
+            return;
+        }
         
-        addLog('💡 Click on any element on the page to inspect it');
+        const currentUrl = tabs[0].url || 'unknown';
+        const tabId = tabs[0].id;
         
-        // Show immediate preview
-        const content = `
-            <div class="info">🔍 Element Inspector Ready</div>
-            <strong>URL:</strong> ${currentUrl}<br>
-            <strong>Status:</strong> Ready to inspect elements<br>
-            <strong>Instructions:</strong> Click on any page element<br>
-            <div style="margin-top: 5px; font-style: italic;">
-                Note: Full element inspection requires content script integration
-            </div>
-        `;
-        showPreview('🔍 Element Inspector', content, 'info');
+        // First try to get any selected element
+        chrome.tabs.sendMessage(tabId, {type: 'GET_SELECTED_ELEMENT'}, function(response) {
+            if (chrome.runtime.lastError) {
+                // Content script might not be loaded, try to inject it
+                chrome.scripting.executeScript({
+                    target: {tabId: tabId},
+                    files: ['content.js']
+                }, () => {
+                    // Try again after injection
+                    setTimeout(() => {
+                        chrome.tabs.sendMessage(tabId, {type: 'GET_SELECTED_ELEMENT'}, handleElementResponse);
+                    }, 100);
+                });
+            } else {
+                handleElementResponse(response);
+            }
+        });
         
-        if (button) {
-            setTimeout(() => setButtonLoading(button, false), 500);
+        function handleElementResponse(response) {
+            if (response && response.success && response.data) {
+                // We have a selected element!
+                const element = response.data;
+                addLog('✅ Element found: ' + element.tagName);
+                
+                // Format attributes for display
+                let attributesHtml = '';
+                if (element.attributes && Object.keys(element.attributes).length > 0) {
+                    const attrs = Object.entries(element.attributes)
+                        .slice(0, 5)
+                        .map(([key, value]) => `${key}="${value.substring(0, 30)}${value.length > 30 ? '...' : ''}"`)
+                        .join(' ');
+                    attributesHtml = attrs;
+                }
+                
+                // Build detailed preview
+                const content = `
+                    <div class="success">✅ Element Selected</div>
+                    <div style="margin-top: 10px;">
+                        <strong>🏷️ Tag:</strong> &lt;${element.tagName}&gt;<br>
+                        ${element.id ? `<strong>🆔 ID:</strong> #${element.id}<br>` : ''}
+                        ${element.className ? `<strong>📝 Class:</strong> .${element.className.split(' ').join('.')}<br>` : ''}
+                        
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #444;">
+                            <strong>🎯 XPath:</strong><br>
+                            <code style="font-size: 10px; word-break: break-all;">${element.xpath}</code>
+                        </div>
+                        
+                        <div style="margin-top: 8px;">
+                            <strong>🎨 CSS Selector:</strong><br>
+                            <code style="font-size: 10px; word-break: break-all;">${element.cssSelector}</code>
+                        </div>
+                        
+                        ${attributesHtml ? `
+                        <div style="margin-top: 8px;">
+                            <strong>📋 Attributes:</strong><br>
+                            <code style="font-size: 10px;">${attributesHtml}</code>
+                        </div>` : ''}
+                        
+                        <div style="margin-top: 8px;">
+                            <strong>📐 Position:</strong> ${Math.round(element.position.left)}x${Math.round(element.position.top)}<br>
+                            <strong>📏 Size:</strong> ${Math.round(element.position.width)}x${Math.round(element.position.height)}px
+                        </div>
+                        
+                        ${element.text ? `
+                        <div style="margin-top: 8px;">
+                            <strong>📄 Text:</strong><br>
+                            <span style="font-size: 10px;">${element.text.substring(0, 50)}${element.text.length > 50 ? '...' : ''}</span>
+                        </div>` : ''}
+                    </div>
+                `;
+                
+                showPreview('🔍 Element Inspector', content, 'success');
+                
+                // Also log to activity
+                addLog(`📊 XPath: ${element.xpath}`);
+                addLog(`🎨 Selector: ${element.cssSelector}`);
+            } else {
+                // No element selected, start inspect mode
+                addLog('⚡ Starting inspect mode...');
+                
+                chrome.tabs.sendMessage(tabId, {type: 'START_INSPECT_MODE'}, function(response) {
+                    if (chrome.runtime.lastError || !response?.success) {
+                        // Fallback message
+                        const content = `
+                            <div class="warning">⚠️ No Element Selected</div>
+                            <strong>To select an element:</strong><br>
+                            1. Right-click any element on the page<br>
+                            2. Choose "Inspect" from the menu<br>
+                            3. Click "Inspect Element" button again<br>
+                            <br>
+                            <strong>OR</strong><br>
+                            Click "Inspect Element" again to enter selection mode
+                        `;
+                        showPreview('🔍 Element Inspector', content, 'warning');
+                    } else {
+                        addLog('✅ Inspect mode activated - click any element');
+                        
+                        const content = `
+                            <div class="info">🎯 Inspect Mode Active</div>
+                            <strong>Instructions:</strong><br>
+                            1. Move your mouse over elements to highlight<br>
+                            2. Click on any element to select it<br>
+                            3. Element details will appear here<br>
+                            <br>
+                            <strong>Visual Indicators:</strong><br>
+                            🔵 Blue outline = Hovering<br>
+                            🟢 Green outline = Selected
+                        `;
+                        showPreview('🔍 Element Inspector', content, 'info');
+                    }
+                });
+            }
+            
+            if (button) setButtonLoading(button, false);
         }
     });
 }

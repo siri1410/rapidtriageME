@@ -1,15 +1,301 @@
-// Content script to help DevTools extension communication
+// Enhanced content script with element selection tracking
 (function() {
     'use strict';
     
-    // Mark page as having RapidTriage extension
+    // Initialize RapidTriage
     if (!window.__RAPIDTRIAGE__) {
         window.__RAPIDTRIAGE__ = {
             version: '2.3.0',
-            ready: true
+            ready: true,
+            selectedElement: null,
+            lastHoveredElement: null
         };
         
-        // Signal to DevTools that content script is loaded
         console.log('[RapidTriage] Content script loaded');
     }
+    
+    // Get XPath for an element
+    function getXPath(element) {
+        if (!element) return '';
+        
+        if (element.id !== '') {
+            return `//*[@id="${element.id}"]`;
+        }
+        
+        if (element === document.body) {
+            return '/html/body';
+        }
+        
+        let nodeCount = 0;
+        let siblings = element.parentNode ? element.parentNode.childNodes : [];
+        
+        for (let i = 0; i < siblings.length; i++) {
+            let sibling = siblings[i];
+            if (sibling === element) {
+                return getXPath(element.parentNode) + '/' + element.tagName.toLowerCase() + '[' + (nodeCount + 1) + ']';
+            }
+            if (sibling.nodeType === 1 && sibling.tagName === element.tagName) {
+                nodeCount++;
+            }
+        }
+        
+        return '';
+    }
+    
+    // Get CSS selector for an element
+    function getCSSSelector(element) {
+        if (!element) return '';
+        
+        const path = [];
+        while (element && element.nodeType === Node.ELEMENT_NODE) {
+            let selector = element.nodeName.toLowerCase();
+            
+            if (element.id) {
+                selector = '#' + element.id;
+                path.unshift(selector);
+                break;
+            } else {
+                let sibling = element;
+                let nth = 1;
+                
+                while (sibling = sibling.previousElementSibling) {
+                    if (sibling.nodeName.toLowerCase() === selector) nth++;
+                }
+                
+                if (nth !== 1) selector += `:nth-of-type(${nth})`;
+            }
+            
+            path.unshift(selector);
+            element = element.parentNode;
+        }
+        
+        return path.join(' > ');
+    }
+    
+    // Get element attributes
+    function getElementAttributes(element) {
+        if (!element || !element.attributes) return {};
+        
+        const attrs = {};
+        for (let attr of element.attributes) {
+            attrs[attr.name] = attr.value;
+        }
+        return attrs;
+    }
+    
+    // Get element info
+    function getElementInfo(element) {
+        if (!element) return null;
+        
+        const rect = element.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(element);
+        
+        return {
+            tagName: element.tagName.toLowerCase(),
+            id: element.id || null,
+            className: element.className || null,
+            xpath: getXPath(element),
+            cssSelector: getCSSSelector(element),
+            attributes: getElementAttributes(element),
+            text: element.textContent ? element.textContent.substring(0, 100) : '',
+            innerHTML: element.innerHTML ? element.innerHTML.substring(0, 200) : '',
+            position: {
+                top: rect.top,
+                left: rect.left,
+                width: rect.width,
+                height: rect.height
+            },
+            styles: {
+                display: computedStyle.display,
+                position: computedStyle.position,
+                color: computedStyle.color,
+                backgroundColor: computedStyle.backgroundColor,
+                fontSize: computedStyle.fontSize,
+                fontWeight: computedStyle.fontWeight,
+                zIndex: computedStyle.zIndex
+            },
+            parent: element.parentElement ? {
+                tagName: element.parentElement.tagName.toLowerCase(),
+                id: element.parentElement.id || null,
+                className: element.parentElement.className || null
+            } : null
+        };
+    }
+    
+    // Track clicked elements
+    let lastClickedElement = null;
+    let isInspectMode = false;
+    
+    // Highlight styles
+    const highlightStyles = document.createElement('style');
+    highlightStyles.innerHTML = `
+        .rapidtriage-highlight {
+            outline: 2px solid #007ACC !important;
+            outline-offset: 2px !important;
+            background-color: rgba(0, 122, 204, 0.1) !important;
+            cursor: crosshair !important;
+        }
+        .rapidtriage-selected {
+            outline: 3px solid #4CAF50 !important;
+            outline-offset: 2px !important;
+            background-color: rgba(76, 175, 80, 0.1) !important;
+        }
+    `;
+    document.head.appendChild(highlightStyles);
+    
+    // Element hover handler for inspect mode
+    function handleMouseOver(e) {
+        if (!isInspectMode) return;
+        
+        const element = e.target;
+        if (element === lastClickedElement) return;
+        
+        // Remove previous highlight
+        document.querySelectorAll('.rapidtriage-highlight').forEach(el => {
+            el.classList.remove('rapidtriage-highlight');
+        });
+        
+        element.classList.add('rapidtriage-highlight');
+        window.__RAPIDTRIAGE__.lastHoveredElement = getElementInfo(element);
+    }
+    
+    // Element click handler for inspect mode
+    function handleClick(e) {
+        if (!isInspectMode) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const element = e.target;
+        
+        // Remove all highlights and selections
+        document.querySelectorAll('.rapidtriage-highlight, .rapidtriage-selected').forEach(el => {
+            el.classList.remove('rapidtriage-highlight', 'rapidtriage-selected');
+        });
+        
+        // Mark as selected
+        element.classList.add('rapidtriage-selected');
+        lastClickedElement = element;
+        
+        // Store selected element info
+        const elementInfo = getElementInfo(element);
+        window.__RAPIDTRIAGE__.selectedElement = elementInfo;
+        
+        // Send to extension
+        chrome.runtime.sendMessage({
+            type: 'ELEMENT_SELECTED',
+            data: elementInfo
+        });
+        
+        // Exit inspect mode
+        isInspectMode = false;
+        document.body.style.cursor = '';
+        
+        console.log('[RapidTriage] Element selected:', elementInfo);
+    }
+    
+    // Listen for messages from extension
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        console.log('[RapidTriage] Message received:', request.type);
+        
+        switch(request.type) {
+            case 'GET_SELECTED_ELEMENT':
+                // Get the currently selected element info
+                if (window.__RAPIDTRIAGE__.selectedElement) {
+                    sendResponse({
+                        success: true,
+                        data: window.__RAPIDTRIAGE__.selectedElement
+                    });
+                } else {
+                    // Try to get info from Chrome's $0 (last inspected element)
+                    try {
+                        if (window.$0) {
+                            const elementInfo = getElementInfo(window.$0);
+                            window.__RAPIDTRIAGE__.selectedElement = elementInfo;
+                            sendResponse({
+                                success: true,
+                                data: elementInfo
+                            });
+                        } else {
+                            sendResponse({
+                                success: false,
+                                error: 'No element selected'
+                            });
+                        }
+                    } catch (e) {
+                        sendResponse({
+                            success: false,
+                            error: 'Could not access selected element'
+                        });
+                    }
+                }
+                break;
+                
+            case 'START_INSPECT_MODE':
+                // Start element inspection mode
+                isInspectMode = true;
+                document.body.style.cursor = 'crosshair';
+                
+                // Add event listeners
+                document.addEventListener('mouseover', handleMouseOver, true);
+                document.addEventListener('click', handleClick, true);
+                
+                sendResponse({success: true});
+                break;
+                
+            case 'STOP_INSPECT_MODE':
+                // Stop element inspection mode
+                isInspectMode = false;
+                document.body.style.cursor = '';
+                
+                // Remove event listeners
+                document.removeEventListener('mouseover', handleMouseOver, true);
+                document.removeEventListener('click', handleClick, true);
+                
+                // Remove highlights
+                document.querySelectorAll('.rapidtriage-highlight, .rapidtriage-selected').forEach(el => {
+                    el.classList.remove('rapidtriage-highlight', 'rapidtriage-selected');
+                });
+                
+                sendResponse({success: true});
+                break;
+                
+            case 'PING':
+                sendResponse({success: true, ready: true});
+                break;
+                
+            default:
+                sendResponse({success: false, error: 'Unknown message type'});
+        }
+        
+        return true; // Keep message channel open for async response
+    });
+    
+    // Auto-detect if DevTools element is selected
+    let devToolsCheckInterval = setInterval(() => {
+        try {
+            // Check if Chrome DevTools $0 exists (last inspected element)
+            if (typeof $0 !== 'undefined' && $0) {
+                const currentElement = $0;
+                if (currentElement !== window.__RAPIDTRIAGE__.lastDevToolsElement) {
+                    window.__RAPIDTRIAGE__.lastDevToolsElement = currentElement;
+                    window.__RAPIDTRIAGE__.selectedElement = getElementInfo(currentElement);
+                    
+                    // Notify extension
+                    chrome.runtime.sendMessage({
+                        type: 'DEVTOOLS_ELEMENT_SELECTED',
+                        data: window.__RAPIDTRIAGE__.selectedElement
+                    });
+                }
+            }
+        } catch (e) {
+            // $0 not available, ignore
+        }
+    }, 1000);
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(devToolsCheckInterval);
+    });
+    
 })();
