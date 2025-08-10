@@ -504,53 +504,119 @@ function clearLogs(button) {
 function openDevTools(button) {
     if (button) setButtonLoading(button, true);
     
-    addLog('Opening DevTools...');
-    
-    // Show immediate preview
-    showPreview('🔧 DevTools Access', 'Attempting to open DevTools...<br>Please wait...', 'info');
+    addLog('Checking DevTools...');
     
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        if (chrome.runtime.lastError || !tabs[0]) {
-            const error = chrome.runtime.lastError?.message || 'No active tab';
-            addLog(`❌ DevTools failed: ${error}`);
-            
-            const content = `
-                <div class="error">❌ DevTools Failed</div>
-                <strong>Error:</strong> ${error}<br>
-                <strong>Solution:</strong> Make sure you have an active tab open
-            `;
-            showPreview('🔧 DevTools Access', content, 'error');
+        if (!tabs[0]) {
+            addLog('❌ No active tab found');
+            showPreview('🔧 DevTools Guide', '<div class="error">No active tab found</div>', 'error');
             if (button) setButtonLoading(button, false);
             return;
         }
         
-        chrome.debugger.attach({tabId: tabs[0].id}, '1.0', function() {
-            if (chrome.runtime.lastError) {
-                const error = chrome.runtime.lastError.message;
-                addLog(`❌ DevTools failed: ${error}`);
-                
-                const content = `
-                    <div class="error">❌ DevTools Access Failed</div>
-                    <strong>Error:</strong> ${error}<br>
-                    <strong>Alternative:</strong> Press F12 to open DevTools manually<br>
-                    <strong>Tab ID:</strong> ${tabs[0].id}
-                `;
-                showPreview('🔧 DevTools Access', content, 'error');
-            } else {
-                addLog('✅ DevTools opened (press F12 to see)');
-                
-                const content = `
-                    <div class="success">✅ DevTools Access Granted</div>
-                    <strong>Status:</strong> Debugger attached successfully<br>
-                    <strong>Tab ID:</strong> ${tabs[0].id}<br>
-                    <strong>Instructions:</strong> Press F12 to open DevTools<br>
-                    <strong>Time:</strong> ${new Date().toLocaleTimeString()}
-                `;
-                showPreview('🔧 DevTools Access', content, 'success');
-            }
+        const currentUrl = tabs[0].url;
+        const tabId = tabs[0].id;
+        
+        // Check if it's a chrome:// URL or other restricted page
+        if (currentUrl.startsWith('chrome://') || currentUrl.startsWith('chrome-extension://') || 
+            currentUrl.startsWith('edge://') || currentUrl.startsWith('about:')) {
             
-            if (button) setButtonLoading(button, false);
-        });
+            addLog('ℹ️ Cannot attach debugger to system pages');
+            
+            // Provide helpful guide instead
+            const content = `
+                <div class="info">ℹ️ DevTools Guide</div>
+                <strong>Current page:</strong> System page<br>
+                <strong>Status:</strong> Extensions cannot control DevTools on chrome:// pages<br>
+                
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #444;">
+                    <strong>🔧 To Open DevTools:</strong><br>
+                    • Press <code>F12</code> (Windows/Linux)<br>
+                    • Press <code>Cmd+Option+I</code> (Mac)<br>
+                    • Right-click → "Inspect"<br>
+                    • Menu → More Tools → Developer Tools
+                </div>
+                
+                <div style="margin-top: 10px;">
+                    <strong>📍 Find RapidTriage Panel:</strong><br>
+                    • Look for "RapidTriage" tab in DevTools<br>
+                    • Check ">>" menu if not visible<br>
+                    • Elements panel → Right sidebar
+                </div>
+            `;
+            showPreview('🔧 DevTools Guide', content, 'info');
+            
+        } else {
+            // For normal web pages, try to attach debugger
+            chrome.debugger.attach({tabId: tabId}, '1.3', function() {
+                if (chrome.runtime.lastError) {
+                    const error = chrome.runtime.lastError.message;
+                    
+                    // Check if DevTools is already open
+                    if (error.includes('Another debugger') || error.includes('already attached')) {
+                        addLog('✅ DevTools is already open');
+                        
+                        const content = `
+                            <div class="success">✅ DevTools Already Open</div>
+                            <strong>Status:</strong> DevTools is active<br>
+                            <strong>URL:</strong> ${currentUrl}<br>
+                            
+                            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #444;">
+                                <strong>📍 Find RapidTriage Panel:</strong><br>
+                                • Look for "RapidTriage" tab at the top<br>
+                                • Check ">>" overflow menu if needed<br>
+                                • Or find in Elements → Right sidebar
+                            </div>
+                        `;
+                        showPreview('🔧 DevTools Status', content, 'success');
+                    } else {
+                        addLog(`⚠️ ${error}`);
+                        
+                        const content = `
+                            <div class="warning">⚠️ Manual DevTools Required</div>
+                            <strong>Reason:</strong> ${error}<br>
+                            
+                            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #444;">
+                                <strong>🔧 Open DevTools Manually:</strong><br>
+                                • Press <code>F12</code> or<br>
+                                • Right-click → "Inspect"<br>
+                                <br>
+                                <strong>📍 Then Find RapidTriage:</strong><br>
+                                • Check tabs: Elements, Console, <strong>RapidTriage</strong><br>
+                                • Or click ">>" for more panels
+                            </div>
+                        `;
+                        showPreview('🔧 DevTools Guide', content, 'warning');
+                    }
+                } else {
+                    addLog('✅ Debugger attached successfully');
+                    
+                    // Detach immediately - we just wanted to trigger DevTools
+                    chrome.debugger.detach({tabId: tabId}, function() {
+                        const content = `
+                            <div class="success">✅ DevTools Triggered</div>
+                            <strong>Status:</strong> Ready to open<br>
+                            <strong>URL:</strong> ${currentUrl}<br>
+                            
+                            <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #444;">
+                                <strong>🔧 Now Press F12</strong> to open DevTools<br>
+                                <br>
+                                <strong>📍 Find RapidTriage Panel:</strong><br>
+                                • Look for "RapidTriage" tab<br>
+                                • Check ">>" menu if not visible
+                            </div>
+                        `;
+                        showPreview('🔧 DevTools Ready', content, 'success');
+                    });
+                }
+                
+                if (button) setButtonLoading(button, false);
+            });
+        }
+        
+        if (button) {
+            setTimeout(() => setButtonLoading(button, false), 500);
+        }
     });
 }
 
