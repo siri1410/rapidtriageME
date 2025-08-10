@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('status').textContent = 'Ready';
     
     addLog('RapidTriage popup loaded');
+    
+    // Attach event listeners to buttons (Chrome extensions block inline onclick)
+    attachButtonListeners();
 });
 
 function addLog(message) {
@@ -582,6 +585,42 @@ function inspectElement(button) {
             setTimeout(() => setButtonLoading(button, false), 500);
         }
     });
+}
+
+// Attach event listeners to buttons (required for Chrome extensions)
+function attachButtonListeners() {
+    console.log('Attaching button listeners...');
+    
+    // Get all buttons and attach listeners
+    document.getElementById('btn-test-server')?.addEventListener('click', function() {
+        testServer(this);
+    });
+    
+    document.getElementById('btn-screenshot')?.addEventListener('click', function() {
+        takeScreenshot(this);
+    });
+    
+    document.getElementById('btn-clear')?.addEventListener('click', function() {
+        clearLogs(this);
+    });
+    
+    document.getElementById('btn-devtools')?.addEventListener('click', function() {
+        openDevTools(this);
+    });
+    
+    document.getElementById('btn-lighthouse')?.addEventListener('click', function() {
+        runLighthouseAudit(this);
+    });
+    
+    document.getElementById('btn-console')?.addEventListener('click', function() {
+        getConsoleLogs(this);
+    });
+    
+    document.getElementById('btn-inspect')?.addEventListener('click', function() {
+        inspectElement(this);
+    });
+    
+    console.log('Button listeners attached successfully');
 }
 
 // Auto-test server on load
