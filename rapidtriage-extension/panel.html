@@ -46,6 +46,38 @@
         button:hover {
             background: #005a9e;
         }
+        
+        button:active {
+            background: #004080;
+            transform: scale(0.98);
+        }
+        
+        button.loading {
+            background: #888;
+            cursor: wait;
+            position: relative;
+            color: transparent;
+        }
+        
+        button.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 2px solid #007ACC;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -57,16 +89,16 @@
         <div>Chrome: <span id="chrome-version"></span></div>
     </div>
     
-    <button onclick="testServer()">Test Server</button>
-    <button onclick="takeScreenshot()">Screenshot</button>
-    <button onclick="clearLogs()">Clear</button>
-    <button onclick="openDevTools()">Open DevTools</button>
+    <button onclick="testServer(this)">Test Server</button>
+    <button onclick="takeScreenshot(this)">Screenshot</button>
+    <button onclick="clearLogs(this)">Clear</button>
+    <button onclick="openDevTools(this)">Open DevTools</button>
     
     <br><br>
     
-    <button onclick="runLighthouseAudit()">Lighthouse Audit</button>
-    <button onclick="getConsoleLogs()">Console Logs</button>
-    <button onclick="inspectElement()">Inspect Element</button>
+    <button onclick="runLighthouseAudit(this)">Lighthouse Audit</button>
+    <button onclick="getConsoleLogs(this)">Console Logs</button>
+    <button onclick="inspectElement(this)">Inspect Element</button>
     
     <div id="logs"></div>
     
@@ -85,8 +117,27 @@
             logs.insertBefore(logDiv, logs.firstChild);
         }
         
-        function testServer() {
+        function setButtonLoading(buttonElement, loading = true) {
+            if (!buttonElement) return;
+            
+            if (loading) {
+                buttonElement.classList.add('loading');
+                buttonElement.disabled = true;
+                buttonElement.setAttribute('data-original-text', buttonElement.textContent);
+            } else {
+                buttonElement.classList.remove('loading');
+                buttonElement.disabled = false;
+                const originalText = buttonElement.getAttribute('data-original-text');
+                if (originalText) {
+                    buttonElement.textContent = originalText;
+                }
+            }
+        }
+        
+        function testServer(button) {
+            if (button) setButtonLoading(button, true);
             addLog('Testing server connection...');
+            
             fetch('http://localhost:3025/.identity')
                 .then(response => response.json())
                 .then(data => {
@@ -94,12 +145,20 @@
                 })
                 .catch(error => {
                     addLog(`❌ Connection failed: ${error.message}`);
+                })
+                .finally(() => {
+                    if (button) setButtonLoading(button, false);
                 });
         }
         
-        function clearLogs() {
+        function clearLogs(button) {
+            if (button) setButtonLoading(button, true);
             document.getElementById('logs').innerHTML = '';
             addLog('Logs cleared');
+            
+            setTimeout(() => {
+                if (button) setButtonLoading(button, false);
+            }, 300);
         }
         
         function takeScreenshot() {

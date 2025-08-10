@@ -35,6 +35,14 @@ function showPreview(title, content, type = 'info') {
     previewHeader.textContent = title;
     previewContent.innerHTML = content;
     previewContent.className = `preview-content ${type}`;
+    
+    // Add smooth fade-in animation like in test page
+    previewContent.style.opacity = '0';
+    setTimeout(() => {
+        previewContent.style.transition = 'opacity 0.3s';
+        previewContent.style.opacity = '1';
+    }, 50);
+    
     console.log('Preview updated successfully');
 }
 
