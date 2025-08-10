@@ -1,62 +1,34 @@
-// DevTools script - try multiple approaches for Chrome 138 compatibility
-console.log('[RapidTriage] DevTools initializing...');
+// Create RapidTriage DevTools panel
+console.log('[RapidTriage] DevTools script starting...');
 
-// Approach 1: Standard panel creation
-setTimeout(() => {
-    try {
-        chrome.devtools.panels.create(
-            "RapidTriage",
-            null,
-            "panel.html",
-            function(panel) {
-                if (chrome.runtime.lastError) {
-                    console.error('[RapidTriage] Panel creation failed:', chrome.runtime.lastError.message);
-                } else {
-                    console.log('[RapidTriage] Main panel created successfully');
-                }
-            }
-        );
-    } catch (e) {
-        console.error('[RapidTriage] Exception creating panel:', e);
+// Create the main panel immediately
+chrome.devtools.panels.create(
+    "RapidTriage",
+    null, // no icon for now
+    "panel.html",
+    function(panel) {
+        if (chrome.runtime.lastError) {
+            console.error('[RapidTriage] Panel creation error:', chrome.runtime.lastError);
+        } else {
+            console.log('[RapidTriage] Panel created successfully!');
+            
+            // Store panel reference if needed
+            window.rapidTriagePanel = panel;
+        }
     }
-}, 100);
+);
 
-// Approach 2: Sidebar as primary option
-setTimeout(() => {
-    try {
-        chrome.devtools.panels.elements.createSidebarPane(
-            "RapidTriage",
-            function(sidebar) {
-                if (chrome.runtime.lastError) {
-                    console.error('[RapidTriage] Sidebar creation failed:', chrome.runtime.lastError.message);
-                } else {
-                    console.log('[RapidTriage] Sidebar created successfully');
-                    sidebar.setPage("panel.html");
-                }
-            }
-        );
-    } catch (e) {
-        console.error('[RapidTriage] Exception creating sidebar:', e);
+// Also create a sidebar in Elements panel for quick access
+chrome.devtools.panels.elements.createSidebarPane(
+    "RapidTriage",
+    function(sidebar) {
+        if (chrome.runtime.lastError) {
+            console.error('[RapidTriage] Sidebar error:', chrome.runtime.lastError);
+        } else {
+            console.log('[RapidTriage] Elements sidebar created!');
+            sidebar.setPage("panel.html");
+        }
     }
-}, 200);
+);
 
-// Approach 3: Sources panel extension
-setTimeout(() => {
-    try {
-        chrome.devtools.panels.sources.createSidebarPane(
-            "RapidTriage",
-            function(sidebar) {
-                if (chrome.runtime.lastError) {
-                    console.error('[RapidTriage] Sources sidebar failed:', chrome.runtime.lastError.message);
-                } else {
-                    console.log('[RapidTriage] Sources sidebar created');
-                    sidebar.setPage("panel.html");
-                }
-            }
-        );
-    } catch (e) {
-        console.error('[RapidTriage] Exception creating sources sidebar:', e);
-    }
-}, 300);
-
-console.log('[RapidTriage] DevTools script loaded');
+console.log('[RapidTriage] DevTools script completed');

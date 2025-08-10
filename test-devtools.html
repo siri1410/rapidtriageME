@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test DevTools Panel - RapidTriage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 { color: #333; }
+        h2 { color: #007ACC; font-size: 18px; }
+        
+        .steps {
+            background: #e8f4fd;
+            padding: 15px;
+            border-left: 4px solid #007ACC;
+            margin: 15px 0;
+        }
+        
+        .steps li {
+            margin: 10px 0;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .success { background: #d4edda; color: #155724; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        
+        button {
+            background: #007ACC;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover { background: #005a9e; }
+    </style>
+</head>
+<body>
+    <h1>🔧 RapidTriage DevTools Panel Test</h1>
+    
+    <div class="card">
+        <h2>📋 Steps to Enable DevTools Panel</h2>
+        <ol class="steps">
+            <li><strong>Reload Extension:</strong>
+                <br>Go to <code>chrome://extensions/</code>
+                <br>Find "RapidTriage DevTools" and click the ↻ Reload button
+            </li>
+            
+            <li><strong>Close ALL DevTools Windows:</strong>
+                <br>Close any open DevTools windows (F12 panels)
+                <br>This ensures a fresh start
+            </li>
+            
+            <li><strong>Open DevTools Fresh:</strong>
+                <br>Press <code>F12</code> or right-click → Inspect
+                <br>Look for "RapidTriage" tab at the top (next to Elements, Console, etc.)
+            </li>
+            
+            <li><strong>Alternative Locations:</strong>
+                <br>If not in main tabs, check:
+                <br>• Click ">>" menu at the end of tabs
+                <br>• In Elements panel → Right sidebar → RapidTriage
+                <br>• In Sources panel → Right sidebar → RapidTriage
+            </li>
+        </ol>
+    </div>
+    
+    <div class="card">
+        <h2>🔍 Troubleshooting</h2>
+        
+        <button onclick="checkExtension()">Check Extension Status</button>
+        <button onclick="testConsoleLog()">Test Console</button>
+        <button onclick="openExtensions()">Open Extensions Page</button>
+        
+        <div id="status"></div>
+        
+        <h3>If Panel Still Doesn't Appear:</h3>
+        <ol>
+            <li>Open DevTools Console (in the DevTools window itself)</li>
+            <li>Look for messages starting with <code>[RapidTriage]</code></li>
+            <li>Check for any error messages</li>
+            <li>Try: Close Chrome completely and restart</li>
+        </ol>
+    </div>
+    
+    <div class="card">
+        <h2>✅ Expected Result</h2>
+        <div class="status success">
+            You should see a "RapidTriage" tab in the DevTools panel tabs
+            (Elements, Console, Sources, Network, <strong>RapidTriage</strong>, ...)
+        </div>
+        
+        <h3>Panel Features:</h3>
+        <ul>
+            <li>Test Server Connection</li>
+            <li>Take Screenshots</li>
+            <li>Run Lighthouse Audits</li>
+            <li>Get Console Logs</li>
+            <li>Inspect Elements</li>
+        </ul>
+    </div>
+    
+    <div class="card">
+        <h2>🐛 Debug Information</h2>
+        <pre id="debug-info">
+Extension manifest version: 3
+DevTools page: devtools.html
+Panel page: panel.html
+Required permissions: ✓ scripting, ✓ activeTab, ✓ debugger
+        </pre>
+    </div>
+
+    <script>
+        function checkExtension() {
+            const status = document.getElementById('status');
+            
+            // Check if extension is installed
+            if (chrome && chrome.runtime) {
+                status.innerHTML = '<div class="status success">✅ Chrome extension API is available</div>';
+                
+                // Try to send a message to the extension
+                try {
+                    chrome.runtime.sendMessage('kjhcfbhaehkfcgmdmobjpjjpnioiifnd', {type: 'PING'}, 
+                        response => {
+                            if (chrome.runtime.lastError) {
+                                status.innerHTML += '<div class="status warning">⚠️ Extension not responding. Make sure to reload it.</div>';
+                            } else {
+                                status.innerHTML += '<div class="status success">✅ Extension is loaded and responding</div>';
+                            }
+                        }
+                    );
+                } catch (e) {
+                    status.innerHTML += '<div class="status info">ℹ️ Cannot communicate with extension from this page</div>';
+                }
+            } else {
+                status.innerHTML = '<div class="status warning">⚠️ Chrome extension API not available</div>';
+            }
+        }
+        
+        function testConsoleLog() {
+            console.log('[RapidTriage Test] Console log test');
+            console.info('[RapidTriage Test] Info message');
+            console.warn('[RapidTriage Test] Warning message');
+            console.error('[RapidTriage Test] Error message');
+            
+            const status = document.getElementById('status');
+            status.innerHTML = '<div class="status success">✅ Test messages sent to console. Check DevTools Console.</div>';
+        }
+        
+        function openExtensions() {
+            window.open('chrome://extensions/', '_blank');
+        }
+        
+        // Auto-check on load
+        setTimeout(checkExtension, 500);
+        
+        // Add timestamp
+        document.getElementById('debug-info').innerHTML += '\nPage loaded: ' + new Date().toLocaleString();
+    </script>
+</body>
+</html>
