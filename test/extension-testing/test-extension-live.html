@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RapidTriage Extension Test - Live Simulation</title>
+    <style>
+        body {
+            width: 450px;
+            margin: 50px auto;
+            padding: 15px;
+            font-family: system-ui, sans-serif;
+            background: #1e1e1e;
+            color: #cccccc;
+            border: 2px solid #444;
+            border-radius: 5px;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            font-size: 16px;
+            margin: 0 0 15px 0;
+        }
+        
+        .status {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+        
+        button {
+            background: #007ACC;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 3px;
+            font-size: 12px;
+            position: relative;
+            min-width: 100px;
+        }
+        
+        button:hover {
+            background: #005a9e;
+        }
+        
+        button:active {
+            background: #004080;
+            transform: scale(0.98);
+        }
+        
+        button.loading {
+            background: #888;
+            cursor: wait;
+            color: transparent;
+        }
+        
+        button.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 2px solid #007ACC;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-container {
+            margin-top: 15px;
+            border-top: 1px solid #444;
+            padding-top: 15px;
+        }
+        
+        .results-header {
+            color: #4CAF50;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .preview-area {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .preview-header {
+            color: #9CDCFE;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        
+        .preview-content {
+            font-family: monospace;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .info { color: #2196F3; }
+        
+        .log {
+            background: #2d2d2d;
+            padding: 8px;
+            border-radius: 3px;
+            margin: 3px 0;
+            font-family: monospace;
+            font-size: 11px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .test-controls {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 RapidTriage Extension - Live Test</h1>
+    
+    <div class="status">
+        <div>Chrome: 138</div>
+        <div>Time: <span id="time"></span></div>
+        <div>Status: <span id="status">Connected</span></div>
+    </div>
+    
+    <div>
+        <button onclick="testServer(this)">Test Server</button>
+        <button onclick="takeScreenshot(this)">Screenshot</button>
+        <button onclick="clearLogs(this)">Clear</button>
+        <button onclick="openDevTools(this)">Open DevTools</button>
+    </div>
+    
+    <div>
+        <button onclick="runLighthouseAudit(this)">Lighthouse Audit</button>
+        <button onclick="getConsoleLogs(this)">Console Logs</button>
+        <button onclick="inspectElement(this)">Inspect Element</button>
+    </div>
+    
+    <div class="results-container">
+        <div class="results-header">📊 Results Preview</div>
+        <div class="preview-area" id="preview">
+            <div class="preview-header">Waiting for action...</div>
+            <div class="preview-content" id="preview-content">
+                Click any button above to see results here instantly.
+            </div>
+        </div>
+    </div>
+    
+    <div class="results-container">
+        <div class="results-header">📋 Activity Log</div>
+        <div id="logs" class="log"></div>
+    </div>
+    
+    <div class="test-controls">
+        <div class="results-header">🧪 Test Controls</div>
+        <button onclick="simulateAllButtons()">Test All Buttons</button>
+        <button onclick="location.reload()">Reset Page</button>
+    </div>
+
+    <script>
+        // Initialize
+        document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        
+        function addLog(message) {
+            const logs = document.getElementById('logs');
+            const entry = `[${new Date().toLocaleTimeString()}] ${message}\n`;
+            logs.textContent = entry + logs.textContent;
+        }
+        
+        function showPreview(title, content, type = 'info') {
+            console.log('showPreview called:', title, type);
+            const previewHeader = document.querySelector('.preview-header');
+            const previewContent = document.getElementById('preview-content');
+            
+            previewHeader.textContent = title;
+            previewContent.innerHTML = content;
+            previewContent.className = `preview-content ${type}`;
+            
+            // Add animation
+            previewContent.style.opacity = '0';
+            setTimeout(() => {
+                previewContent.style.transition = 'opacity 0.3s';
+                previewContent.style.opacity = '1';
+            }, 50);
+        }
+        
+        function setButtonLoading(button, loading = true) {
+            if (!button) return;
+            
+            if (loading) {
+                button.classList.add('loading');
+                button.disabled = true;
+                button.setAttribute('data-original-text', button.textContent);
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+                const originalText = button.getAttribute('data-original-text');
+                if (originalText) {
+                    button.textContent = originalText;
+                }
+            }
+        }
+        
+        function testServer(button) {
+            console.log('testServer called');
+            setButtonLoading(button, true);
+            addLog('Testing server connection...');
+            
+            showPreview('🔍 Server Connection Test', 'Testing connection to http://localhost:3025...<br>Please wait...', 'info');
+            
+            // Simulate server response
+            setTimeout(() => {
+                const content = `
+                    <div class="success">✅ Connection Successful</div>
+                    <strong>Server:</strong> RapidTriageME Browser Tools Server<br>
+                    <strong>Version:</strong> 2.0.0<br>
+                    <strong>Port:</strong> 3025<br>
+                    <strong>Signature:</strong> mcp-browser-connector-24x7
+                `;
+                showPreview('🔍 Server Connection Test', content, 'success');
+                addLog('✅ Connected: RapidTriageME Browser Tools Server v2.0.0');
+                setButtonLoading(button, false);
+            }, 1500);
+        }
+        
+        function takeScreenshot(button) {
+            console.log('takeScreenshot called');
+            setButtonLoading(button, true);
+            addLog('📷 Taking screenshot...');
+            
+            showPreview('📷 Screenshot Capture', 'Capturing current tab screenshot...<br>Please wait...', 'info');
+            
+            setTimeout(() => {
+                const content = `
+                    <div class="success">✅ Screenshot Complete</div>
+                    <strong>File:</strong> screenshot_${Date.now()}.png<br>
+                    <strong>Size:</strong> ~847KB<br>
+                    <strong>URL:</strong> ${window.location.href}<br>
+                    <strong>Time:</strong> ${new Date().toLocaleTimeString()}
+                `;
+                showPreview('📷 Screenshot Capture', content, 'success');
+                addLog('✅ Screenshot captured successfully');
+                setButtonLoading(button, false);
+            }, 2000);
+        }
+        
+        function clearLogs(button) {
+            console.log('clearLogs called');
+            setButtonLoading(button, true);
+            
+            setTimeout(() => {
+                document.getElementById('logs').textContent = '';
+                addLog('Logs cleared');
+                
+                const content = `
+                    <div class="success">✅ Logs Cleared</div>
+                    <strong>Action:</strong> All activity logs cleared<br>
+                    <strong>Status:</strong> Ready for new actions<br>
+                    <strong>Time:</strong> ${new Date().toLocaleTimeString()}
+                `;
+                showPreview('🧹 Clear Logs', content, 'success');
+                setButtonLoading(button, false);
+            }, 300);
+        }
+        
+        function openDevTools(button) {
+            console.log('openDevTools called');
+            setButtonLoading(button, true);
+            addLog('Opening DevTools...');
+            
+            showPreview('🔧 DevTools Access', 'Attempting to open DevTools...<br>Please wait...', 'info');
+            
+            setTimeout(() => {
+                const content = `
+                    <div class="success">✅ DevTools Access Granted</div>
+                    <strong>Status:</strong> Debugger attached successfully<br>
+                    <strong>Tab ID:</strong> ${Math.floor(Math.random() * 1000000)}<br>
+                    <strong>Instructions:</strong> Press F12 to open DevTools<br>
+                    <strong>Time:</strong> ${new Date().toLocaleTimeString()}
+                `;
+                showPreview('🔧 DevTools Access', content, 'success');
+                addLog('✅ DevTools opened (press F12 to see)');
+                setButtonLoading(button, false);
+            }, 1000);
+        }
+        
+        function runLighthouseAudit(button) {
+            console.log('runLighthouseAudit called');
+            setButtonLoading(button, true);
+            addLog('🔍 Starting Lighthouse audit...');
+            
+            showPreview('🔍 Lighthouse Audit', `
+                <div class="info">🔍 Lighthouse Audit Started</div>
+                <strong>URL:</strong> ${window.location.href}<br>
+                <strong>Status:</strong> Analyzing performance...<br>
+                <div style="margin-top: 5px;">This may take a few seconds...</div>
+            `, 'info');
+            
+            setTimeout(() => {
+                const content = `
+                    <div class="success">✅ Lighthouse Audit Complete</div>
+                    <strong>🏃 Performance:</strong> 95/100<br>
+                    <strong>♿ Accessibility:</strong> 88/100<br>
+                    <strong>🎯 Best Practices:</strong> 92/100<br>
+                    <strong>🔍 SEO:</strong> 85/100<br>
+                    <strong>⏱️ Load Time:</strong> 150ms<br>
+                    <strong>📅 Time:</strong> ${new Date().toLocaleTimeString()}
+                `;
+                showPreview('🔍 Lighthouse Audit', content, 'success');
+                addLog('✅ Lighthouse Audit Complete');
+                addLog('  🏃 Performance: 95/100');
+                addLog('  ♿ Accessibility: 88/100');
+                setButtonLoading(button, false);
+            }, 3000);
+        }
+        
+        function getConsoleLogs(button) {
+            console.log('getConsoleLogs called');
+            setButtonLoading(button, true);
+            addLog('📋 Getting console logs...');
+            
+            showPreview('📋 Console Logs', `
+                <div class="info">📋 Console Analysis Started</div>
+                <strong>URL:</strong> ${window.location.href}<br>
+                <strong>Status:</strong> Fetching console messages...<br>
+                <div style="margin-top: 5px;">Please wait...</div>
+            `, 'info');
+            
+            setTimeout(() => {
+                const content = `
+                    <div class="success">✅ Console Analysis Complete</div>
+                    <strong>Total:</strong> 4 messages<br>
+                    <strong>❌ Errors:</strong> 1<br>
+                    <strong>⚠️ Warnings:</strong> 1<br>
+                    <strong>ℹ️ Info:</strong> 1<br>
+                    <strong>📝 Logs:</strong> 1<br>
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #444;">
+                        <strong>Recent messages:</strong><br>
+                        <div style="font-size: 10px; margin-top: 4px;">
+                            📝 [log] Page loaded successfully<br>
+                            ℹ️ [info] RapidTriage extension active<br>
+                            ⚠️ [warn] Network request timeout (simulated)<br>
+                            ❌ [error] Failed to load resource (mock)
+                        </div>
+                    </div>
+                `;
+                showPreview('📋 Console Logs', content, 'success');
+                addLog('✅ Found 4 console entries');
+                setButtonLoading(button, false);
+            }, 2500);
+        }
+        
+        function inspectElement(button) {
+            console.log('inspectElement called');
+            setButtonLoading(button, true);
+            addLog('Element inspection ready');
+            
+            const content = `
+                <div class="info">🔍 Element Inspector Ready</div>
+                <strong>URL:</strong> ${window.location.href}<br>
+                <strong>Status:</strong> Ready to inspect elements<br>
+                <strong>Instructions:</strong> Click on any page element<br>
+                <div style="margin-top: 5px; font-style: italic;">
+                    Note: Full element inspection requires content script integration
+                </div>
+            `;
+            showPreview('🔍 Element Inspector', content, 'info');
+            
+            setTimeout(() => {
+                setButtonLoading(button, false);
+            }, 500);
+        }
+        
+        function simulateAllButtons() {
+            const buttons = document.querySelectorAll('button');
+            let delay = 0;
+            
+            buttons.forEach((button, index) => {
+                if (button.textContent.includes('Test All') || button.textContent.includes('Reset')) return;
+                
+                setTimeout(() => {
+                    button.click();
+                }, delay);
+                delay += 4000;
+            });
+        }
+        
+        // Add initial log
+        addLog('RapidTriage test page loaded');
+        
+        // Generate some console messages for testing
+        console.log('Test page initialized');
+        console.info('RapidTriage extension test ready');
+        console.warn('This is a test warning');
+        console.error('This is a test error (not a real error)');
+    </script>
+</body>
+</html>

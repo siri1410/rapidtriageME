@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RapidTriage Extension Feature Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .feature { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        button { background: #007ACC; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; margin: 5px; }
+        button:hover { background: #005a9e; }
+    </style>
+</head>
+<body>
+    <h1>🚀 RapidTriage Extension Feature Test</h1>
+    
+    <div class="feature">
+        <h3>📷 Screenshot Test</h3>
+        <p>Use the extension to take a screenshot of this page</p>
+        <button onclick="console.log('Screenshot button clicked')">Test Button</button>
+    </div>
+    
+    <div class="feature">
+        <h3>🔍 Lighthouse Audit Test</h3>
+        <p>Run a lighthouse audit on this page to test performance metrics</p>
+        <button onclick="console.log('Lighthouse test initiated')">Audit Button</button>
+    </div>
+    
+    <div class="feature">
+        <h3>📋 Console Logs Test</h3>
+        <p>Generate some console messages for testing</p>
+        <button onclick="generateTestLogs()">Generate Logs</button>
+    </div>
+    
+    <script>
+        function generateTestLogs() {
+            console.log('🟢 Test log message generated');
+            console.info('ℹ️ Test info message');
+            console.warn('⚠️ Test warning message');
+            console.error('❌ Test error message (simulated)');
+        }
+        
+        // Auto-generate some logs for testing
+        console.log('Page loaded successfully');
+        console.info('RapidTriage test page ready');
+    </script>
+</body>
+</html>

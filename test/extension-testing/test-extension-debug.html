@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chrome Extension Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        h2 { color: #333; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        button:hover { background: #45a049; }
+        #results {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chrome Extension Debug Test</h1>
+    
+    <div class="step">
+        <h2>Step 1: Check Chrome Version</h2>
+        <button onclick="checkChromeVersion()">Check Version</button>
+        <div id="chrome-version"></div>
+    </div>
+
+    <div class="step">
+        <h2>Step 2: Extension Debug Commands</h2>
+        <p>Run these commands in Chrome's console (F12) when on chrome://extensions page:</p>
+        <div class="code">
+// 1. Get all installed extensions
+chrome.management.getAll(exts => {
+    exts.filter(e => e.name.includes('RapidTriage')).forEach(e => {
+        console.log('Extension:', e.name, 'ID:', e.id, 'Enabled:', e.enabled);
+    });
+});
+
+// 2. Check if DevTools API is available
+console.log('DevTools API available:', typeof chrome.devtools);
+
+// 3. Get extension errors
+chrome.runtime.getPackageDirectoryEntry(dir => {
+    console.log('Extension directory:', dir);
+});
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 3: Manual Panel Test</h2>
+        <p>Create a minimal test extension to isolate the issue:</p>
+        <button onclick="generateMinimalExtension()">Generate Minimal Test Files</button>
+        <div id="minimal-extension"></div>
+    </div>
+
+    <div class="step">
+        <h2>Step 4: Debugging Checklist</h2>
+        <ul>
+            <li>✓ manifest.json has "devtools_page": "devtools.html"</li>
+            <li>✓ devtools.html exists and loads devtools.js</li>
+            <li>✓ devtools.js calls chrome.devtools.panels.create()</li>
+            <li>✓ panel.html exists in the extension directory</li>
+            <li>✓ No errors in chrome://extensions page</li>
+            <li>✓ Extension is enabled</li>
+            <li>✓ DevTools was reopened after loading extension</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>Step 5: Test Results</h2>
+        <button onclick="runDiagnostics()">Run Diagnostics</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function checkChromeVersion() {
+            const version = navigator.userAgent.match(/Chrome\/(\d+\.\d+\.\d+\.\d+)/);
+            const versionDiv = document.getElementById('chrome-version');
+            if (version) {
+                versionDiv.innerHTML = `<p class="success">Chrome Version: ${version[1]}</p>`;
+                if (parseInt(version[1].split('.')[0]) >= 138) {
+                    versionDiv.innerHTML += `<p class="warning">You're running Chrome 138+. DevTools extensions may have compatibility issues.</p>`;
+                }
+            } else {
+                versionDiv.innerHTML = `<p class="error">Unable to detect Chrome version</p>`;
+            }
+        }
+
+        function generateMinimalExtension() {
+            const manifestContent = {
+                "name": "Test DevTools Panel",
+                "version": "1.0.0",
+                "manifest_version": 3,
+                "devtools_page": "devtools.html"
+            };
+
+            const devtoolsHTML = `<!DOCTYPE html>
+<html>
+<body>
+<script src="devtools.js"></script>
+</body>
+</html>`;
+
+            const devtoolsJS = `console.log('DevTools script loaded');
+chrome.devtools.panels.create(
+    "Test Panel",
+    null,
+    "panel.html",
+    function(panel) {
+        console.log('Panel created:', panel);
+    }
+);`;
+
+            const panelHTML = `<!DOCTYPE html>
+<html>
+<body>
+<h1>Test Panel Works!</h1>
+</body>
+</html>`;
+
+            const output = document.getElementById('minimal-extension');
+            output.innerHTML = `
+                <h3>Create these files in a new directory:</h3>
+                <h4>manifest.json:</h4>
+                <div class="code">${JSON.stringify(manifestContent, null, 2)}</div>
+                <h4>devtools.html:</h4>
+                <div class="code">${devtoolsHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                <h4>devtools.js:</h4>
+                <div class="code">${devtoolsJS}</div>
+                <h4>panel.html:</h4>
+                <div class="code">${panelHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                <p class="success">Load this minimal extension to test if panels work at all.</p>
+            `;
+        }
+
+        function runDiagnostics() {
+            const results = document.getElementById('results');
+            let output = "DIAGNOSTIC RESULTS\n==================\n\n";
+            
+            // Check user agent
+            output += "User Agent:\n" + navigator.userAgent + "\n\n";
+            
+            // Check Chrome version
+            const version = navigator.userAgent.match(/Chrome\/(\d+)/);
+            if (version) {
+                output += "Chrome Major Version: " + version[1] + "\n";
+                if (parseInt(version[1]) >= 138) {
+                    output += "⚠️ Chrome 138+ detected - may have DevTools extension issues\n";
+                }
+            }
+            
+            // Platform info
+            output += "\nPlatform: " + navigator.platform + "\n";
+            output += "Language: " + navigator.language + "\n";
+            
+            // Extension debugging tips
+            output += "\n\nDEBUGGING STEPS:\n";
+            output += "1. Open chrome://extensions\n";
+            output += "2. Enable Developer mode\n";
+            output += "3. Check for errors under your extension\n";
+            output += "4. Click 'service worker' to inspect background script\n";
+            output += "5. In DevTools console, run: chrome.devtools\n";
+            output += "6. If undefined, the API isn't loaded in that context\n";
+            
+            results.textContent = output;
+        }
+    </script>
+</body>
+</html>

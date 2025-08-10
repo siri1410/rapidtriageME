@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Checker</title>
+    <style>
+        body {
+            font-family: 'SF Mono', Monaco, monospace;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 { color: #569cd6; }
+        h2 { color: #4ec9b0; margin-top: 30px; }
+        .step {
+            background: #2d2d2d;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 3px solid #569cd6;
+        }
+        .code {
+            background: #1e1e1e;
+            padding: 10px;
+            border: 1px solid #3e3e3e;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .success { color: #4ec9b0; }
+        .error { color: #f48771; }
+        .warning { color: #dcdcaa; }
+        button {
+            background: #569cd6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #4a8ac9; }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #1e1e1e;
+            border: 1px solid #3e3e3e;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Chrome Extension DevTools Panel Checker</h1>
+    
+    <div class="step">
+        <h2>Step 1: Quick Diagnosis</h2>
+        <p>This will check your Chrome version and known issues:</p>
+        <button onclick="quickDiagnosis()">Run Quick Diagnosis</button>
+        <div id="diagnosis-result" class="result"></div>
+    </div>
+
+    <div class="step">
+        <h2>Step 2: Extension Instructions</h2>
+        <div class="warning">
+            <p><strong>Load the Diagnostic Extension:</strong></p>
+            <ol>
+                <li>Open <code>chrome://extensions/</code></li>
+                <li>Enable "Developer mode" (top right)</li>
+                <li>Click "Load unpacked"</li>
+                <li>Select: <code>/Users/yarlis/Downloads/rapidtriageME/devtools-diagnostic</code></li>
+                <li>Note the Extension ID (looks like: abcdefghijklmnopqrstuvwx)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 3: Check Service Worker</h2>
+        <p>After loading the extension:</p>
+        <ol>
+            <li>In chrome://extensions/, find "DevTools Panel Diagnostic"</li>
+            <li>Click on "service worker" link</li>
+            <li>Look for messages starting with [Diagnostic]</li>
+            <li>Copy any error messages you see</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h2>Step 4: Test DevTools</h2>
+        <ol>
+            <li>Open this page in a new tab</li>
+            <li>Open DevTools (F12)</li>
+            <li>Check for these tabs: "Diagnostic1", "Diagnostic2", "Diagnostic3"</li>
+            <li>Check Elements panel → right sidebar for "Diagnostic Sidebar"</li>
+        </ol>
+        <button onclick="testDevToolsAPI()">Test DevTools API Availability</button>
+        <div id="devtools-result" class="result"></div>
+    </div>
+
+    <div class="step">
+        <h2>Step 5: Chrome Flags Check</h2>
+        <p>Copy and paste these URLs to check flags:</p>
+        <div class="code">chrome://flags/#extensions-on-chrome-urls
+chrome://flags/#extension-mime-request-handling
+chrome://flags/#enable-experimental-extension-apis</div>
+        <p>Make sure none are set to "Disabled"</p>
+    </div>
+
+    <div class="step">
+        <h2>Step 6: Console Commands</h2>
+        <p>Run these in DevTools console on the chrome://extensions page:</p>
+        <div class="code">// Check for extension errors
+chrome.management.getAll(exts => {
+    const diagnostic = exts.find(e => e.name.includes('Diagnostic'));
+    if (diagnostic) {
+        console.log('Diagnostic Extension:', diagnostic);
+        console.log('Enabled:', diagnostic.enabled);
+        console.log('Type:', diagnostic.type);
+        console.log('Permissions:', diagnostic.permissions);
+    } else {
+        console.log('Diagnostic extension not found');
+    }
+});</div>
+    </div>
+
+    <div class="step">
+        <h2>Possible Issues & Solutions</h2>
+        <div id="issues-list"></div>
+    </div>
+
+    <script>
+        function quickDiagnosis() {
+            const result = document.getElementById('diagnosis-result');
+            let html = '<h3>Diagnosis Results:</h3>';
+            
+            // Check Chrome version
+            const match = navigator.userAgent.match(/Chrome\/(\d+)/);
+            if (match) {
+                const version = parseInt(match[1]);
+                html += `<p>Chrome Version: <span class="${version >= 138 ? 'warning' : 'success'}">${version}</span></p>`;
+                
+                if (version >= 138) {
+                    html += '<p class="warning">⚠️ Chrome 138+ detected. There may be issues with DevTools extensions.</p>';
+                    html += '<p>Known issues in Chrome 138:</p>';
+                    html += '<ul>';
+                    html += '<li>DevTools panels may not appear immediately</li>';
+                    html += '<li>Manifest V3 DevTools API may have timing issues</li>';
+                    html += '<li>Some panel creation methods may fail silently</li>';
+                    html += '</ul>';
+                }
+            }
+            
+            // Check platform
+            html += `<p>Platform: ${navigator.platform}</p>`;
+            html += `<p>User Agent: <code style="font-size: 11px;">${navigator.userAgent}</code></p>`;
+            
+            // Recommendations
+            html += '<h3>Recommendations:</h3>';
+            html += '<ol>';
+            html += '<li>Load the diagnostic extension from Step 2</li>';
+            html += '<li>Check the service worker console for errors</li>';
+            html += '<li>Try opening DevTools in a new incognito window</li>';
+            html += '<li>Clear Chrome cache and restart</li>';
+            html += '</ol>';
+            
+            result.innerHTML = html;
+        }
+        
+        function testDevToolsAPI() {
+            const result = document.getElementById('devtools-result');
+            let html = '<h3>DevTools API Test:</h3>';
+            
+            // This will only work if opened from DevTools context
+            html += '<p>Note: chrome.devtools API is only available within DevTools context.</p>';
+            html += '<p>To properly test:</p>';
+            html += '<ol>';
+            html += '<li>Open DevTools (F12)</li>';
+            html += '<li>Go to Console</li>';
+            html += '<li>Type: <code>chrome.devtools</code></li>';
+            html += '<li>If undefined, the API is not loading properly</li>';
+            html += '</ol>';
+            
+            result.innerHTML = html;
+        }
+        
+        // List common issues
+        function showIssues() {
+            const issues = document.getElementById('issues-list');
+            issues.innerHTML = `
+                <div class="error">
+                    <h3>🔴 If panels don't appear at all:</h3>
+                    <ul>
+                        <li>Chrome 138+ has known issues with DevTools extensions</li>
+                        <li>Try Chrome Canary or Chrome Dev channel</li>
+                        <li>Check if other DevTools extensions work (React DevTools, Vue DevTools)</li>
+                        <li>Disable all other extensions and try again</li>
+                        <li>Clear Chrome profile: chrome://settings/resetProfileSettings</li>
+                    </ul>
+                </div>
+                <div class="warning">
+                    <h3>🟡 If you see errors in console:</h3>
+                    <ul>
+                        <li>"chrome.devtools is undefined" - The devtools_page isn't loading</li>
+                        <li>"Cannot read property 'create' of undefined" - panels API not available</li>
+                        <li>"Unchecked runtime.lastError" - Permission or manifest issues</li>
+                    </ul>
+                </div>
+                <div class="success">
+                    <h3>🟢 If diagnostic panels appear:</h3>
+                    <ul>
+                        <li>The issue is with your specific extension code</li>
+                        <li>Check for JavaScript errors in your devtools.js</li>
+                        <li>Ensure panel.html exists and is valid</li>
+                        <li>Try simplifying your code to match the diagnostic extension</li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // Run on load
+        window.onload = () => {
+            showIssues();
+        };
+    </script>
+</body>
+</html>

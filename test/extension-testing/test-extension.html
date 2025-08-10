@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test RapidTriage Extension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007ACC;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        #output {
+            background: #2d2d2d;
+            color: #cccccc;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border-radius: 3px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 RapidTriage Extension Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Extension Status</h2>
+        <p>Use the RapidTriage popup or DevTools panel to test the extension functionality.</p>
+        <p>The extension should be able to:</p>
+        <ul>
+            <li>✅ Test server connection</li>
+            <li>📷 Take screenshots</li>
+            <li>🔍 Run Lighthouse audits</li>
+            <li>📋 Get console logs</li>
+            <li>🧹 Clear logs</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Buttons</h2>
+        <button onclick="testServer()">Test Server Connection</button>
+        <button onclick="generateConsoleMessages()">Generate Console Messages</button>
+        <button onclick="simulateError()">Simulate Error</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Output</h2>
+        <div id="output">Ready for testing...\n</div>
+    </div>
+
+    <script>
+        function log(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function testServer() {
+            log('Testing server connection...');
+            fetch('http://localhost:3025/.identity')
+                .then(response => response.json())
+                .then(data => {
+                    log(`✅ Server connected: ${data.name} v${data.version}`);
+                })
+                .catch(error => {
+                    log(`❌ Server connection failed: ${error.message}`);
+                });
+        }
+        
+        function generateConsoleMessages() {
+            console.log('This is a test log message');
+            console.warn('This is a test warning message');
+            console.error('This is a test error message');
+            console.info('This is a test info message');
+            log('Generated console messages (check DevTools console)');
+        }
+        
+        function simulateError() {
+            try {
+                throw new Error('Simulated error for testing');
+            } catch (e) {
+                console.error('Caught error:', e);
+                log('Simulated error thrown (check DevTools console)');
+            }
+        }
+        
+        // Auto-test server on load
+        setTimeout(testServer, 1000);
+    </script>
+</body>
+</html>
