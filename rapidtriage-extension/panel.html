@@ -1,501 +1,244 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <style>
         body {
-            padding: 16px;
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: #282828;
-            color: #fff;
             margin: 0;
+            padding: 20px;
+            font-family: system-ui, sans-serif;
+            background: #1e1e1e;
+            color: #cccccc;
         }
         
-        /* Tab Navigation */
-        .tabs-container {
-            display: flex;
-            border-bottom: 1px solid #444;
-            margin: -16px -16px 16px -16px;
-            padding: 0 16px;
-            background: #222;
+        h1 {
+            color: #4CAF50;
+            margin: 0 0 20px 0;
+            font-size: 18px;
         }
         
-        .tab-button {
-            padding: 12px 20px;
-            background: none;
-            color: #999;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-        
-        .tab-button:hover {
-            color: #fff;
-            background: #333;
-        }
-        
-        .tab-button.active {
-            color: #fff;
-            border-bottom-color: #4a9eff;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        .endpoint-list {
-            margin: 16px 0;
-        }
-        .endpoint-item {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-        .endpoint-form {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            align-items: center;
-        }
-        button {
-            padding: 4px 8px;
-        }
-        input {
-            padding: 4px;
-        }
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .status-connected {
-            background: #4caf50;
-        }
-        .status-disconnected {
-            background: #f44336;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 4px;
-        }
-        .checkbox-group {
-            margin-bottom: 8px;
-        }
-        .checkbox-group-2 {
-            margin-bottom: 6px;
-        }
-        input[type="number"],
-        input[type="text"] {
-            padding: 4px;
-            width: 200px;
-        }
-        .settings-section {
-            border: 1px solid #ccc;
-            padding: 16px;
-            margin-bottom: 16px;
-            border-radius: 4px;
-        }
-        .settings-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            user-select: none;
-        }
-        .settings-header h3 {
-            margin: 0;
-        }
-        .settings-content {
-            display: none;
-            margin-top: 16px;
-        }
-        .settings-content.visible {
-            display: block;
-        }
-        .chevron {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s ease;
-        }
-        .chevron.open {
-            transform: rotate(180deg);
-        }
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .action-button {
-            background-color: #4a4a4a;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .action-button:hover {
-            background-color: #5a5a5a;
-        }
-        .action-button.danger {
-            background-color: #f44336;
-        }
-        .action-button.danger:hover {
-            background-color: #d32f2f;
-        }
-        
-        /* Performance Metrics */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
+        .status {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 5px;
             margin-bottom: 20px;
         }
         
-        .metric-card {
-            background: #333;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 3px solid #4a9eff;
-        }
-        
-        .metric-label {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 4px;
-        }
-        
-        .metric-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-        }
-        
-        .metric-status {
-            font-size: 10px;
-            margin-top: 4px;
-            padding: 2px 6px;
+        .log {
+            background: #2d2d2d;
+            padding: 10px;
             border-radius: 3px;
-            display: inline-block;
-        }
-        
-        .metric-status.good {
-            background: #4caf50;
-            color: white;
-        }
-        
-        .metric-status.needs-improvement {
-            background: #ff9800;
-            color: white;
-        }
-        
-        .metric-status.poor {
-            background: #f44336;
-            color: white;
-        }
-        
-        /* Insights Section */
-        .insight-item {
-            background: #333;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            border-left: 3px solid #ff9800;
-        }
-        
-        .insight-title {
-            font-weight: bold;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-        
-        .insight-description {
-            color: #ccc;
+            margin: 5px 0;
+            font-family: monospace;
             font-size: 12px;
-            line-height: 1.4;
         }
         
-        /* Network Tree */
-        .dependency-tree {
-            background: #333;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            max-height: 300px;
-            overflow-y: auto;
+        button {
+            background: #007ACC;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
         }
         
-        .tree-node {
-            margin-left: 16px;
-            padding: 2px 0;
-        }
-        
-        .critical-path {
-            color: #ff9800;
-            font-weight: bold;
-        }
-        
-        /* LCP Phases */
-        .lcp-phases {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .lcp-phase {
-            background: #333;
-            padding: 8px;
-            border-radius: 4px;
-            text-align: center;
-        }
-        
-        .lcp-phase-name {
-            font-size: 10px;
-            color: #999;
-            margin-bottom: 2px;
-        }
-        
-        .lcp-phase-time {
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
+        button:hover {
+            background: #005a9e;
         }
     </style>
 </head>
 <body>
-    <!-- Tab Navigation -->
-    <div class="tabs-container">
-        <button class="tab-button active" data-tab="general">General</button>
-        <button class="tab-button" data-tab="performance">Performance</button>
-        <button class="tab-button" data-tab="network">Network</button>
-        <button class="tab-button" data-tab="settings">Settings</button>
+    <h1>🚀 RapidTriage DevTools Panel</h1>
+    
+    <div class="status">
+        <div>✅ Panel loaded successfully!</div>
+        <div>Time: <span id="time"></span></div>
+        <div>Chrome: <span id="chrome-version"></span></div>
     </div>
     
-    <!-- General Tab -->
-    <div id="general-tab" class="tab-content active">
-        <div class="settings-section">
-            <h3>Quick Actions</h3>
-            <div class="quick-actions">
-                <button id="capture-screenshot" class="action-button">
-                    📸 Screenshot
-                </button>
-                <button id="run-audits" class="action-button">
-                    🔍 Run Audits
-                </button>
-                <button id="wipe-logs" class="action-button danger">
-                    🗑️ Clear Logs
-                </button>
-            </div>
-            <div class="checkbox-group-2" style="margin-top: 10px; display: flex; align-items: center;">
-                <label>
-                    <input type="checkbox" id="allow-auto-paste">
-                    Allow Auto-paste to Cursor
-                </label>
-            </div>
-        </div>
-        
-        <!-- Core Web Vitals -->
-        <div class="settings-section">
-            <h3>Core Web Vitals</h3>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">LCP</div>
-                    <div class="metric-value" id="lcp-value">--</div>
-                    <div class="metric-status" id="lcp-status">--</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">FID</div>
-                    <div class="metric-value" id="fid-value">--</div>
-                    <div class="metric-status" id="fid-status">--</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">CLS</div>
-                    <div class="metric-value" id="cls-value">--</div>
-                    <div class="metric-status" id="cls-status">--</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">TTFB</div>
-                    <div class="metric-value" id="ttfb-value">--</div>
-                    <div class="metric-status" id="ttfb-status">--</div>
-                </div>
-            </div>
-            <button id="capture-metrics" class="action-button" style="width: 100%;">
-                Capture Current Metrics
-            </button>
-        </div>
-    </div>
+    <button onclick="testServer()">Test Server</button>
+    <button onclick="takeScreenshot()">Screenshot</button>
+    <button onclick="clearLogs()">Clear</button>
+    <button onclick="openDevTools()">Open DevTools</button>
     
-    <!-- Performance Tab -->
-    <div id="performance-tab" class="tab-content">
-        <div class="settings-section">
-            <h3>LCP Breakdown by Phase</h3>
-            <div class="lcp-phases">
-                <div class="lcp-phase">
-                    <div class="lcp-phase-name">TTFB</div>
-                    <div class="lcp-phase-time" id="lcp-ttfb">--</div>
-                </div>
-                <div class="lcp-phase">
-                    <div class="lcp-phase-name">Load Delay</div>
-                    <div class="lcp-phase-time" id="lcp-load-delay">--</div>
-                </div>
-                <div class="lcp-phase">
-                    <div class="lcp-phase-name">Load Time</div>
-                    <div class="lcp-phase-time" id="lcp-load-time">--</div>
-                </div>
-                <div class="lcp-phase">
-                    <div class="lcp-phase-name">Render Delay</div>
-                    <div class="lcp-phase-time" id="lcp-render-delay">--</div>
-                </div>
-            </div>
-            <div style="margin-top: 12px; padding: 8px; background: #2a2a2a; border-radius: 4px;">
-                <div style="font-size: 11px; color: #999; margin-bottom: 4px;">Field Data (75th percentile)</div>
-                <div id="field-data-content" style="font-size: 12px; color: #fff;">
-                    Enable field data in settings to see Chrome UX Report data
-                </div>
-            </div>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Performance Insights</h3>
-            <div id="performance-insights">
-                <div class="insight-item">
-                    <div class="insight-title">Waiting for insights...</div>
-                    <div class="insight-description">Run performance analysis to see recommendations</div>
-                </div>
-            </div>
-            <button id="analyze-performance" class="action-button" style="width: 100%;">
-                Analyze Performance
-            </button>
-        </div>
-    </div>
+    <br><br>
     
-    <!-- Network Tab -->
-    <div id="network-tab" class="tab-content">
-        <div class="settings-section">
-            <h3>Network Dependency Tree</h3>
-            <div class="dependency-tree" id="network-tree">
-                <div style="color: #999;">No critical request chains detected</div>
-            </div>
-            <button id="analyze-network" class="action-button" style="width: 100%;">
-                Analyze Network Dependencies
-            </button>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Network Insights</h3>
-            <div id="network-insights">
-                <div class="insight-item">
-                    <div class="insight-title">No issues detected</div>
-                    <div class="insight-description">Network performance appears optimal</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <button onclick="runLighthouseAudit()">Lighthouse Audit</button>
+    <button onclick="getConsoleLogs()">Console Logs</button>
+    <button onclick="inspectElement()">Inspect Element</button>
     
-    <!-- Settings Tab -->
-    <div id="settings-tab" class="tab-content">
-        <div class="settings-section">
-            <h3>Screenshot Settings</h3>
-            <div class="form-group">
-                <label for="screenshot-path">Screenshot directory (defaults to Downloads folder)</label>
-                <input type="text" id="screenshot-path" placeholder="/path/to/screenshots">
-            </div>
-        </div>
-
-        <div class="settings-section">
-            <h3>Server Connection Settings</h3>
-            <div class="form-group">
-                <label for="server-host">Server Host</label>
-                <input type="text" id="server-host" placeholder="localhost or IP address">
-            </div>
-            <div class="form-group">
-                <label for="server-port">Server Port</label>
-                <input type="number" id="server-port" min="1" max="65535" value="3025">
-            </div>
-            <div class="quick-actions">
-                <button id="discover-server" class="action-button">
-                    Auto-Discover Server
-                </button>
-                <button id="test-connection" class="action-button">
-                    Test Connection
-                </button>
-            </div>
-            <div id="connection-status" style="margin-top: 8px; display: none;">
-                <span id="status-icon" class="status-indicator"></span>
-                <span id="status-text"></span>
-            </div>
-        </div>
-
-    <div class="settings-section">
-        <div class="settings-header" id="advanced-settings-header">
-            <h3>Advanced Settings</h3>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </div>
+    <div id="logs"></div>
+    
+    <script>
+        // Initialize
+        document.getElementById('time').textContent = new Date().toLocaleString();
         
-        <div class="settings-content" id="advanced-settings-content">
-            <div class="form-group">
-                <label for="log-limit">Log Limit (number of logs)</label>
-                <input type="number" id="log-limit" min="1" value="50">
-            </div>
-
-            <div class="form-group">
-                <label for="query-limit">Query Limit (characters)</label>
-                <input type="number" id="query-limit" min="1" value="30000">
-            </div>
-
-            <div class="form-group">
-                <label for="string-size-limit">String Size Limit (characters)</label>
-                <input type="number" id="string-size-limit" min="1" value="500">
-            </div>
-
-            <div class="form-group">
-                <label for="max-log-size">Max Log Size (characters)</label>
-                <input type="number" id="max-log-size" min="1000" value="20000">
-            </div>
-
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="show-request-headers">
-                    Include Request Headers
-                </label>
-            </div>
-
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="show-response-headers">
-                    Include Response Headers
-                </label>
-            </div>
+        const chromeVersion = navigator.userAgent.match(/Chrome\/(\d+)/);
+        document.getElementById('chrome-version').textContent = chromeVersion ? chromeVersion[1] : 'Unknown';
+        
+        function addLog(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log';
+            logDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.insertBefore(logDiv, logs.firstChild);
+        }
+        
+        function testServer() {
+            addLog('Testing server connection...');
+            fetch('http://localhost:3025/.identity')
+                .then(response => response.json())
+                .then(data => {
+                    addLog(`✅ Connected: ${data.name} v${data.version}`);
+                })
+                .catch(error => {
+                    addLog(`❌ Connection failed: ${error.message}`);
+                });
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            addLog('Logs cleared');
+        }
+        
+        function takeScreenshot() {
+            addLog('📷 Taking screenshot...');
             
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="enable-field-data">
-                    Enable Chrome UX Report Field Data
-                </label>
-            </div>
+            // For DevTools panel, we need to use the inspected window
+            const tabId = chrome.devtools.inspectedWindow.tabId;
             
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="cpu-throttling-20x">
-                    Enable 20x CPU Throttling (Chrome 135)
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <script src="panel.js"></script>
+            chrome.runtime.sendMessage({
+                type: 'CAPTURE_SCREENSHOT',
+                tabId: tabId
+            }, function(response) {
+                if (chrome.runtime.lastError) {
+                    addLog(`❌ Screenshot failed: ${chrome.runtime.lastError.message}`);
+                } else if (response && response.success) {
+                    addLog('✅ Screenshot captured and sent to server');
+                    addLog(`📁 Saved as: ${response.path || 'screenshot.png'}`);
+                } else {
+                    addLog(`❌ Screenshot failed: ${response?.error || 'Unknown error'}`);
+                }
+            });
+        }
+        
+        function openDevTools() {
+            addLog('Opening DevTools...');
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                chrome.debugger.attach({tabId: tabs[0].id}, '1.0', function() {
+                    if (chrome.runtime.lastError) {
+                        addLog(`❌ DevTools failed: ${chrome.runtime.lastError.message}`);
+                    } else {
+                        addLog('✅ DevTools opened (press F12 to see)');
+                    }
+                });
+            });
+        }
+        
+        function runLighthouseAudit() {
+            addLog('🔍 Starting Lighthouse audit...');
+            
+            // Get URL from inspected window
+            const currentUrl = chrome.devtools.inspectedWindow.location.href;
+            addLog(`📊 Auditing: ${currentUrl}`);
+            
+            fetch('http://localhost:3025/api/lighthouse', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: currentUrl})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const scores = data.data.scores;
+                    const metrics = data.data.metrics;
+                    
+                    addLog('✅ Lighthouse Audit Complete:');
+                    addLog(`  🏃 Performance: ${scores.performance}/100`);
+                    addLog(`  ♿ Accessibility: ${scores.accessibility}/100`);
+                    addLog(`  🎯 Best Practices: ${scores.bestPractices}/100`);
+                    addLog(`  🔍 SEO: ${scores.seo}/100`);
+                    addLog(`  ⏱️ Load Time: ${metrics.loadTime}ms`);
+                } else {
+                    addLog(`❌ Lighthouse failed: ${data.error}`);
+                }
+            })
+            .catch(error => {
+                addLog(`❌ Lighthouse error: ${error.message}`);
+            });
+        }
+        
+        function getConsoleLogs() {
+            addLog('📋 Getting console logs...');
+            
+            // Get URL from inspected window
+            const currentUrl = chrome.devtools.inspectedWindow.location.href;
+            addLog(`🔍 Analyzing console logs for: ${currentUrl}`);
+            
+            fetch('http://localhost:3025/api/console-logs', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: currentUrl})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const logs = data.data.logs;
+                    addLog(`✅ Found ${logs.length} console entries:`);
+                    
+                    if (logs.length === 0) {
+                        addLog('  📝 No console messages found');
+                    } else {
+                        // Group by log level
+                        const byLevel = logs.reduce((acc, log) => {
+                            acc[log.level] = (acc[log.level] || 0) + 1;
+                            return acc;
+                        }, {});
+                        
+                        Object.entries(byLevel).forEach(([level, count]) => {
+                            const emoji = level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'info' ? 'ℹ️' : '📝';
+                            addLog(`  ${emoji} ${level}: ${count} messages`);
+                        });
+                        
+                        // Show last few messages
+                        addLog('  📃 Recent messages:');
+                        logs.slice(-5).forEach(log => {
+                            const emoji = log.level === 'error' ? '❌' : log.level === 'warn' ? '⚠️' : '📝';
+                            addLog(`    ${emoji} ${log.text.substring(0, 60)}${log.text.length > 60 ? '...' : ''}`);
+                        });
+                    }
+                } else {
+                    addLog(`❌ Console logs failed: ${data.error}`);
+                }
+            })
+            .catch(error => {
+                addLog(`❌ Console logs error: ${error.message}`);
+            });
+        }
+        
+        function inspectElement() {
+            addLog('Element inspection ready - select an element on the page');
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                addLog('💡 Click on any element on the page to inspect it');
+            });
+        }
+        
+        // Initial log
+        addLog('RapidTriage panel initialized');
+        
+        // Auto test server
+        setTimeout(testServer, 500);
+    </script>
 </body>
-</html> 
+</html>

@@ -1,27 +1,33 @@
 {
-    "name": "RapidTriage DevTools",
-    "version": "2.0.0",
-    "description": "YarlisAISolutions RapidTriage - AI-powered browser debugging with Chrome 135 performance insights",
     "manifest_version": 3,
-    "author": "YarlisAISolutions",
-    "homepage_url": "https://rapidtriage.me",
+    "name": "RapidTriage DevTools",
+    "version": "2.3.0",
+    "description": "YarlisAISolutions RapidTriage - Browser debugging and monitoring tools",
     "devtools_page": "devtools.html",
     "permissions": [
-      "activeTab",
-      "debugger",
-      "storage",
-      "tabs",
-      "windows"
+        "scripting",
+        "activeTab", 
+        "storage",
+        "tabs",
+        "webNavigation",
+        "debugger"
     ],
     "host_permissions": [
-      "<all_urls>"
+        "<all_urls>"
     ],
     "background": {
-      "service_worker": "background.js"
+        "service_worker": "background.js"
     },
-    "icons": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
-    }
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "RapidTriage Controls"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "run_at": "document_start",
+            "all_frames": true
+        }
+    ]
 }

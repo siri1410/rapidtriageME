@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 450px;
+            height: 600px;
+            margin: 0;
+            padding: 15px;
+            font-family: system-ui, sans-serif;
+            background: #1e1e1e;
+            color: #cccccc;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            font-size: 16px;
+            margin: 0 0 15px 0;
+        }
+        
+        .status {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+        
+        button {
+            background: #007ACC;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 3px;
+            font-size: 12px;
+        }
+        
+        button:hover {
+            background: #005a9e;
+        }
+        
+        button:active {
+            background: #004080;
+            transform: scale(0.98);
+        }
+        
+        button.loading {
+            background: #888;
+            cursor: wait;
+            position: relative;
+            color: transparent;
+        }
+        
+        button.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 2px solid #007ACC;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-container {
+            margin-top: 15px;
+            border-top: 1px solid #444;
+            padding-top: 15px;
+        }
+        
+        .results-header {
+            color: #4CAF50;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .log {
+            background: #2d2d2d;
+            padding: 8px;
+            border-radius: 3px;
+            margin: 3px 0;
+            font-family: monospace;
+            font-size: 11px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        .preview-area {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .preview-header {
+            color: #9CDCFE;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        
+        .preview-content {
+            font-family: monospace;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .info { color: #2196F3; }
+    </style>
+</head>
+<body>
+    <h1>🚀 RapidTriage Controls</h1>
+    
+    <div class="status">
+        <div>Chrome: <span id="chrome-version"></span></div>
+        <div>Time: <span id="time"></span></div>
+        <div>Status: <span id="status">Initializing...</span></div>
+    </div>
+    
+    <div>
+        <button onclick="testServer(this)">Test Server</button>
+        <button onclick="takeScreenshot(this)">Screenshot</button>
+        <button onclick="clearLogs(this)">Clear</button>
+        <button onclick="openDevTools(this)">Open DevTools</button>
+    </div>
+    
+    <div>
+        <button onclick="runLighthouseAudit(this)">Lighthouse Audit</button>
+        <button onclick="getConsoleLogs(this)">Console Logs</button>
+        <button onclick="inspectElement(this)">Inspect Element</button>
+    </div>
+    
+    <div class="results-container">
+        <div class="results-header">📊 Results Preview</div>
+        <div class="preview-area" id="preview">
+            <div class="preview-header">Waiting for action...</div>
+            <div class="preview-content" id="preview-content">
+                Click any button above to see results here instantly.
+            </div>
+        </div>
+    </div>
+    
+    <div class="results-container">
+        <div class="results-header">📋 Activity Log</div>
+        <div id="logs"></div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
