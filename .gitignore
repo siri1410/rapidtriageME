@@ -8,6 +8,7 @@ dist/
 build/
 */build/
 .wrangler/
+site/
 
 # Environment files
 .env
@@ -61,6 +62,8 @@ wrangler.toml.backup
 test-results/
 screenshots/
 *.har
+reports/*.html
+reports/*.json
 
 # Local configuration
 local.config.js
