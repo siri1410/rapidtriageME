@@ -71,10 +71,16 @@ export function generateLandingPage(env: any): string {
       border-radius: 10px;
       border-left: 4px solid #667eea;
       transition: transform 0.2s, box-shadow 0.2s;
+      display: block;
+      color: inherit;
+    }
+    a.feature-card {
+      text-decoration: none;
     }
     .feature-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      background: #edf2f7;
     }
     .feature-card h3 {
       color: #2d3748;
@@ -826,18 +832,50 @@ console.log('Screenshot URL:', result.screenshotUrl);</code>
     </div>
     
     <div class="section">
+      <h2>🚀 Quick Access</h2>
+      <div class="features-grid">
+        <a href="${baseUrl}/api-docs" class="feature-card" style="text-decoration: none; cursor: pointer;">
+          <h3>📖 API Documentation</h3>
+          <p>Interactive API documentation with request/response examples and testing interface.</p>
+        </a>
+        <a href="${baseUrl}/dashboard" class="feature-card" style="text-decoration: none; cursor: pointer;">
+          <h3>📊 Dashboard</h3>
+          <p>Monitor system metrics, usage statistics, and manage your account settings.</p>
+        </a>
+        <a href="${baseUrl}/status" class="feature-card" style="text-decoration: none; cursor: pointer;">
+          <h3>🟢 System Status</h3>
+          <p>Real-time system status, uptime monitoring, and service health checks.</p>
+        </a>
+        <a href="${baseUrl}/openapi.json" class="feature-card" style="text-decoration: none; cursor: pointer;">
+          <h3>🔧 OpenAPI Spec</h3>
+          <p>Download OpenAPI specification for code generation and API client libraries.</p>
+        </a>
+        <a href="https://docs.rapidtriage.me" class="feature-card" style="text-decoration: none; cursor: pointer;" target="_blank">
+          <h3>📚 Documentation</h3>
+          <p>Comprehensive guides, tutorials, and best practices for using RapidTriageME.</p>
+        </a>
+        <a href="https://github.com/YarlisAISolutions/rapidtriageME" class="feature-card" style="text-decoration: none; cursor: pointer;" target="_blank">
+          <h3>💻 GitHub Repository</h3>
+          <p>Source code, examples, issue tracking, and community contributions.</p>
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
       <h2>📚 Resources & Support</h2>
       <div class="alert alert-success">
-        <strong>📖 Documentation</strong><br>
-        Full API documentation and guides available at <a href="https://docs.rapidtriage.me" style="color: #22543d; font-weight: 600;">docs.rapidtriage.me</a>
+        <strong>📖 Complete Documentation</strong><br>
+        Full API documentation and implementation guides available at <a href="https://docs.rapidtriage.me" style="color: #22543d; font-weight: 600;">docs.rapidtriage.me</a>
       </div>
       
       <h3>Getting Help</h3>
       <ul style="line-height: 2; color: #4a5568; padding-left: 20px;">
         <li><strong>Email Support:</strong> <a href="mailto:support@rapidtriage.me">support@rapidtriage.me</a></li>
-        <li><strong>GitHub Issues:</strong> <a href="https://github.com/YarlisAISolutions/rapidtriage" target="_blank">github.com/YarlisAISolutions/rapidtriage</a></li>
+        <li><strong>GitHub Issues:</strong> <a href="https://github.com/YarlisAISolutions/rapidtriageME" target="_blank">github.com/YarlisAISolutions/rapidtriageME</a></li>
         <li><strong>Status Page:</strong> <a href="${baseUrl}/status" target="_blank">${baseUrl}/status</a></li>
         <li><strong>API Reference:</strong> <a href="${baseUrl}/api-docs" target="_blank">${baseUrl}/api-docs</a></li>
+        <li><strong>Health Check:</strong> <a href="${baseUrl}/health" target="_blank">${baseUrl}/health</a></li>
+        <li><strong>Metrics:</strong> <a href="${baseUrl}/metrics" target="_blank">${baseUrl}/metrics</a></li>
       </ul>
       
       <h3>Browser Extension</h3>

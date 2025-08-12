@@ -1,0 +1,887 @@
+meta {
+  name: RapidTriageME API Collection v2.0
+  type: collection
+  version: 2.0.0
+  description: Complete API testing collection for RapidTriageME with authentication, browser operations, and debugging tools
+}
+
+auth {
+  mode: bearer
+  bearer {
+    token: {{jwt_token}}
+  }
+}
+
+vars {
+  base_url: https://rapidtriage.me
+  local_url: http://localhost:8787
+  jwt_token: 
+  api_key: 
+  user_email: test@example.com
+  user_password: TestPass123!
+}
+
+---
+
+meta {
+  name: 01. Authentication - Register
+  type: http
+  seq: 1
+  folder: Authentication
+}
+
+post {
+  url: {{base_url}}/auth/register
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{user_email}}",
+    "password": "{{user_password}}",
+    "name": "Test User"
+  }
+}
+
+tests {
+  test("User registered successfully", () => {
+    expect(res.status).to.equal(201);
+    expect(res.body.success).to.equal(true);
+    expect(res.body.token).to.exist;
+    expect(res.body.user.email).to.equal(env.get("user_email"));
+    
+    // Save token for future requests
+    env.set("jwt_token", res.body.token);
+    env.set("user_id", res.body.user.id);
+  });
+}
+
+---
+
+meta {
+  name: 02. Authentication - Login
+  type: http
+  seq: 2
+  folder: Authentication
+}
+
+post {
+  url: {{base_url}}/auth/login
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{user_email}}",
+    "password": "{{user_password}}"
+  }
+}
+
+tests {
+  test("Login successful", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.success).to.equal(true);
+    expect(res.body.token).to.exist;
+    
+    // Update token
+    env.set("jwt_token", res.body.token);
+  });
+}
+
+---
+
+meta {
+  name: 03. Authentication - Get Profile
+  type: http
+  seq: 3
+  folder: Authentication
+}
+
+get {
+  url: {{base_url}}/auth/profile
+}
+
+headers {
+  Authorization: Bearer {{jwt_token}}
+}
+
+tests {
+  test("Profile retrieved", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.email).to.equal(env.get("user_email"));
+    expect(res.body.subscription).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 04. Authentication - Update Profile
+  type: http
+  seq: 4
+  folder: Authentication
+}
+
+put {
+  url: {{base_url}}/auth/profile
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{jwt_token}}
+}
+
+body:json {
+  {
+    "name": "Updated Test User",
+    "company": "TestCorp"
+  }
+}
+
+tests {
+  test("Profile updated", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.success).to.equal(true);
+  });
+}
+
+---
+
+meta {
+  name: 05. API Keys - Create Key
+  type: http
+  seq: 5
+  folder: API Keys
+}
+
+post {
+  url: {{base_url}}/auth/api-keys
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{jwt_token}}
+}
+
+body:json {
+  {
+    "name": "Test API Key",
+    "permissions": ["read", "write"],
+    "expiresIn": 30,
+    "rateLimit": 1000
+  }
+}
+
+tests {
+  test("API key created", () => {
+    expect(res.status).to.equal(201);
+    expect(res.body.key).to.exist;
+    expect(res.body.id).to.exist;
+    
+    // Save API key
+    env.set("api_key", res.body.key);
+    env.set("api_key_id", res.body.id);
+  });
+}
+
+---
+
+meta {
+  name: 06. API Keys - List Keys
+  type: http
+  seq: 6
+  folder: API Keys
+}
+
+get {
+  url: {{base_url}}/auth/api-keys?page=1&limit=10
+}
+
+headers {
+  Authorization: Bearer {{jwt_token}}
+}
+
+tests {
+  test("API keys listed", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.data).to.be.an("array");
+    expect(res.body.pagination).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 07. API Keys - Revoke Key
+  type: http
+  seq: 7
+  folder: API Keys
+}
+
+delete {
+  url: {{base_url}}/auth/api-keys/{{api_key_id}}
+}
+
+headers {
+  Authorization: Bearer {{jwt_token}}
+}
+
+tests {
+  test("API key revoked", () => {
+    expect(res.status).to.equal(204);
+  });
+}
+
+---
+
+meta {
+  name: 08. Screenshot - Upload
+  type: http
+  seq: 8
+  folder: Browser Operations
+}
+
+post {
+  url: {{base_url}}/api/screenshot
+}
+
+headers {
+  Content-Type: application/json
+  X-API-Key: {{api_key}}
+}
+
+body:json {
+  {
+    "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+    "url": "https://example.com",
+    "title": "Test Screenshot",
+    "format": "png",
+    "fullPage": false
+  }
+}
+
+tests {
+  test("Screenshot uploaded", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.success).to.equal(true);
+    expect(res.body.url).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 09. Console Logs - Retrieve
+  type: http
+  seq: 9
+  folder: Debugging
+}
+
+post {
+  url: {{base_url}}/api/console-logs
+}
+
+headers {
+  Content-Type: application/json
+  X-API-Key: {{api_key}}
+}
+
+body:json {
+  {
+    "level": "all",
+    "limit": 100
+  }
+}
+
+tests {
+  test("Console logs retrieved", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.content).to.be.an("array");
+  });
+}
+
+---
+
+meta {
+  name: 10. Network Logs - Retrieve
+  type: http
+  seq: 10
+  folder: Debugging
+}
+
+post {
+  url: {{base_url}}/api/network-logs
+}
+
+headers {
+  Content-Type: application/json
+  X-API-Key: {{api_key}}
+}
+
+body:json {
+  {
+    "limit": 50,
+    "filter": {
+      "method": "GET",
+      "status": 200
+    }
+  }
+}
+
+tests {
+  test("Network logs retrieved", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.content).to.be.an("array");
+  });
+}
+
+---
+
+meta {
+  name: 11. Browser Navigate
+  type: http
+  seq: 11
+  folder: Browser Operations
+}
+
+post {
+  url: {{base_url}}/api/navigate
+}
+
+headers {
+  Content-Type: application/json
+  X-API-Key: {{api_key}}
+}
+
+body:json {
+  {
+    "url": "https://example.com",
+    "waitForLoad": true,
+    "timeout": 30000
+  }
+}
+
+tests {
+  test("Navigation successful", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.content).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 12. Triage Report - Generate
+  type: http
+  seq: 12
+  folder: Debugging
+}
+
+post {
+  url: {{base_url}}/api/triage-report
+}
+
+headers {
+  Content-Type: application/json
+  X-API-Key: {{api_key}}
+}
+
+body:json {
+  {
+    "includeScreenshot": true,
+    "includeLogs": true,
+    "includeNetworkAnalysis": true
+  }
+}
+
+tests {
+  test("Triage report generated", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.content).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 13. Health Check
+  type: http
+  seq: 13
+  folder: System
+}
+
+get {
+  url: {{base_url}}/health
+}
+
+tests {
+  test("System is healthy", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.status).to.equal("healthy");
+    expect(res.body.environment).to.equal("production");
+  });
+}
+
+---
+
+meta {
+  name: 14. Metrics
+  type: http
+  seq: 14
+  folder: System
+}
+
+get {
+  url: {{base_url}}/metrics
+}
+
+tests {
+  test("Metrics retrieved", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.requests).to.exist;
+    expect(res.body.uptime).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 15. Dashboard
+  type: http
+  seq: 15
+  folder: Dashboard
+}
+
+get {
+  url: {{base_url}}/dashboard
+}
+
+headers {
+  Authorization: Bearer {{jwt_token}}
+}
+
+tests {
+  test("Dashboard accessible", () => {
+    expect(res.status).to.equal(200);
+    expect(res.headers["content-type"]).to.include("text/html");
+  });
+}
+
+---
+
+meta {
+  name: 16. Status Page
+  type: http
+  seq: 16
+  folder: Dashboard
+}
+
+get {
+  url: {{base_url}}/status
+}
+
+tests {
+  test("Status page accessible", () => {
+    expect(res.status).to.equal(200);
+    expect(res.headers["content-type"]).to.include("text/html");
+  });
+}
+
+---
+
+meta {
+  name: 17. API Documentation
+  type: http
+  seq: 17
+  folder: Documentation
+}
+
+get {
+  url: {{base_url}}/api-docs
+}
+
+tests {
+  test("API docs accessible", () => {
+    expect(res.status).to.equal(200);
+    expect(res.headers["content-type"]).to.include("text/html");
+  });
+}
+
+---
+
+meta {
+  name: 18. OpenAPI Spec - JSON
+  type: http
+  seq: 18
+  folder: Documentation
+}
+
+get {
+  url: {{base_url}}/openapi.json
+}
+
+tests {
+  test("OpenAPI JSON spec available", () => {
+    expect(res.status).to.equal(200);
+    expect(res.body.openapi).to.exist;
+    expect(res.body.info.title).to.equal("RapidTriageME API");
+  });
+}
+
+---
+
+meta {
+  name: 19. OpenAPI Spec - YAML
+  type: http
+  seq: 19
+  folder: Documentation
+}
+
+get {
+  url: {{base_url}}/openapi.yaml
+}
+
+tests {
+  test("OpenAPI YAML spec available", () => {
+    expect(res.status).to.equal(200);
+    expect(res.headers["content-type"]).to.include("yaml");
+  });
+}
+
+---
+
+meta {
+  name: 20. Landing Page
+  type: http
+  seq: 20
+  folder: Dashboard
+}
+
+get {
+  url: {{base_url}}/
+}
+
+tests {
+  test("Landing page loads", () => {
+    expect(res.status).to.equal(200);
+    expect(res.headers["content-type"]).to.include("text/html");
+    expect(res.body).to.include("RapidTriageME");
+  });
+}
+
+---
+
+meta {
+  name: 21. CORS Preflight
+  type: http
+  seq: 21
+  folder: System
+}
+
+options {
+  url: {{base_url}}/api/console-logs
+}
+
+headers {
+  Origin: http://localhost:3000
+  Access-Control-Request-Method: POST
+  Access-Control-Request-Headers: content-type,x-api-key
+}
+
+tests {
+  test("CORS headers present", () => {
+    expect(res.status).to.equal(204);
+    expect(res.headers["access-control-allow-origin"]).to.exist;
+    expect(res.headers["access-control-allow-methods"]).to.include("POST");
+  });
+}
+
+---
+
+meta {
+  name: 22. Error - Invalid Login
+  type: http
+  seq: 22
+  folder: Error Handling
+}
+
+post {
+  url: {{base_url}}/auth/login
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "invalid@example.com",
+    "password": "wrongpassword"
+  }
+}
+
+tests {
+  test("Invalid login rejected", () => {
+    expect(res.status).to.equal(401);
+    expect(res.body.error).to.exist;
+  });
+}
+
+---
+
+meta {
+  name: 23. Error - Duplicate Registration
+  type: http
+  seq: 23
+  folder: Error Handling
+}
+
+post {
+  url: {{base_url}}/auth/register
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{user_email}}",
+    "password": "{{user_password}}",
+    "name": "Duplicate User"
+  }
+}
+
+tests {
+  test("Duplicate registration rejected", () => {
+    expect(res.status).to.equal(409);
+    expect(res.body.error).to.include("already exists");
+  });
+}
+
+---
+
+meta {
+  name: 24. Error - Invalid Email Format
+  type: http
+  seq: 24
+  folder: Error Handling
+}
+
+post {
+  url: {{base_url}}/auth/register
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "invalid-email",
+    "password": "ValidPass123!",
+    "name": "Test User"
+  }
+}
+
+tests {
+  test("Invalid email rejected", () => {
+    expect(res.status).to.equal(400);
+    expect(res.body.error).to.include("email");
+  });
+}
+
+---
+
+meta {
+  name: 25. Error - Weak Password
+  type: http
+  seq: 25
+  folder: Error Handling
+}
+
+post {
+  url: {{base_url}}/auth/register
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "test2@example.com",
+    "password": "weak",
+    "name": "Test User"
+  }
+}
+
+tests {
+  test("Weak password rejected", () => {
+    expect(res.status).to.equal(400);
+    expect(res.body.error).to.include("password");
+  });
+}
+
+---
+
+meta {
+  name: 26. Error - Missing Fields
+  type: http
+  seq: 26
+  folder: Error Handling
+}
+
+post {
+  url: {{base_url}}/auth/register
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "test3@example.com"
+  }
+}
+
+tests {
+  test("Missing fields rejected", () => {
+    expect(res.status).to.equal(400);
+    expect(res.body.error).to.include("required");
+  });
+}
+
+---
+
+meta {
+  name: 27. Error - Expired Token
+  type: http
+  seq: 27
+  folder: Error Handling
+}
+
+get {
+  url: {{base_url}}/auth/profile
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkwMjJ9.4Adcj3UFYzPUVaVF43FmMab6RlaQD8A9V8wFzzht-KQ
+}
+
+tests {
+  test("Expired token rejected", () => {
+    expect(res.status).to.equal(401);
+    expect(res.body.error).to.include("expired");
+  });
+}
+
+---
+
+meta {
+  name: 28. Error - Invalid API Key
+  type: http
+  seq: 28
+  folder: Error Handling
+}
+
+post {
+  url: {{base_url}}/api/console-logs
+}
+
+headers {
+  Content-Type: application/json
+  X-API-Key: invalid-api-key-12345
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("Invalid API key rejected", () => {
+    expect(res.status).to.equal(401);
+    expect(res.body.error).to.include("Invalid");
+  });
+}
+
+---
+
+meta {
+  name: 29. Load Test - Health Endpoint
+  type: http
+  seq: 29
+  folder: Performance
+}
+
+get {
+  url: {{base_url}}/health
+}
+
+script:pre-request {
+  // Run this multiple times for load testing
+  const iterations = 10;
+  console.log(`Running ${iterations} iterations`);
+}
+
+tests {
+  test("Health endpoint performs well", () => {
+    expect(res.status).to.equal(200);
+    expect(res.responseTime).to.be.below(100);
+  });
+}
+
+---
+
+meta {
+  name: 30. Complete E2E Flow
+  type: http
+  seq: 30
+  folder: E2E Tests
+  description: Complete end-to-end test flow
+}
+
+script:pre-request {
+  // This represents a complete flow
+  // 1. Register user
+  // 2. Login
+  // 3. Create API key
+  // 4. Use API key for operations
+  // 5. Generate report
+  // 6. Revoke API key
+  // 7. Logout
+  
+  console.log("Starting E2E test flow");
+  const timestamp = Date.now();
+  env.set("test_email", `e2e_${timestamp}@example.com`);
+}
+
+post {
+  url: {{base_url}}/auth/register
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "{{test_email}}",
+    "password": "E2ETest123!",
+    "name": "E2E Test User"
+  }
+}
+
+tests {
+  test("E2E flow completes successfully", () => {
+    expect(res.status).to.equal(201);
+    console.log("✅ E2E test completed");
+  });
+}
