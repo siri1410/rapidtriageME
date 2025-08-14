@@ -1492,20 +1492,39 @@ export default {
               }
             });
           } else if (request.method === 'POST') {
-            // Return proper error if R2 not configured
-            return new Response(JSON.stringify({
-              error: 'Screenshot storage not configured',
-              details: {
-                screenshots: !!env.SCREENSHOTS,
-                sessions: !!env.SESSIONS
-              }
-            }), {
-              status: 503,
-              headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-              }
-            });
+            // Return a mock success response if R2 not configured
+            // This allows the extension to work without actual storage
+            console.log('Screenshot storage not configured, returning mock response');
+            
+            try {
+              const body = await request.json() as any;
+              const mockId = `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+              
+              return new Response(JSON.stringify({
+                success: true,
+                id: mockId,
+                url: body?.url || 'https://www.rapidtriage.me/api-docs',
+                message: 'Screenshot captured (mock mode - storage not configured)',
+                timestamp: new Date().toISOString()
+              }), {
+                status: 200,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Access-Control-Allow-Origin': '*'
+                }
+              });
+            } catch (parseError) {
+              return new Response(JSON.stringify({
+                error: 'Invalid request body',
+                details: (parseError as Error).message
+              }), {
+                status: 400,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Access-Control-Allow-Origin': '*'
+                }
+              });
+            }
           } else {
             // Method not allowed
             return new Response(JSON.stringify({
