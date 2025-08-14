@@ -1290,6 +1290,28 @@ export default {
     
     // Handle OPTIONS preflight
     if (request.method === 'OPTIONS') {
+      // Special handling for OpenAPI endpoints to allow specific origins
+      if (url.pathname === '/openapi.json' || url.pathname === '/openapi.yaml') {
+        const origin = request.headers.get('Origin') || '';
+        const allowedOrigins = [
+          'https://rapidtriage.me',
+          'https://www.rapidtriage.me',
+          'https://test.rapidtriage.me'
+        ];
+        
+        const corsOrigin = allowedOrigins.includes(origin) ? origin : 'https://rapidtriage.me';
+        
+        return new Response(null, { 
+          status: 204, 
+          headers: {
+            'Access-Control-Allow-Origin': corsOrigin,
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '86400'
+          }
+        });
+      }
+      
       return new Response(null, { 
         status: 204, 
         headers: corsHeaders 

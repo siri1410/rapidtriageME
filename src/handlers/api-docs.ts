@@ -30,10 +30,6 @@ export class ApiDocsHandler {
    * Serve Swagger UI HTML page
    */
   async handleSwaggerUI(_request: Request): Promise<Response> {
-    const baseUrl = this.env.ENVIRONMENT === 'production' 
-      ? 'https://rapidtriage.me' 
-      : 'https://rapidtriage-me.sireesh-yarlagadda-d3f.workers.dev';
-
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,7 +137,7 @@ export class ApiDocsHandler {
     <h3>Download OpenAPI Specification</h3>
     <a href="/openapi.json" download="rapidtriage-openapi.json">📄 JSON Format</a>
     <a href="/openapi.yaml" download="rapidtriage-openapi.yaml">📝 YAML Format</a>
-    <a href="https://github.com/YarlisAISolutions/rapidtriage/blob/main/docs/api" target="_blank">📚 Full Docs</a>
+    <a href="https://docs.rapidtriage.me" target="_blank">📚 Full Docs</a>
   </div>
   
   <div id="swagger-ui"></div>
@@ -150,8 +146,10 @@ export class ApiDocsHandler {
   <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js"></script>
   <script>
     window.onload = function() {
+      // Use the current window location's origin to avoid CORS issues
+      const currentOrigin = window.location.origin;
       const ui = SwaggerUIBundle({
-        url: "${baseUrl}/openapi.json",
+        url: currentOrigin + "/openapi.json",
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [
@@ -237,10 +235,6 @@ export class ApiDocsHandler {
    * Serve ReDoc HTML page as alternative documentation
    */
   async handleReDoc(_request: Request): Promise<Response> {
-    const baseUrl = this.env.ENVIRONMENT === 'production' 
-      ? 'https://rapidtriage.me' 
-      : 'https://rapidtriage-me.sireesh-yarlagadda-d3f.workers.dev';
-
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -279,7 +273,9 @@ export class ApiDocsHandler {
   
   <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
   <script>
-    Redoc.init('${baseUrl}/openapi.json', {
+    // Use the current window location's origin to avoid CORS issues
+    const currentOrigin = window.location.origin;
+    Redoc.init(currentOrigin + '/openapi.json', {
       scrollYOffset: 0,
       theme: {
         colors: {
@@ -337,13 +333,25 @@ export class ApiDocsHandler {
   /**
    * Serve OpenAPI spec as JSON
    */
-  async handleOpenApiJson(_request: Request): Promise<Response> {
+  async handleOpenApiJson(request: Request): Promise<Response> {
+    const origin = request.headers.get('Origin') || '';
+    const allowedOrigins = [
+      'https://rapidtriage.me',
+      'https://www.rapidtriage.me',
+      'https://test.rapidtriage.me'
+    ];
+    
+    const corsOrigin = allowedOrigins.includes(origin) ? origin : 'https://rapidtriage.me';
+    
     return new Response(JSON.stringify(this.openApiSpec, null, 2), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=3600',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': corsOrigin,
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '86400'
       }
     });
   }
@@ -351,17 +359,29 @@ export class ApiDocsHandler {
   /**
    * Serve OpenAPI spec as YAML
    */
-  async handleOpenApiYaml(_request: Request): Promise<Response> {
+  async handleOpenApiYaml(request: Request): Promise<Response> {
     // For now, we'll convert JSON to YAML
     // In production, this would serve the actual YAML file
     const yamlContent = this.jsonToYaml(this.openApiSpec);
+    
+    const origin = request.headers.get('Origin') || '';
+    const allowedOrigins = [
+      'https://rapidtriage.me',
+      'https://www.rapidtriage.me',
+      'https://test.rapidtriage.me'
+    ];
+    
+    const corsOrigin = allowedOrigins.includes(origin) ? origin : 'https://rapidtriage.me';
     
     return new Response(yamlContent, {
       status: 200,
       headers: {
         'Content-Type': 'application/x-yaml',
         'Cache-Control': 'public, max-age=3600',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': corsOrigin,
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Max-Age': '86400'
       }
     });
   }
