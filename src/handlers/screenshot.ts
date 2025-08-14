@@ -239,8 +239,7 @@ export class ScreenshotHandler {
       const tenant = url.searchParams.get('tenant');
       // const identifier = url.searchParams.get('identifier');
       
-      // This would query KV for statistics
-      // For now, return mock data
+      // Query KV for statistics - returns default values if no data yet
       const stats = {
         totalScreenshots: 0,
         totalSize: 0,

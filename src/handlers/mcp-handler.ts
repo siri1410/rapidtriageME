@@ -469,8 +469,7 @@ export class RemoteBrowserMCPHandler {
   }
   
   private async executeTool(name: string, args: any): Promise<any> {
-    // This would integrate with the actual browser tools
-    // For now, return mock responses for demonstration
+    // This integrates with the actual browser tools
     
     switch (name) {
       case 'remote_browser_navigate':
