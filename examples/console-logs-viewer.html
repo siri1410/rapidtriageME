@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RapidTriageME Console Logs Viewer - Production Ready</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .console-viewer {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .viewer-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .viewer-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .viewer-controls {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .control-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .control-label {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .control-input {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .control-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .filter-chip {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .filter-chip.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .viewer-stats {
+            display: flex;
+            gap: 20px;
+            padding: 15px 20px;
+            background: #f7fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .stat-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .badge-error { background: #fed7d7; color: #742a2a; }
+        .badge-warn { background: #fef5c7; color: #744210; }
+        .badge-info { background: #bee3f8; color: #2c5282; }
+        .badge-debug { background: #e6fffa; color: #234e52; }
+        .badge-total { background: #e2e8f0; color: #4a5568; }
+        
+        .viewer-content {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            border-left: 4px solid;
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .log-entry:hover {
+            transform: translateX(4px);
+        }
+        
+        .log-error {
+            background: #fff5f5;
+            border-left-color: #fc8181;
+            color: #742a2a;
+        }
+        
+        .log-warn {
+            background: #fffdf7;
+            border-left-color: #f6ad55;
+            color: #744210;
+        }
+        
+        .log-info {
+            background: #ebf8ff;
+            border-left-color: #4299e1;
+            color: #2c5282;
+        }
+        
+        .log-debug {
+            background: #e6fffa;
+            border-left-color: #38b2ac;
+            color: #234e52;
+        }
+        
+        .log-log {
+            background: #f7fafc;
+            border-left-color: #a0aec0;
+            color: #4a5568;
+        }
+        
+        .log-level {
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        
+        .log-time {
+            color: #718096;
+            font-size: 11px;
+            margin-right: 12px;
+        }
+        
+        .log-message {
+            display: inline;
+            word-break: break-word;
+        }
+        
+        .log-source {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #a0aec0;
+        }
+        
+        .viewer-footer {
+            padding: 15px 20px;
+            background: #f7fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .export-menu {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .search-highlight {
+            background: yellow;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #e2e8f0;
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="console-viewer">
+        <div class="viewer-header">
+            <div class="viewer-title">🚀 Console Logs Viewer</div>
+            <div id="connectionStatus">Connected</div>
+        </div>
+        
+        <div class="viewer-controls">
+            <div class="control-group">
+                <label class="control-label">Session ID:</label>
+                <input type="text" class="control-input" id="sessionId" placeholder="Enter session ID" style="width: 200px;">
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label">Search:</label>
+                <input type="text" class="control-input" id="searchInput" placeholder="Filter logs..." style="width: 200px;">
+            </div>
+            
+            <div class="control-group">
+                <button class="control-button btn-primary" onclick="loadLogs()">Load Logs</button>
+                <button class="control-button btn-secondary" onclick="clearLogs()">Clear</button>
+                <button class="control-button btn-secondary" onclick="autoRefresh()">
+                    <span id="refreshIcon">🔄</span> Auto Refresh
+                </button>
+            </div>
+        </div>
+        
+        <div class="viewer-controls" style="padding-top: 0;">
+            <div class="control-group">
+                <label class="control-label">Filter by level:</label>
+                <span class="filter-chip active" data-level="all" onclick="toggleFilter(this)">All</span>
+                <span class="filter-chip" data-level="error" onclick="toggleFilter(this)">Errors</span>
+                <span class="filter-chip" data-level="warn" onclick="toggleFilter(this)">Warnings</span>
+                <span class="filter-chip" data-level="info" onclick="toggleFilter(this)">Info</span>
+                <span class="filter-chip" data-level="debug" onclick="toggleFilter(this)">Debug</span>
+                <span class="filter-chip" data-level="log" onclick="toggleFilter(this)">Logs</span>
+            </div>
+        </div>
+        
+        <div class="viewer-stats" id="statsPanel">
+            <div class="stat-item">
+                <span class="stat-badge badge-total">Total: <span id="totalCount">0</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-badge badge-error">Errors: <span id="errorCount">0</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-badge badge-warn">Warnings: <span id="warnCount">0</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-badge badge-info">Info: <span id="infoCount">0</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-badge badge-debug">Debug: <span id="debugCount">0</span></span>
+            </div>
+        </div>
+        
+        <div class="viewer-content" id="logsContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 20px;">Ready to load logs...</p>
+            </div>
+        </div>
+        
+        <div class="viewer-footer">
+            <div>
+                <span id="logStatus">No logs loaded</span>
+            </div>
+            <div class="export-menu">
+                <button class="control-button btn-secondary" onclick="exportLogs('json')">Export JSON</button>
+                <button class="control-button btn-secondary" onclick="exportLogs('csv')">Export CSV</button>
+                <button class="control-button btn-secondary" onclick="exportLogs('text')">Export Text</button>
+                <button class="control-button btn-secondary" onclick="copyLogs()">📋 Copy</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const API_ENDPOINT = 'http://localhost:8787/api/console-logs';
+        const EXTENSION_ID = 'console-viewer';
+        
+        // State
+        let allLogs = [];
+        let filteredLogs = [];
+        let activeFilters = ['all'];
+        let refreshInterval = null;
+        let searchTerm = '';
+        
+        // Load logs from API
+        async function loadLogs() {
+            const sessionId = document.getElementById('sessionId').value;
+            if (!sessionId) {
+                alert('Please enter a session ID');
+                return;
+            }
+            
+            const container = document.getElementById('logsContainer');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top: 20px;">Loading logs...</p></div>';
+            
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Extension-Id': EXTENSION_ID
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        limit: 500
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.logs && data.logs.length > 0) {
+                    allLogs = data.logs;
+                    applyFilters();
+                    updateStats();
+                    document.getElementById('logStatus').textContent = `Loaded ${allLogs.length} logs`;
+                } else {
+                    container.innerHTML = '<div class="loading"><p>No logs found for this session</p></div>';
+                    document.getElementById('logStatus').textContent = 'No logs found';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="loading"><p>Error loading logs: ' + error.message + '</p></div>';
+                document.getElementById('logStatus').textContent = 'Error loading logs';
+            }
+        }
+        
+        // Apply filters and search
+        function applyFilters() {
+            filteredLogs = allLogs;
+            
+            // Apply level filter
+            if (!activeFilters.includes('all')) {
+                filteredLogs = filteredLogs.filter(log => activeFilters.includes(log.level));
+            }
+            
+            // Apply search filter
+            if (searchTerm) {
+                filteredLogs = filteredLogs.filter(log => 
+                    log.message.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            renderLogs();
+        }
+        
+        // Render logs to display
+        function renderLogs() {
+            const container = document.getElementById('logsContainer');
+            
+            if (filteredLogs.length === 0) {
+                container.innerHTML = '<div class="loading"><p>No logs match the current filters</p></div>';
+                return;
+            }
+            
+            container.innerHTML = filteredLogs.map(log => {
+                const time = new Date(log.timestamp).toLocaleTimeString();
+                let message = escapeHtml(log.message);
+                
+                // Highlight search term
+                if (searchTerm) {
+                    const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+                    message = message.replace(regex, '<span class="search-highlight">$1</span>');
+                }
+                
+                return `
+                    <div class="log-entry log-${log.level}">
+                        <span class="log-level">[${log.level.toUpperCase()}]</span>
+                        <span class="log-time">${time}</span>
+                        <span class="log-message">${message}</span>
+                        ${log.source ? `<span class="log-source">at ${escapeHtml(log.source)}:${log.lineNumber || 0}</span>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const stats = {
+                total: allLogs.length,
+                error: allLogs.filter(l => l.level === 'error').length,
+                warn: allLogs.filter(l => l.level === 'warn').length,
+                info: allLogs.filter(l => l.level === 'info').length,
+                debug: allLogs.filter(l => l.level === 'debug').length,
+                log: allLogs.filter(l => l.level === 'log').length
+            };
+            
+            document.getElementById('totalCount').textContent = stats.total;
+            document.getElementById('errorCount').textContent = stats.error;
+            document.getElementById('warnCount').textContent = stats.warn;
+            document.getElementById('infoCount').textContent = stats.info;
+            document.getElementById('debugCount').textContent = stats.debug;
+        }
+        
+        // Toggle filter
+        function toggleFilter(chip) {
+            const level = chip.dataset.level;
+            
+            if (level === 'all') {
+                // Clear all other filters
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                activeFilters = ['all'];
+            } else {
+                // Remove 'all' filter if it's active
+                const allChip = document.querySelector('.filter-chip[data-level="all"]');
+                allChip.classList.remove('active');
+                
+                // Toggle this filter
+                chip.classList.toggle('active');
+                
+                // Update active filters
+                activeFilters = Array.from(document.querySelectorAll('.filter-chip.active'))
+                    .map(c => c.dataset.level);
+                
+                // If no filters active, activate 'all'
+                if (activeFilters.length === 0) {
+                    allChip.classList.add('active');
+                    activeFilters = ['all'];
+                }
+            }
+            
+            applyFilters();
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            applyFilters();
+        });
+        
+        // Clear logs
+        function clearLogs() {
+            allLogs = [];
+            filteredLogs = [];
+            document.getElementById('logsContainer').innerHTML = '<div class="loading"><p>No logs loaded</p></div>';
+            updateStats();
+            document.getElementById('logStatus').textContent = 'No logs loaded';
+        }
+        
+        // Auto refresh
+        function autoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+                document.getElementById('refreshIcon').textContent = '🔄';
+            } else {
+                loadLogs();
+                refreshInterval = setInterval(loadLogs, 5000);
+                document.getElementById('refreshIcon').textContent = '⏸';
+            }
+        }
+        
+        // Export functions
+        function exportLogs(format) {
+            if (filteredLogs.length === 0) {
+                alert('No logs to export');
+                return;
+            }
+            
+            let content = '';
+            let filename = `console-logs-${Date.now()}`;
+            let mimeType = 'text/plain';
+            
+            switch (format) {
+                case 'json':
+                    content = JSON.stringify(filteredLogs, null, 2);
+                    filename += '.json';
+                    mimeType = 'application/json';
+                    break;
+                    
+                case 'csv':
+                    content = 'Timestamp,Level,Message,URL\n';
+                    content += filteredLogs.map(log => 
+                        `"${log.timestamp}","${log.level}","${log.message.replace(/"/g, '""')}","${log.url || ''}"`
+                    ).join('\n');
+                    filename += '.csv';
+                    mimeType = 'text/csv';
+                    break;
+                    
+                case 'text':
+                    content = filteredLogs.map(log => 
+                        `[${log.level.toUpperCase()}] ${log.timestamp} - ${log.message}`
+                    ).join('\n');
+                    filename += '.txt';
+                    break;
+            }
+            
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Copy logs to clipboard
+        function copyLogs() {
+            const text = filteredLogs.map(log => 
+                `[${log.level.toUpperCase()}] ${log.message}`
+            ).join('\n');
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Logs copied to clipboard!');
+            });
+        }
+        
+        // Helper functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        // Load on Enter key
+        document.getElementById('sessionId').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadLogs();
+            }
+        });
+    </script>
+</body>
+</html>

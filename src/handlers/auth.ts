@@ -10,14 +10,16 @@ interface User {
   email: string;
   name: string;
   passwordHash: string;
-  role: 'user' | 'admin' | 'enterprise';
+  role?: 'user' | 'admin' | 'enterprise';
   createdAt: string;
+  updatedAt?: string;
   emailVerified: boolean;
   twoFactorEnabled: boolean;
   subscription: {
     plan: 'free' | 'pro' | 'enterprise';
+    status?: 'active' | 'inactive' | 'cancelled';
     expiresAt: string;
-    requestLimit: number;
+    requestLimit?: number;
   };
 }
 
@@ -332,6 +334,56 @@ export class AuthHandler {
             user = JSON.parse(userData);
           }
         }
+      }
+      
+      // Create demo user if it's demo@example.com and doesn't exist
+      if (!user && email === 'demo@example.com' && password === 'demo1234') {
+        const demoUserId = 'user_demo_' + Date.now();
+        const demoUser: User = {
+          id: demoUserId,
+          email: 'demo@example.com',
+          name: 'Demo User',
+          passwordHash: await this.hashPassword('demo1234'),
+          subscription: {
+            plan: 'pro',
+            status: 'active',
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          twoFactorEnabled: false,
+          emailVerified: true
+        };
+        
+        // Store demo user
+        if (this.env.SESSIONS) {
+          await this.env.SESSIONS.put(`user:${demoUserId}`, JSON.stringify(demoUser));
+          await this.env.SESSIONS.put(`user:email:demo@example.com`, demoUserId);
+          await this.env.SESSIONS.put(`user:${demoUserId}:company`, 'Acme Corporation');
+          
+          // Create some demo API keys
+          const demoKeys = [
+            {
+              id: 'key_demo_1',
+              key: 'rtm_demo_key_1234567890',
+              name: 'Production API Key',
+              createdAt: new Date().toISOString(),
+              lastUsedAt: new Date().toISOString(),
+              status: 'active'
+            },
+            {
+              id: 'key_demo_2',
+              key: 'rtm_demo_key_0987654321',
+              name: 'Development API Key',
+              createdAt: new Date().toISOString(),
+              lastUsedAt: null,
+              status: 'active'
+            }
+          ];
+          await this.env.SESSIONS.put(`user:${demoUserId}:apikeys`, JSON.stringify(demoKeys));
+        }
+        
+        user = demoUser;
       }
       
       // Check if user exists

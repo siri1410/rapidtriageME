@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Login - RapidTriageME</title>
+</head>
+<body>
+    <script>
+        // Auto login and redirect
+        async function autoLogin() {
+            try {
+                // Clear any existing session
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Login with demo credentials
+                const response = await fetch('http://localhost:8787/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'demo@example.com',
+                        password: 'demo1234'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    // Store authentication data
+                    localStorage.setItem('rapidtriage_auth_token', data.token);
+                    localStorage.setItem('rapidtriage_refresh_token', data.refreshToken);
+                    localStorage.setItem('rapidtriage_user', JSON.stringify(data.user));
+                    
+                    // Immediately redirect to profile
+                    window.location.href = 'http://localhost:8787/profile';
+                } else {
+                    console.error('Login failed:', data);
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+            }
+        }
+
+        // Execute immediately
+        autoLogin();
+    </script>
+</body>
+</html>

@@ -378,7 +378,7 @@ export class RemoteBrowserMCPHandler {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Extension-Id',
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
           'Access-Control-Max-Age': '86400',
         }
@@ -554,20 +554,66 @@ export class RemoteBrowserMCPHandler {
         };
         
       case 'remote_get_console_logs':
-        return {
-          content: [{
-            type: "text",
-            text: `Console Logs:\n[INFO] Page loaded\n[WARN] Deprecation warning\n[ERROR] Failed to load resource`
-          }]
-        };
+        // Check if this is a POST request with logs to store
+        if (args.logs && Array.isArray(args.logs)) {
+          // Store the logs
+          const { BrowserLogsHandler } = await import('./browser-logs');
+          const logsHandler = new BrowserLogsHandler(this.env);
+          const storeRequest = new Request('http://localhost/api/console-logs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(args)
+          });
+          const storeResponse = await logsHandler.storeConsoleLogs(storeRequest);
+          const storeResult = await storeResponse.json() as any;
+          
+          return {
+            content: [{
+              type: "text",
+              text: storeResult?.message || 'Console logs stored successfully'
+            }]
+          };
+        } else {
+          // Retrieve logs
+          const { BrowserLogsHandler } = await import('./browser-logs');
+          const logsHandler = new BrowserLogsHandler(this.env);
+          const getRequest = new Request(`http://localhost/api/console-logs?url=${args.url || ''}&sessionId=${args.sessionId || ''}&level=${args.level || 'all'}&limit=${args.limit || 100}`);
+          const getResponse = await logsHandler.getConsoleLogs(getRequest);
+          const result = await getResponse.json();
+          
+          return result;
+        }
         
       case 'remote_get_network_logs':
-        return {
-          content: [{
-            type: "text",
-            text: `Network Analysis:\nTotal Requests: 42\nFailed Requests: 2\nAverage Response Time: 234ms`
-          }]
-        };
+        // Check if this is a POST request with logs to store
+        if (args.logs && Array.isArray(args.logs)) {
+          // Store the logs
+          const { BrowserLogsHandler } = await import('./browser-logs');
+          const logsHandler = new BrowserLogsHandler(this.env);
+          const storeRequest = new Request('http://localhost/api/network-logs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(args)
+          });
+          const storeResponse = await logsHandler.storeNetworkLogs(storeRequest);
+          const storeResult = await storeResponse.json() as any;
+          
+          return {
+            content: [{
+              type: "text",
+              text: storeResult?.message || 'Network logs stored successfully'
+            }]
+          };
+        } else {
+          // Retrieve logs
+          const { BrowserLogsHandler } = await import('./browser-logs');
+          const logsHandler = new BrowserLogsHandler(this.env);
+          const getRequest = new Request(`http://localhost/api/network-logs?sessionId=${args.sessionId || ''}&status=${args.status || ''}&limit=${args.limit || 100}`);
+          const getResponse = await logsHandler.getNetworkLogs(getRequest);
+          const result = await getResponse.json();
+          
+          return result;
+        }
         
       case 'remote_run_lighthouse_audit':
         return {

@@ -27,6 +27,41 @@ export function generateLandingPage(env: any): string {
       min-height: 100vh;
       padding: 20px;
     }
+    .header-nav {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .nav-btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    .nav-btn-outline {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+    .nav-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: white;
+    }
+    .nav-btn-solid {
+      background: white;
+      color: #667eea;
+      border: 2px solid white;
+    }
+    .nav-btn-solid:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
     .container {
       background: rgba(255, 255, 255, 0.98);
       border-radius: 20px;
@@ -34,6 +69,7 @@ export function generateLandingPage(env: any): string {
       max-width: 1200px;
       margin: 0 auto;
       box-shadow: 0 25px 70px rgba(0,0,0,0.2);
+      position: relative;
     }
     h1 {
       color: #2d3748;
@@ -408,6 +444,28 @@ export function generateLandingPage(env: any): string {
   </script>
 </head>
 <body>
+  <!-- Navigation Header -->
+  <div class="header-nav" id="navHeader">
+    <a href="/login" class="nav-btn nav-btn-outline">Sign In</a>
+    <a href="/login" class="nav-btn nav-btn-solid">Get Started</a>
+  </div>
+  
+  <script>
+    // Check if user is authenticated and update navigation
+    (function() {
+      const token = localStorage.getItem('rapidtriage_auth_token') || 
+                   sessionStorage.getItem('rapidtriage_auth_token');
+      
+      if (token) {
+        // User is logged in, show dashboard link
+        document.getElementById('navHeader').innerHTML = \`
+          <a href="/dashboard" class="nav-btn nav-btn-outline">Dashboard</a>
+          <a href="/profile" class="nav-btn nav-btn-solid">My Profile</a>
+        \`;
+      }
+    })();
+  </script>
+  
   <div class="container">
     <h1>🚀 RapidTriageME</h1>
     <p class="subtitle">Enterprise Browser Automation & Debugging Platform by YarlisAISolutions</p>

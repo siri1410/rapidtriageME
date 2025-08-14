@@ -448,6 +448,8 @@ export class DashboardHandler {
       </div>
       <nav class="nav-links">
         <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/profile">Profile</a>
         <a href="/api-docs">API Docs</a>
         <a href="/status">Status</a>
         <a href="#" onclick="logout()">Logout</a>
@@ -608,10 +610,11 @@ curl -X POST ${baseUrl}/api/console-logs \\
 
     // Initialize dashboard
     async function init() {
-      authToken = localStorage.getItem('rapidtriage_auth_token');
+      authToken = localStorage.getItem('rapidtriage_auth_token') || 
+                  sessionStorage.getItem('rapidtriage_auth_token');
       
       if (!authToken) {
-        window.location.href = '/';
+        window.location.href = '/login?redirect=/dashboard';
         return;
       }
       
@@ -856,7 +859,11 @@ curl -X POST ${baseUrl}/api/console-logs \\
     // Logout
     function logout() {
       localStorage.removeItem('rapidtriage_auth_token');
-      window.location.href = '/';
+      localStorage.removeItem('rapidtriage_refresh_token');
+      sessionStorage.removeItem('rapidtriage_auth_token');
+      sessionStorage.removeItem('rapidtriage_refresh_token');
+      localStorage.removeItem('rapidtriage_user');
+      window.location.href = '/login';
     }
 
     // Close modals on outside click

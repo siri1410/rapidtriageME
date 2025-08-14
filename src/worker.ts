@@ -17,6 +17,8 @@ import { StatusHandler } from './handlers/status';
 import { AuthHandler } from './handlers/auth';
 import { DashboardHandler } from './handlers/dashboard';
 import { ReportsHandler } from './handlers/reports';
+import { LoginHandler } from './handlers/login';
+import { ProfileHandler } from './handlers/profile';
 // import { Logger } from './utils/logger';
 
 // Test suite handler function
@@ -1276,7 +1278,7 @@ export default {
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Extension-Id',
       'Access-Control-Max-Age': '86400',
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
@@ -1390,6 +1392,14 @@ export default {
           }
           return new Response('Method not allowed', { status: 405 });
           
+        case '/login':
+          const loginHandler = new LoginHandler(env);
+          return loginHandler.handleLogin(request);
+          
+        case '/profile':
+          const profileHandler = new ProfileHandler(env);
+          return profileHandler.handleProfile(request);
+          
         case '/dashboard':
           const dashboardHandler = new DashboardHandler(env);
           return dashboardHandler.handleDashboard(request);
@@ -1403,11 +1413,11 @@ export default {
           return reportsApiHandler.handleReportsListAPI(request);
           
         case '/auth/profile':
-          const profileHandler = new AuthHandler(env);
+          const authProfileHandler = new AuthHandler(env);
           if (request.method === 'GET') {
-            return profileHandler.handleGetProfile(request);
+            return authProfileHandler.handleGetProfile(request);
           } else if (request.method === 'PUT') {
-            return profileHandler.handleUpdateProfile(request);
+            return authProfileHandler.handleUpdateProfile(request);
           }
           return new Response('Method not allowed', { status: 405 });
           

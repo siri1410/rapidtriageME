@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RapidTriageME Console Logs API Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        pre {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            border-left: 4px solid;
+            line-height: 1.5;
+        }
+        .log-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left-color: #fc8181;
+        }
+        .log-warn {
+            background: #fef5c7;
+            color: #744210;
+            border-left-color: #f6ad55;
+        }
+        .log-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left-color: #4299e1;
+        }
+        .log-log {
+            background: #e2e8f0;
+            color: #4a5568;
+            border-left-color: #a0aec0;
+        }
+        .log-debug {
+            background: #e6fffa;
+            color: #234e52;
+            border-left-color: #38b2ac;
+        }
+        #logsDisplay {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        details summary {
+            outline: none;
+        }
+        details[open] summary {
+            margin-bottom: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 RapidTriageME Console Logs API Test</h1>
+    
+    <div class="section">
+        <h2>Configuration</h2>
+        <label>API Endpoint:</label>
+        <input type="text" id="apiEndpoint" value="http://localhost:8787/api/console-logs" />
+        
+        <label>Extension ID (for testing without auth):</label>
+        <input type="text" id="extensionId" value="test-extension-123" placeholder="Leave empty to use API key" />
+        
+        <label>API Key (if not using extension ID):</label>
+        <input type="text" id="apiKey" placeholder="rtm_..." />
+        
+        <label>Session ID:</label>
+        <input type="text" id="sessionId" value="test-session-123" />
+    </div>
+
+    <div class="section">
+        <h2>1. Generate Console Logs</h2>
+        <p>Click the button below to generate some test console logs in this page:</p>
+        <button onclick="generateLogs()">Generate Test Logs</button>
+        <div id="generatedLogs"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. Send Logs to API</h2>
+        <p>Send the captured console logs to the RapidTriageME API:</p>
+        <button onclick="sendLogs()">Send Logs to API</button>
+        <div id="sendStatus"></div>
+        <pre id="sendResponse"></pre>
+    </div>
+
+    <div class="section">
+        <h2>3. Retrieve Logs from API</h2>
+        <p>Retrieve the stored logs from the API:</p>
+        <button onclick="retrieveLogs()">Retrieve Logs</button>
+        <div id="retrieveStatus"></div>
+        
+        <!-- Formatted Logs Display -->
+        <div id="formattedLogs" style="display: none;">
+            <h3>Formatted Logs:</h3>
+            <div id="logsDisplay" style="margin: 15px 0;"></div>
+        </div>
+        
+        <!-- Raw JSON Response -->
+        <details style="margin-top: 20px;">
+            <summary style="cursor: pointer; color: #667eea; font-weight: 500;">View Raw JSON Response</summary>
+            <pre id="retrieveResponse" style="margin-top: 10px;"></pre>
+        </details>
+    </div>
+
+    <div class="section">
+        <h2>4. Test Direct API Call (Bruno/Postman Compatible)</h2>
+        <p>Copy this curl command to test in your terminal:</p>
+        <pre id="curlCommand"></pre>
+        <button onclick="updateCurlCommand()">Update Curl Command</button>
+    </div>
+
+    <script>
+        let capturedLogs = [];
+        
+        // Intercept console methods
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const originalInfo = console.info;
+        
+        console.log = function(...args) {
+            capturedLogs.push({
+                level: 'log',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            capturedLogs.push({
+                level: 'error',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalError.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+            capturedLogs.push({
+                level: 'warn',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalWarn.apply(console, args);
+        };
+        
+        console.info = function(...args) {
+            capturedLogs.push({
+                level: 'info',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalInfo.apply(console, args);
+        };
+        
+        function generateLogs() {
+            // Clear previous logs
+            capturedLogs = [];
+            
+            // Generate various types of logs
+            console.log('Application initialized successfully');
+            console.info('User agent:', navigator.userAgent);
+            console.warn('This is a deprecation warning');
+            console.error('Failed to load resource: net::ERR_BLOCKED_BY_CLIENT');
+            console.log('Page URL:', window.location.href);
+            console.info('Timestamp:', new Date().toISOString());
+            
+            // Display captured logs
+            const logsDiv = document.getElementById('generatedLogs');
+            logsDiv.innerHTML = '<h3>Generated Logs:</h3>';
+            capturedLogs.forEach(log => {
+                const logDiv = document.createElement('div');
+                logDiv.className = `log-entry log-${log.level}`;
+                logDiv.textContent = `[${log.level.toUpperCase()}] ${log.message}`;
+                logsDiv.appendChild(logDiv);
+            });
+        }
+        
+        async function sendLogs() {
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const extensionId = document.getElementById('extensionId').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const sessionId = document.getElementById('sessionId').value;
+            
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            if (extensionId) {
+                headers['X-Extension-Id'] = extensionId;
+            } else if (apiKey) {
+                headers['Authorization'] = `Bearer ${apiKey}`;
+            }
+            
+            const body = {
+                url: window.location.href,
+                logs: capturedLogs,
+                sessionId: sessionId
+            };
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('sendStatus').innerHTML = '<div class="status success">✅ Logs sent successfully!</div>';
+                } else {
+                    document.getElementById('sendStatus').innerHTML = '<div class="status error">❌ Failed to send logs</div>';
+                }
+                
+                document.getElementById('sendResponse').textContent = JSON.stringify(data, null, 2);
+                
+            } catch (error) {
+                document.getElementById('sendStatus').innerHTML = '<div class="status error">❌ Error: ' + error.message + '</div>';
+                document.getElementById('sendResponse').textContent = error.toString();
+            }
+        }
+        
+        async function retrieveLogs() {
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const extensionId = document.getElementById('extensionId').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const sessionId = document.getElementById('sessionId').value;
+            
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            if (extensionId) {
+                headers['X-Extension-Id'] = extensionId;
+            } else if (apiKey) {
+                headers['Authorization'] = `Bearer ${apiKey}`;
+            }
+            
+            const body = {
+                sessionId: sessionId,
+                limit: 100
+            };
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('retrieveStatus').innerHTML = '<div class="status success">✅ Logs retrieved successfully!</div>';
+                    
+                    // Display formatted logs
+                    if (data.logs && data.logs.length > 0) {
+                        const formattedLogsDiv = document.getElementById('formattedLogs');
+                        const logsDisplayDiv = document.getElementById('logsDisplay');
+                        
+                        formattedLogsDiv.style.display = 'block';
+                        logsDisplayDiv.innerHTML = '';
+                        
+                        // Create formatted log entries
+                        data.logs.forEach(log => {
+                            const logEntry = document.createElement('div');
+                            logEntry.className = `log-entry log-${log.level}`;
+                            
+                            const timestamp = new Date(log.timestamp).toLocaleTimeString();
+                            logEntry.innerHTML = `
+                                <strong>[${log.level.toUpperCase()}]</strong> 
+                                <span style="color: #718096; font-size: 11px;">${timestamp}</span><br>
+                                ${escapeHtml(log.message)}
+                            `;
+                            
+                            logsDisplayDiv.appendChild(logEntry);
+                        });
+                        
+                        // Also display the text content if available
+                        if (data.content && data.content[0] && data.content[0].text) {
+                            const summaryDiv = document.createElement('div');
+                            summaryDiv.style.marginTop = '20px';
+                            summaryDiv.style.padding = '15px';
+                            summaryDiv.style.background = '#f7fafc';
+                            summaryDiv.style.borderRadius = '6px';
+                            summaryDiv.innerHTML = '<h4>Summary:</h4><pre style="margin-top: 10px; white-space: pre-wrap;">' + 
+                                escapeHtml(data.content[0].text) + '</pre>';
+                            logsDisplayDiv.appendChild(summaryDiv);
+                        }
+                    } else if (data.content && data.content[0]) {
+                        // No logs array, but we have content text
+                        const formattedLogsDiv = document.getElementById('formattedLogs');
+                        const logsDisplayDiv = document.getElementById('logsDisplay');
+                        
+                        formattedLogsDiv.style.display = 'block';
+                        logsDisplayDiv.innerHTML = '<pre style="white-space: pre-wrap;">' + 
+                            escapeHtml(data.content[0].text) + '</pre>';
+                    }
+                } else {
+                    document.getElementById('retrieveStatus').innerHTML = '<div class="status error">❌ Failed to retrieve logs</div>';
+                    document.getElementById('formattedLogs').style.display = 'none';
+                }
+                
+                // Always show raw JSON
+                document.getElementById('retrieveResponse').textContent = JSON.stringify(data, null, 2);
+                
+            } catch (error) {
+                document.getElementById('retrieveStatus').innerHTML = '<div class="status error">❌ Error: ' + error.message + '</div>';
+                document.getElementById('retrieveResponse').textContent = error.toString();
+                document.getElementById('formattedLogs').style.display = 'none';
+            }
+        }
+        
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function updateCurlCommand() {
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const extensionId = document.getElementById('extensionId').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const sessionId = document.getElementById('sessionId').value;
+            
+            let authHeader = '';
+            if (extensionId) {
+                authHeader = `  -H "X-Extension-Id: ${extensionId}" \\`;
+            } else if (apiKey) {
+                authHeader = `  -H "Authorization: Bearer ${apiKey}" \\`;
+            }
+            
+            const curlCommand = `# Store logs
+curl -X POST ${endpoint} \\
+  -H "Content-Type: application/json" \\
+${authHeader}
+  -d '{
+    "url": "https://example.com",
+    "logs": [
+      {"level": "error", "message": "Test error message", "timestamp": "${new Date().toISOString()}"},
+      {"level": "warn", "message": "Test warning message", "timestamp": "${new Date().toISOString()}"},
+      {"level": "info", "message": "Test info message", "timestamp": "${new Date().toISOString()}"}
+    ],
+    "sessionId": "${sessionId}"
+  }'
+
+# Retrieve logs
+curl -X POST ${endpoint} \\
+  -H "Content-Type: application/json" \\
+${authHeader}
+  -d '{
+    "sessionId": "${sessionId}",
+    "limit": 100
+  }'`;
+            
+            document.getElementById('curlCommand').textContent = curlCommand;
+        }
+        
+        // Initialize curl command on load
+        updateCurlCommand();
+    </script>
+</body>
+</html>

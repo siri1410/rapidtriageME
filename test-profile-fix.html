@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Test - RapidTriageME</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        pre {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 RapidTriageME - Profile Testing & Fix</h1>
+        
+        <div class="section">
+            <h2>Step 1: Login with Demo Account</h2>
+            <p>This will automatically login with demo credentials and store the token.</p>
+            <button onclick="loginDemo()">Login as Demo User</button>
+            <div id="loginStatus"></div>
+        </div>
+
+        <div class="section">
+            <h2>Step 2: Check Stored Data</h2>
+            <button onclick="checkStoredData()">Check LocalStorage Data</button>
+            <pre id="storedData"></pre>
+        </div>
+
+        <div class="section">
+            <h2>Step 3: Fetch Profile Data</h2>
+            <button onclick="fetchProfile()">Fetch Profile from API</button>
+            <pre id="profileData"></pre>
+        </div>
+
+        <div class="section">
+            <h2>Step 4: Go to Profile Page</h2>
+            <button onclick="goToProfile()">Open Profile Page</button>
+        </div>
+    </div>
+
+    <script>
+        async function loginDemo() {
+            const statusDiv = document.getElementById('loginStatus');
+            statusDiv.innerHTML = '<div class="status">Logging in...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8787/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'demo@example.com',
+                        password: 'demo1234'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    // Store authentication data
+                    localStorage.setItem('rapidtriage_auth_token', data.token);
+                    localStorage.setItem('rapidtriage_refresh_token', data.refreshToken);
+                    localStorage.setItem('rapidtriage_user', JSON.stringify(data.user));
+                    
+                    statusDiv.innerHTML = `
+                        <div class="status success">
+                            ✅ Login successful!<br>
+                            User: ${data.user.name}<br>
+                            Email: ${data.user.email}<br>
+                            Plan: ${data.user.subscription.plan}
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = '<div class="status error">❌ Login failed: ' + (data.error || 'Unknown error') + '</div>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<div class="status error">❌ Error: ' + error.message + '</div>';
+            }
+        }
+
+        function checkStoredData() {
+            const token = localStorage.getItem('rapidtriage_auth_token');
+            const user = localStorage.getItem('rapidtriage_user');
+            
+            const dataDiv = document.getElementById('storedData');
+            dataDiv.textContent = JSON.stringify({
+                hasToken: !!token,
+                tokenPreview: token ? token.substring(0, 50) + '...' : null,
+                user: user ? JSON.parse(user) : null
+            }, null, 2);
+        }
+
+        async function fetchProfile() {
+            const token = localStorage.getItem('rapidtriage_auth_token');
+            
+            if (!token) {
+                document.getElementById('profileData').textContent = 'No auth token found. Please login first.';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:8787/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                document.getElementById('profileData').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('profileData').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        function goToProfile() {
+            window.location.href = 'http://localhost:8787/profile';
+        }
+
+        // Check initial state
+        window.onload = function() {
+            const token = localStorage.getItem('rapidtriage_auth_token');
+            if (token) {
+                document.getElementById('loginStatus').innerHTML = '<div class="status success">Already logged in. You can skip to Step 4.</div>';
+            }
+        };
+    </script>
+</body>
+</html>
