@@ -167,7 +167,7 @@ export class ApiDocsHandler {
         showExtensions: true,
         showCommonExtensions: true,
         tryItOutEnabled: true,
-        persistAuthorization: true,
+        persistAuthorization: false, // Disabled to avoid cookie errors
         displayRequestDuration: true,
         requestSnippetsEnabled: true,
         requestSnippets: {
@@ -201,10 +201,21 @@ export class ApiDocsHandler {
           languages: ["curl_bash", "javascript_fetch", "python_requests", "node_fetch"]
         },
         onComplete: function() {
-          // Add authorization header helper
-          const authToken = localStorage.getItem('rapidtriage_auth_token');
-          if (authToken) {
-            ui.preauthorizeApiKey('bearerAuth', authToken);
+          // Add authorization header helper with error handling
+          try {
+            const authToken = localStorage.getItem('rapidtriage_auth_token');
+            if (authToken && ui && typeof ui.preauthorizeApiKey === 'function') {
+              // Use setTimeout to ensure UI is fully initialized
+              setTimeout(() => {
+                try {
+                  ui.preauthorizeApiKey('bearerAuth', authToken);
+                } catch (e) {
+                  console.warn('Could not preauthorize API key:', e);
+                }
+              }, 100);
+            }
+          } catch (error) {
+            console.warn('Authorization setup skipped:', error);
           }
         }
       });
